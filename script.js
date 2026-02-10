@@ -1,38 +1,40 @@
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg'), antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#geometric-bg'), antialias: true, alpha: true });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.setZ(30);
+camera.position.z = 50;
 
-// Create a professional wireframe background
-const geometry = new THREE.IcosahedronGeometry(20, 2);
-const material = new THREE.MeshStandardMaterial({ color: 0x00f2ff, wireframe: true, transparent: true, opacity: 0.1 });
+// Create Geometric Mesh
+const geometry = new THREE.PlaneGeometry(150, 150, 20, 20);
+const material = new THREE.MeshLambertMaterial({ color: 0x7cfc00, wireframe: true, transparent: true, opacity: 0.1 });
 const mesh = new THREE.Mesh(geometry, material);
+mesh.rotation.x = -1.2;
 scene.add(mesh);
 
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(1, 1, 1);
-scene.add(light);
+// Randomize heights for "Low Poly" look
+const pos = geometry.attributes.position;
+for (let i = 0; i < pos.count; i++) {
+    const z = Math.random() * 5;
+    pos.setZ(i, z);
+}
 
-// Mouse tracking
-let mouseX = 0;
-let mouseY = 0;
-window.addEventListener('mousemove', (e) => {
-    mouseX = (e.clientX - window.innerWidth / 2) / 100;
-    mouseY = (e.clientY - window.innerHeight / 2) / 100;
+const light = new THREE.PointLight(0xffffff, 1, 100);
+light.position.set(0, 10, 20);
+scene.add(light, new THREE.AmbientLight(0xffffff, 0.2));
+
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX - window.innerWidth / 2) / 200;
+    mouseY = (e.clientY - window.innerHeight / 2) / 200;
 });
 
 function animate() {
     requestAnimationFrame(animate);
-    mesh.rotation.x += 0.001;
-    mesh.rotation.y += 0.002;
-    
-    // Subtle camera drift based on mouse
+    mesh.rotation.z += 0.001;
     camera.position.x += (mouseX - camera.position.x) * 0.05;
     camera.position.y += (-mouseY - camera.position.y) * 0.05;
     camera.lookAt(scene.position);
-
     renderer.render(scene, camera);
 }
 animate();
