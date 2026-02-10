@@ -3,68 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Om Kumar | Web Developer & Pharma Professional</title>
+    <title>Om Kumar | Web Developer & Pharmacy Professional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <canvas id="bg"></canvas>
 
+    <nav>
+        <div class="logo">OM<span>KUMAR</span></div>
+        <div class="nav-links">
+            <a href="#projects">Portfolio</a>
+            <a href="#about">About</a>
+            <a href="mailto:w3.omkumar@gmail.com" class="nav-btn">Start a Project</a>
+        </div>
+    </nav>
+
     <main>
-        <header>
-            <h1>OM KUMAR</h1>
-            <p>🚀 Web Developer | 💊 B.Pharm Final Year</p>
+        <header class="hero">
+            <div class="hero-inner">
+                <span class="badge">Available for Tech & Pharma Roles</span>
+                <h1>Crafting <i>Precision</i> In Tech & Health.</h1>
+                <p class="hero-subtext">B.Pharm Scholar blending pharmaceutical accuracy with modern web architecture.</p>
+                <div class="cta-group">
+                    <a href="#projects" class="btn-primary">View My Work</a>
+                    <a href="#" class="btn-outline">Download CV</a>
+                </div>
+            </div>
         </header>
 
         <section id="about">
-            <img src="images/profile.png" alt="Om Kumar" class="profile-img">
-            <h2>About Me</h2>
-            <p>A passionate and detail-oriented Final-year Bachelor of Pharmacy student with tech knowledge of developing business-oriented websites for the real world. Open for both Web Dev and Pharmacy roles.</p>
-            <div class="buttons">
-                <a href="mailto:w3.omkumar@gmail.com" class="btn">Contact Me</a>
-                <a href="#" class="btn secondary">Download CV</a>
+            <div class="about-container">
+                <div class="about-image">
+                    <img src="images/profile.png" alt="Om Kumar" class="profile-img">
+                </div>
+                <div class="about-text">
+                    <span class="section-tag">01 / About Me</span>
+                    <h2>A Dual-Domain Specialist</h2>
+                    <p>I am a Final-year Bachelor of Pharmacy student with a deep expertise in developing business-oriented digital solutions. My approach combines the analytical rigor of pharmaceutical sciences with the creative flexibility of web development.</p>
+                </div>
             </div>
         </section>
 
         <section id="projects">
-            <h2>Recent Projects</h2>
-            <div class="project-grid">
-                
-        <div class="card">
-    <img src="images/shanifinserve.png" alt="Shani Finserve" class="project-thumb">
-    <h3>Shani Finserve</h3>
-    <p>Financial Wealth App</p>
-</div>
-                
-        <div class="card">
-    <img src="images/drxmentor.png" alt="Drx-Mentor" class="project-thumb">
-    <h3>Drx-Mentor</h3>
-    <p>Pharmacy Exam Prep</p>
-</div>
-                
-        <div class="card">
-    <img src="images/hitech.png" alt="hitech india" class="project-thumb">
-    <h3>Hi-Tech Computer Academy</h3>
-    <p>Edu-Tech Platform</p>
-</div>
-
+            <div class="section-header">
+                <span class="section-tag">02 / Selected Projects</span>
+                <h2>Recent Collaborations</h2>
+            </div>
             
-        <div class="card">
-    <img src="images/mng.png" alt="MNG Tour & Travel" class="project-thumb">
-    <h3>MNG Tour & Travel</h3>
-    <p>Travel Booking Portal</p>
-</div>
-    
+            <div class="bento-grid">
+                <div class="card tall">
+                    <img src="images/shanifinserve.png" alt="Shani Finserve">
+                    <div class="card-content">
+                        <h3>Shani Finserve</h3>
+                        <p>Wealth Management App</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="images/drxmentor.png" alt="Drx-Mentor">
+                    <div class="card-content">
+                        <h3>Drx-Mentor</h3>
+                        <p>Pharma Ed-Tech</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="images/hitech.png" alt="hitech india">
+                    <div class="card-content">
+                        <h3>Hi-Tech Academy</h3>
+                        <p>Edu-Tech Platform</p>
+                    </div>
+                </div>
+
+                <div class="card wide">
+                    <img src="images/mng.png" alt="MNG Tour & Travel">
+                    <div class="card-content">
+                        <h3>MNG Tour & Travel</h3>
+                        <p>Travel Booking Portal</p>
+                    </div>
+                </div>
             </div>
         </section>
 
         <footer>
-            <p>📍 Bihar, India | 📞 +91 9102066047</p>
-            <p>LinkedIn: w3-omkumar</p>
+            <div class="footer-wrap">
+                <h2>Let's build the future together.</h2>
+                <div class="contact-info">
+                    <a href="mailto:w3.omkumar@gmail.com">w3.omkumar@gmail.com</a>
+                    <span>+91 9102066047</span>
+                </div>
+                <div class="footer-bottom">
+                    <p>© 2026 Om Kumar. Bihar, India.</p>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/in/w3-omkumar">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
         </footer>
     </main>
 
     <script src="script.js"></script>
 </body>
-
 </html>
