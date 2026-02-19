@@ -236,17 +236,32 @@
         }
 
         /* --- Portfolio Section --- */
+       /* --- Carousel Section Styles --- */
         #portfolio {
             background-color: var(--bg-white);
         }
 
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
+        .carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
+        .carousel-container {
+            width: 100%;
+            overflow: hidden; /* Hides the cards outside the viewing area */
+            padding: 20px 0; /* Extra padding so box-shadows aren't cut off on hover */
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 30px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        /* Default (Desktop): Show 3 cards at a time */
         .project-card {
+            flex: 0 0 calc(33.333% - 20px); 
             background: var(--bg-white);
             border-radius: 15px;
             overflow: hidden;
@@ -269,7 +284,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: top; /* Focus on the header part of screenshots */
+            object-position: top;
             transition: transform 0.5s ease;
         }
 
@@ -301,6 +316,50 @@
 
         .project-link:hover span {
             margin-left: 10px;
+        }
+
+        /* Carousel Navigation Buttons */
+        .carousel-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            z-index: 10;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .carousel-btn:hover {
+            background-color: #357abd;
+            transform: scale(1.1);
+        }
+
+        .prev-btn { left: -20px; }
+        .next-btn { right: -20px; }
+
+        /* Responsive adjustments for carousel */
+        @media (max-width: 968px) {
+            /* Show 2 cards at a time on tablets */
+            .project-card {
+                flex: 0 0 calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Show 1 card at a time on mobile */
+            .project-card {
+                flex: 0 0 100%;
+            }
+            .prev-btn { left: 0px; }
+            .next-btn { right: 0px; }
         }
 
         /* --- Contact Section --- */
@@ -492,60 +551,69 @@
     <section id="portfolio">
         <div class="container">
             <h2>Featured Projects</h2>
-            <div class="portfolio-grid">
+            
+            <div class="carousel-wrapper">
+                <button class="carousel-btn prev-btn" aria-label="Previous Project">&#10094;</button>
                 
-                <div class="project-card">
-                    <div class="project-img-container">
-                        <img src="images/shanifinserve.png" alt="Shani Finserve Website Screenshot">
-                    </div>
-                    <div class="project-info">
-                        <h3>Shani Finserve</h3>
-                        <p>A financial services web application platform for wealth building, loans, and insurance.</p>
-                        <a href="https://app.shanifinserve.com" target="_blank" class="project-link">
-                            View Live Site <span>&#8594;</span>
-                        </a>
+                <div class="carousel-container">
+                    <div class="carousel-track">
+                        
+                        <div class="project-card">
+                            <div class="project-img-container">
+                                <img src="images/shanifinserve.png" alt="Shani Finserve Website Screenshot">
+                            </div>
+                            <div class="project-info">
+                                <h3>Shani Finserve</h3>
+                                <p>A financial services web application platform for wealth building, loans, and insurance.</p>
+                                <a href="https://app.shanifinserve.com" target="_blank" class="project-link">
+                                    View Live Site <span>&#8594;</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-img-container">
+                                <img src="images/mng.png" alt="MNG Tour and Travels Website Screenshot">
+                            </div>
+                            <div class="project-info">
+                                <h3>MNG Tour and Travels</h3>
+                                <p>A travel agency website featuring destination listings, tour booking functionality, and gallery.</p>
+                                <a href="https://mngtoursandtravels.in" target="_blank" class="project-link">
+                                    View Live Site <span>&#8594;</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-img-container">
+                                <img src="images/hitech.png" alt="Hi-tech India Computer Academy Website Screenshot">
+                            </div>
+                            <div class="project-info">
+                                <h3>Hi-tech Computer Academy</h3>
+                                <p>An educational institute website with course listings, student center login, and certificate verification.</p>
+                                <a href="https://hitechindia.in" target="_blank" class="project-link">
+                                    View Live Site <span>&#8594;</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-img-container">
+                                <img src="images/drxmentor.png" alt="Drx-Mentors Website Screenshot">
+                            </div>
+                            <div class="project-info">
+                                <h3>Drx-Mentors</h3>
+                                <p>A resource hub for pharmacy professionals providing exam papers, quizzes, and pharma news.</p>
+                                <a href="https://drxmentor.com" target="_blank" class="project-link">
+                                    View Live Site <span>&#8594;</span>
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-
-                <div class="project-card">
-                    <div class="project-img-container">
-                        <img src="images/mng.png" alt="MNG Tour and Travels Website Screenshot">
-                    </div>
-                    <div class="project-info">
-                        <h3>MNG Tour and Travels</h3>
-                        <p>A travel agency website featuring destination listings, tour booking functionality, and gallery.</p>
-                        <a href="https://mngtoursandtravels.in" target="_blank" class="project-link">
-                            View Live Site <span>&#8594;</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-img-container">
-                        <img src="images/hitech.png" alt="Hi-tech India Computer Academy Website Screenshot">
-                    </div>
-                    <div class="project-info">
-                        <h3>Hi-tech Computer Academy</h3>
-                        <p>An educational institute website with course listings, student center login, and certificate verification.</p>
-                        <a href="https://hitechindia.in" target="_blank" class="project-link">
-                            View Live Site <span>&#8594;</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-img-container">
-                        <img src="images/drxmentor.png" alt="Drx-Mentors Website Screenshot">
-                    </div>
-                    <div class="project-info">
-                        <h3>Drx-Mentors</h3>
-                        <p>A resource hub for pharmacy professionals providing exam papers, quizzes, and pharma news.</p>
-                        <a href="https://drxmentor.com" target="_blank" class="project-link">
-                            View Live Site <span>&#8594;</span>
-                        </a>
-                    </div>
-                </div>
-
+                
+                <button class="carousel-btn next-btn" aria-label="Next Project">&#10095;</button>
             </div>
         </div>
     </section>
@@ -672,7 +740,50 @@
                 alert('Demo: CV download initiated. (In a real deployment, this would download your PDF resume).');
             });
         });
+        // --- Project Carousel Logic ---
+            const track = document.querySelector('.carousel-track');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            
+            let currentIndex = 0;
+
+            const updateCarousel = () => {
+                const card = document.querySelector('.project-card');
+                const gap = 30; // Matches the gap in CSS
+                // Calculate the width of one card plus the gap between them
+                const moveAmount = card.offsetWidth + gap; 
+                track.style.transform = `translateX(-${currentIndex * moveAmount}px)`;
+            };
+
+            nextBtn.addEventListener('click', () => {
+                const cards = document.querySelectorAll('.project-card');
+                const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+                const cardWidth = cards[0].offsetWidth;
+                
+                // Calculate how many cards fit on the screen right now
+                const visibleCards = Math.round(containerWidth / cardWidth);
+                const maxIndex = cards.length - visibleCards;
+
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            });
+
+            // Reset carousel position if the screen is resized
+            window.addEventListener('resize', () => {
+                currentIndex = 0;
+                updateCarousel();
+            });
     </script>
 </body>
 </html>
+
 
