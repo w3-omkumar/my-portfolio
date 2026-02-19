@@ -1288,85 +1288,71 @@
                 alert('Demo: CV download initiated. (In a real deployment, this would download your PDF resume).');
             });
         });
-        // --- Project Carousel Logic ---
+// 5. 3D Round Portfolio Carousel
             const track = document.querySelector('.carousel-track');
+            const cards = document.querySelectorAll('.project-card');
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
+            const carouselWrapper = document.querySelector('.carousel-wrapper');
             
             let currentIndex = 0;
+            let autoPlayInterval;
+            
+            // Calculate 3D geometry
+            const theta = 360 / cards.length; 
 
-            const updateCarousel = () => {
-                const card = document.querySelector('.project-card');
-                const gap = 30; // Matches the gap in CSS
-                // Calculate the width of one card plus the gap between them
-                const moveAmount = card.offsetWidth + gap; 
-                track.style.transform = `translateX(-${currentIndex * moveAmount}px)`;
+            const setupCarousel = () => {
+                const cardWidth = cards[0].offsetWidth;
+                // Calculate how far out the cards need to be pushed to form a perfect circle
+                const radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length)) + 40;
+
+                cards.forEach((card, i) => {
+                    card.style.transform = `rotateY(${i * theta}deg) translateZ(${radius}px)`;
+                });
+                
+                // Push the track back and rotate it to the current index
+                track.style.transform = `translateZ(${-radius}px) rotateY(${currentIndex * -theta}deg)`;
+            };
+
+            const rotateCarousel = () => {
+                const cardWidth = cards[0].offsetWidth;
+                const radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length)) + 40;
+                track.style.transform = `translateZ(${-radius}px) rotateY(${currentIndex * -theta}deg)`;
             };
 
             nextBtn.addEventListener('click', () => {
-                const cards = document.querySelectorAll('.project-card');
-                const containerWidth = document.querySelector('.carousel-container').offsetWidth;
-                const cardWidth = cards[0].offsetWidth;
-                
-                // Calculate how many cards fit on the screen right now
-                const visibleCards = Math.round(containerWidth / cardWidth);
-                const maxIndex = cards.length - visibleCards;
-
-                if (currentIndex < maxIndex) {
-                    currentIndex++;
-                    updateCarousel();
-                }
+                currentIndex++;
+                rotateCarousel();
             });
 
             prevBtn.addEventListener('click', () => {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    updateCarousel();
-                }
+                currentIndex--;
+                rotateCarousel();
             });
-        // --- Auto-Play Carousel Logic ---
-            let autoPlayInterval;
-            const carouselWrapper = document.querySelector('.carousel-wrapper');
 
+            // Recalculate if the screen size changes
+            window.addEventListener('resize', setupCarousel);
+            
+            // Initialize the 3D positions
+            setupCarousel();
+
+            // Auto-Play Logic
             const startAutoPlay = () => {
-                // Change slide every 3 seconds (3000 milliseconds)
                 autoPlayInterval = setInterval(() => {
-                    const cards = document.querySelectorAll('.project-card');
-                    const containerWidth = document.querySelector('.carousel-container').offsetWidth;
-                    const cardWidth = cards[0].offsetWidth;
-                    
-                    const visibleCards = Math.round(containerWidth / cardWidth);
-                    const maxIndex = cards.length - visibleCards;
-
-                    if (currentIndex < maxIndex) {
-                        currentIndex++;
-                    } else {
-                        currentIndex = 0; // Loop back to the beginning
-                    }
-                    updateCarousel();
-                }, 3000); 
+                    currentIndex++;
+                    rotateCarousel();
+                }, 3500); 
             };
 
-            const stopAutoPlay = () => {
-                clearInterval(autoPlayInterval);
-            };
-
-            // Start auto-play when the page loads
+            const stopAutoPlay = () => clearInterval(autoPlayInterval);
+            
             startAutoPlay();
-
-            // Pause when mouse enters the carousel, resume when it leaves
+            
+            // Pause on hover or touch
             carouselWrapper.addEventListener('mouseenter', stopAutoPlay);
             carouselWrapper.addEventListener('mouseleave', startAutoPlay);
-            
-            // Also pause when user touches the carousel on mobile
             carouselWrapper.addEventListener('touchstart', stopAutoPlay);
             carouselWrapper.addEventListener('touchend', startAutoPlay);
-
-            // Reset carousel position if the screen is resized
-            window.addEventListener('resize', () => {
-                currentIndex = 0;
-                updateCarousel();
-            });
         // --- Particle Network Background Effect ---
             const canvas = document.getElementById('particle-canvas');
             const ctx = canvas.getContext('2d');
@@ -1520,6 +1506,7 @@
 
 </body>
 </html>
+
 
 
 
