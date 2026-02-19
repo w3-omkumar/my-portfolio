@@ -972,6 +972,43 @@
                     updateCarousel();
                 }
             });
+        // --- Auto-Play Carousel Logic ---
+            let autoPlayInterval;
+            const carouselWrapper = document.querySelector('.carousel-wrapper');
+
+            const startAutoPlay = () => {
+                // Change slide every 3 seconds (3000 milliseconds)
+                autoPlayInterval = setInterval(() => {
+                    const cards = document.querySelectorAll('.project-card');
+                    const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+                    const cardWidth = cards[0].offsetWidth;
+                    
+                    const visibleCards = Math.round(containerWidth / cardWidth);
+                    const maxIndex = cards.length - visibleCards;
+
+                    if (currentIndex < maxIndex) {
+                        currentIndex++;
+                    } else {
+                        currentIndex = 0; // Loop back to the beginning
+                    }
+                    updateCarousel();
+                }, 3000); 
+            };
+
+            const stopAutoPlay = () => {
+                clearInterval(autoPlayInterval);
+            };
+
+            // Start auto-play when the page loads
+            startAutoPlay();
+
+            // Pause when mouse enters the carousel, resume when it leaves
+            carouselWrapper.addEventListener('mouseenter', stopAutoPlay);
+            carouselWrapper.addEventListener('mouseleave', startAutoPlay);
+            
+            // Also pause when user touches the carousel on mobile
+            carouselWrapper.addEventListener('touchstart', stopAutoPlay);
+            carouselWrapper.addEventListener('touchend', startAutoPlay);
 
             // Reset carousel position if the screen is resized
             window.addEventListener('resize', () => {
@@ -1136,6 +1173,7 @@
     </button>
 </body>
 </html>
+
 
 
 
