@@ -1288,71 +1288,59 @@
                 alert('Demo: CV download initiated. (In a real deployment, this would download your PDF resume).');
             });
         });
-// 5. 3D Round Portfolio Carousel
+
+        // 5. 3D Round Portfolio Carousel
             const track = document.querySelector('.carousel-track');
+            
+            // --- NEW: Clone cards to create an 8-sided circle instead of 4 ---
+            // This creates a gentle curve so 3 cards are visible at once!
+            const initialCards = document.querySelectorAll('.project-card');
+            initialCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                track.appendChild(clone);
+            });
+            
+            // Select all 8 cards now
             const cards = document.querySelectorAll('.project-card');
+            // -----------------------------------------------------------------
+
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
             const carouselWrapper = document.querySelector('.carousel-wrapper');
             
             let currentIndex = 0;
             let autoPlayInterval;
-            
-            // Calculate 3D geometry
             const theta = 360 / cards.length; 
 
             const setupCarousel = () => {
                 const cardWidth = cards[0].offsetWidth;
-                // Calculate how far out the cards need to be pushed to form a perfect circle
-                const radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length)) + 40;
-
-                cards.forEach((card, i) => {
-                    card.style.transform = `rotateY(${i * theta}deg) translateZ(${radius}px)`;
-                });
-                
-                // Push the track back and rotate it to the current index
+                // Added slightly more padding (+ 60) so the 3 visible cards have breathing room
+                const radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length)) + 60;
+                cards.forEach((card, i) => { card.style.transform = `rotateY(${i * theta}deg) translateZ(${radius}px)`; });
                 track.style.transform = `translateZ(${-radius}px) rotateY(${currentIndex * -theta}deg)`;
             };
 
             const rotateCarousel = () => {
                 const cardWidth = cards[0].offsetWidth;
-                const radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length)) + 40;
+                const radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length)) + 60;
                 track.style.transform = `translateZ(${-radius}px) rotateY(${currentIndex * -theta}deg)`;
             };
 
-            nextBtn.addEventListener('click', () => {
-                currentIndex++;
-                rotateCarousel();
-            });
-
-            prevBtn.addEventListener('click', () => {
-                currentIndex--;
-                rotateCarousel();
-            });
-
-            // Recalculate if the screen size changes
+            nextBtn.addEventListener('click', () => { currentIndex++; rotateCarousel(); });
+            prevBtn.addEventListener('click', () => { currentIndex--; rotateCarousel(); });
             window.addEventListener('resize', setupCarousel);
-            
-            // Initialize the 3D positions
             setupCarousel();
 
-            // Auto-Play Logic
-            const startAutoPlay = () => {
-                autoPlayInterval = setInterval(() => {
-                    currentIndex++;
-                    rotateCarousel();
-                }, 3500); 
-            };
-
+            const startAutoPlay = () => { autoPlayInterval = setInterval(() => { currentIndex++; rotateCarousel(); }, 3500); };
             const stopAutoPlay = () => clearInterval(autoPlayInterval);
             
             startAutoPlay();
-            
-            // Pause on hover or touch
             carouselWrapper.addEventListener('mouseenter', stopAutoPlay);
             carouselWrapper.addEventListener('mouseleave', startAutoPlay);
             carouselWrapper.addEventListener('touchstart', stopAutoPlay);
             carouselWrapper.addEventListener('touchend', startAutoPlay);
+
+        
         // --- Particle Network Background Effect ---
             const canvas = document.getElementById('particle-canvas');
             const ctx = canvas.getContext('2d');
@@ -1506,6 +1494,7 @@
 
 </body>
 </html>
+
 
 
 
