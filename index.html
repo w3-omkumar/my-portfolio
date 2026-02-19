@@ -3,62 +3,675 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Om Kumar | Pharma & Digital</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <title>Om Kumar | Pharma Student & Web Developer Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS Variables & Reset --- */
+        :root {
+            --primary-color: #4a90e2; /* A professional blue */
+            --secondary-color: #2c3e50; /* Dark slate blue for text */
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --text-gray: #6c757d;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--secondary-color);
+            background-color: var(--bg-white);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #357abd;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* --- Hero Section --- */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px; /* Account for fixed header */
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h3 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            width: 400px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            box-shadow: var(--shadow);
+            border: 5px solid var(--bg-white);
+            animation: morph 8s ease-in-out infinite;
+        }
+
+        @keyframes morph {
+            0% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40%/50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
+        }
+
+        /* --- About Section --- */
+        #about {
+            background-color: var(--bg-light);
+        }
+
+        .about-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: var(--text-gray);
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* --- Portfolio Section --- */
+        #portfolio {
+            background-color: var(--bg-white);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--bg-white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid #eee;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .project-img-container {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top; /* Focus on the header part of screenshots */
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-img-container img {
+            transform: scale(1.05);
+        }
+
+        .project-info {
+            padding: 25px;
+        }
+
+        .project-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .project-link span {
+            margin-left: 5px;
+            transition: var(--transition);
+        }
+
+        .project-link:hover span {
+            margin-left: 10px;
+        }
+
+        /* --- Contact Section --- */
+        #contact {
+            background-color: var(--bg-light);
+        }
+
+        .contact-container {
+            display: flex;
+            gap: 50px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            color: var(--text-gray);
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(74, 144, 226, 0.1);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+
+        .contact-form {
+            flex: 1.5;
+            background: var(--bg-white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            height: 120px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        /* --- Responsive Media Queries --- */
+        @media (max-width: 968px) {
+            .hero-content {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 30px;
+            }
+            
+            .hero-text p {
+                margin: 0 auto 30px auto;
+            }
+
+            .contact-container {
+                flex-direction: column;
+            }
+            
+            .portfolio-grid {
+                 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: var(--bg-white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 20px 0;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .hero-image img {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <canvas id="geometric-bg"></canvas>
 
-    <nav>
-        <div class="logo">OM<span>KUMAR</span></div>
-        <div class="links">
-            <a href="#work">Projects</a>
-            <a href="#skills">Expertise</a>
-            <a href="mailto:w3.omkumar@gmail.com" class="btn-nav">Let's Connect</a>
-        </div>
-    </nav>
-
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <p class="tagline">Innovating at the intersection of</p>
-                <h1>PHARMA & <span>DIGITAL. /</span></h1>
-                <p class="bio">A Final-year B.Pharm student with a passion for building real-world web solutions.</p>
-                <div class="hero-btns">
-                    <a href="#work" class="btn-green">Explore Work</a>
-                    <a href="#" class="btn-outline">Download CV</a>
-                </div>
+    <header>
+        <div class="container">
+            <a href="#hero" class="logo">Om Kumar.</a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <svg width="30" height="30" viewBox="0 0 100 80" fill="var(--secondary-color)">
+                    <rect width="100" height="10"></rect>
+                    <rect y="30" width="100" height="10"></rect>
+                    <rect y="60" width="100" height="10"></rect>
+                </svg>
             </div>
-            <div class="hero-visual">
-                <div class="featured-card">
-                    <img src="images/shanifinserve.png" alt="Shani Finserve">
-                    <div class="card-info">
-                        <span>Featured Project</span>
-                        <p>Shani Finserve</p>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h3>Hello, I'm</h3>
+                <h1>Om Kumar</h1>
+                <p>Bridging the gap between healthcare and technology. I am a final year <span class="highlight">B. Pharm student</span> and a professional <span class="highlight">Web Developer</span> specializing in building robust business websites.</p>
+                <a href="#" class="btn" id="download-cv">Download CV</a>
+            </div>
+            <div class="hero-image">
+                <img src="image_0.png" alt="Om Kumar">
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <p>I am currently in my final year of B. Pharm at <span class="highlight">HNB Garhwal University (A Central University)</span> in Srinagar, Uttarakhand. My unique academic background in pharmacy gives me a disciplined and analytical approach to problem-solving.</p>
+                <p>Parallel to my studies, I found a passion for technology and have established myself as a competent Web Developer. I have experience creating, deploying, and managing real-life business websites for reputed companies and organizations, ensuring their online presence is both professional and functional.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio">
+        <div class="container">
+            <h2>Featured Projects</h2>
+            <div class="portfolio-grid">
+                
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="images/shanifinserve.png" alt="Shani Finserve Website Screenshot">
+                    </div>
+                    <div class="project-info">
+                        <h3>Shani Finserve</h3>
+                        <p>A financial services web application platform for wealth building, loans, and insurance.</p>
+                        <a href="https://app.shanifinserve.com" target="_blank" class="project-link">
+                            View Live Site <span>&#8594;</span>
+                        </a>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <section id="work" class="portfolio">
-            <div class="section-title">
-                <span class="number">01 / Recent Projects</span>
-                <h2>Impactful Solutions</h2>
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="images/mng.png" alt="MNG Tour and Travels Website Screenshot">
+                    </div>
+                    <div class="project-info">
+                        <h3>MNG Tour and Travels</h3>
+                        <p>A travel agency website featuring destination listings, tour booking functionality, and gallery.</p>
+                        <a href="https://mngtoursandtravels.in" target="_blank" class="project-link">
+                            View Live Site <span>&#8594;</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="images/hitech.png" alt="Hi-tech India Computer Academy Website Screenshot">
+                    </div>
+                    <div class="project-info">
+                        <h3>Hi-tech Computer Academy</h3>
+                        <p>An educational institute website with course listings, student center login, and certificate verification.</p>
+                        <a href="https://hitechindia.in" target="_blank" class="project-link">
+                            View Live Site <span>&#8594;</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="images/drxmentor.png" alt="Drx-Mentors Website Screenshot">
+                    </div>
+                    <div class="project-info">
+                        <h3>Drx-Mentors</h3>
+                        <p>A resource hub for pharmacy professionals providing exam papers, quizzes, and pharma news.</p>
+                        <a href="https://drxmentor.com" target="_blank" class="project-link">
+                            View Live Site <span>&#8594;</span>
+                        </a>
+                    </div>
+                </div>
+
             </div>
-            <div class="grid">
-                <div class="item"><img src="images/drxmentor.png"><h3>Drx-Mentor</h3><p>Ed-Tech</p></div>
-                <div class="item"><img src="images/hitech.png"><h3>Hi-Tech Academy</h3><p>Learning</p></div>
-                <div class="item"><img src="images/mng.png"><h3>MNG Travels</h3><p>Hospitality</p></div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2>Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Let's talk about your next project.</h3>
+                    <p>Whether you need a business website similar to my portfolio projects or have a unique idea, feel free to reach out. I'm available for freelance work.</p>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        </div>
+                        <div>
+                            <h4>Email Me</h4>
+                            <p>w3.omkumar@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        <div>
+                            <h4>Location</h4>
+                            <p>Srinagar, Uttarakhand, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form" id="projectForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" placeholder="Tell me about your project requirements..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <footer>
-        <p>© 2026 Om Kumar. Rohtas, Bihar.</p>
+        <div class="container">
+            <p>© 2024 Om Kumar. All Rights Reserved.</p>
+        </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Mobile Navigation Toggle ---
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            const navLinksItems = document.querySelectorAll('.nav-links a');
+
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // Close mobile menu when a link is clicked
+            navLinksItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    if(navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
+
+            // --- Smooth Scrolling for Anchor Links ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return; // Skip empty links
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Offset for fixed header
+                        const headerOffset = 70;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+
+            // --- Contact Form Submission Handler (Client-side demo) ---
+            const projectForm = document.getElementById('projectForm');
+            projectForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // In a real application, you would send this data to a backend service.
+                // For this static demo, we'll show a success message.
+                const submitBtn = projectForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerText;
+                
+                submitBtn.innerText = 'Sending...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    alert('Thank you! Your message has been sent successfully. I will contact you shortly.');
+                    projectForm.reset();
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                }, 1500);
+            });
+
+            // --- Download CV Button Handler (Demo) ---
+            const cvBtn = document.getElementById('download-cv');
+            cvBtn.addEventListener('click', (e) => {
+                // Since no actual CV file was provided, show an alert.
+                // To make this work for real, add your PDF to the folder and change href="#" to href="om_kumar_cv.pdf" and add download attribute.
+                e.preventDefault();
+                alert('Demo: CV download initiated. (In a real deployment, this would download your PDF resume).');
+            });
+        });
+    </script>
 </body>
 </html>
