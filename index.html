@@ -7,6 +7,155 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* --- Experience Timeline Styles --- */
+        #experience {
+            background-color: var(--bg-light); /* Alternates with the white background of the skills section */
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* The central vertical line */
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: rgba(74, 144, 226, 0.3);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        .timeline-item.left { left: 0; }
+        .timeline-item.right { left: 50%; }
+
+        /* The icons on the line */
+        .timeline-icon {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            right: -20px;
+            background-color: var(--primary-color);
+            border: 4px solid var(--bg-light);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+            transition: var(--transition);
+        }
+
+        .timeline-item.right .timeline-icon {
+            left: -20px;
+        }
+
+        .timeline-icon svg { width: 20px; height: 20px; }
+
+        .timeline-item:hover .timeline-icon {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 6px rgba(74, 144, 226, 0.4);
+        }
+
+        .timeline-content {
+            padding: 30px;
+            background-color: var(--bg-white);
+            position: relative;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .timeline-content h3 { font-size: 1.4rem; margin-bottom: 5px; }
+        
+        .timeline-date {
+            display: inline-block;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            background: rgba(74, 144, 226, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* Connecting arrows */
+        .timeline-content::after {
+            content: " ";
+            position: absolute;
+            top: 25px;
+            width: 0; height: 0;
+            border: medium solid var(--bg-white);
+        }
+
+        .timeline-item.left .timeline-content::after {
+            right: -15px;
+            border-width: 10px 0 10px 15px;
+            border-color: transparent transparent transparent var(--bg-white);
+        }
+
+        .timeline-item.right .timeline-content::after {
+            left: -15px;
+            border-width: 10px 15px 10px 0;
+            border-color: transparent var(--bg-white) transparent transparent;
+        }
+
+        /* Dark Mode Overrides for Timeline */
+        body.dark-mode #experience { background-color: var(--bg-light); }
+        body.dark-mode .timeline-icon { border-color: var(--bg-light); }
+        body.dark-mode .timeline-content { background: #242424; border-color: #333; }
+        
+        body.dark-mode .timeline-item.left .timeline-content::after {
+            border-color: transparent transparent transparent #242424;
+        }
+        body.dark-mode .timeline-item.right .timeline-content::after {
+            border-color: transparent #242424 transparent transparent;
+        }
+
+        /* --- Timeline Mobile Responsiveness --- */
+        @media screen and (max-width: 768px) {
+            .timeline::after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 0px; }
+            .timeline-item.right { left: 0%; }
+            
+            .timeline-icon, .timeline-item.right .timeline-icon {
+                left: 11px;
+                right: auto;
+            }
+
+            .timeline-item.left .timeline-content::after,
+            .timeline-item.right .timeline-content::after {
+                left: -15px;
+                right: auto;
+                border-width: 10px 15px 10px 0;
+                border-color: transparent var(--bg-white) transparent transparent;
+            }
+
+            body.dark-mode .timeline-item.left .timeline-content::after,
+            body.dark-mode .timeline-item.right .timeline-content::after {
+                border-color: transparent #242424 transparent transparent;
+            }
+        }
         /* --- WhatsApp Widget Styles --- */
         .whatsapp-widget {
             position: fixed;
@@ -894,6 +1043,53 @@
             </div>
         </div>
     </section>
+    <section id="experience">
+        <div class="container">
+            <h2>My Journey</h2>
+            <div class="timeline">
+                
+                <div class="timeline-item right">
+                    <div class="timeline-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Freelance Web Developer</h3>
+                        <span class="timeline-date">Present</span>
+                        <p>Architecting and managing real-world business platforms, including Shani Finserve, MNG Tour and Travels, and Hi-tech Computer Academy.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Final Year B. Pharm</h3>
+                        <span class="timeline-date">Current</span>
+                        <p>Pursuing my Bachelor of Pharmacy degree at HNB Garhwal University (A Central University) in Srinagar, Uttarakhand, focusing on clinical and pharmaceutical care.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Founder, Drx-Mentors</h3>
+                        <span class="timeline-date">Ongoing</span>
+                        <p>Bridging my two passions by developing a digital resource hub and educational platform for pharmacy professionals and students.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <section id="portfolio">
         <div class="container">
@@ -1355,6 +1551,7 @@
 
 </body>
 </html>
+
 
 
 
