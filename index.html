@@ -7,6 +7,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* --- WhatsApp Widget Styles --- */
+        .whatsapp-widget {
+            position: fixed;
+            bottom: 30px;
+            left: 30px; /* Placed on the left, opposite the back-to-top button */
+            width: 55px;
+            height: 55px;
+            background-color: #25D366; /* Official WhatsApp Green */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: var(--transition);
+            animation: pulse-green 2s infinite;
+        }
+
+        .whatsapp-widget:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+            animation: none; /* Stops the pulsing when hovered */
+        }
+
+        /* The glowing pulse effect */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Make it slightly smaller on mobile phones */
+        @media (max-width: 768px) {
+            .whatsapp-widget {
+                bottom: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
 
         /* --- Back to Top Button Styles --- */
         .back-to-top {
@@ -971,7 +1012,12 @@
     </section>
 
     <footer>
-        <footer>
+            <button id="backToTop" class="back-to-top" aria-label="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+    </button>
         <div class="container">
             <div class="social-links">
                 <a href="https://www.linkedin.com/in/w3-omkumar" target="_blank" aria-label="LinkedIn">
@@ -999,7 +1045,6 @@
             </div>
             <p>© 2026 Om Kumar. All Rights Reserved.</p>
         </div>
-    </footer>
     </footer>
 
     <script>
@@ -1307,14 +1352,10 @@
                 }
             });
     </script>
-    <button id="backToTop" class="back-to-top" aria-label="Back to Top">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="19" x2="12" y2="5"></line>
-            <polyline points="5 12 12 5 19 12"></polyline>
-        </svg>
-    </button>
+
 </body>
 </html>
+
 
 
 
