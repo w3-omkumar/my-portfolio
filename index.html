@@ -7,6 +7,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+
+        /* --- Back to Top Button Styles --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        /* This class will be added by JavaScript when scrolling */
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            background-color: #357abd;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
         /* --- CSS Variables & Reset --- */
         :root {
             --primary-color: #4a90e2; /* A professional blue */
@@ -445,6 +481,30 @@
             text-align: center;
         }
 
+        /* Ensure the hero section can contain the canvas properly */
+        #hero {
+            position: relative;
+            overflow: hidden; 
+            /* ... keep your existing min-height, display, etc. ... */
+        }
+
+        /* --- Particle Canvas Styles --- */
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Puts the canvas behind the content */
+            pointer-events: none; /* Prevents the canvas from blocking clicks on your buttons */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2; /* Keeps your text and image above the dots */
+            /* ... keep your existing flex, align-items, etc. ... */
+        }
+
         /* --- Responsive Media Queries --- */
         @media (max-width: 968px) {
             .hero-content {
@@ -525,6 +585,7 @@
     </header>
 
     <section id="hero">
+        <canvas id="particle-canvas"></canvas>
         <div class="container hero-content">
             <div class="hero-text">
                 <h3>Hello, I'm</h3>
@@ -649,23 +710,24 @@
 
                 <form class="contact-form" id="projectForm">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Your Name" required>
+                        <input type="text" id="senderName" class="form-control" placeholder="Your Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Your Email" required>
+                        <input type="email" id="senderEmail" class="form-control" placeholder="Your Email" required>
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" placeholder="Tell me about your project requirements..." required></textarea>
+                        <textarea id="senderMessage" class="form-control" placeholder="Tell me about your project requirements..." required></textarea>
                     </div>
                     <button type="submit" class="btn">Send Message</button>
                 </form>
+            
             </div>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>© 2024 Om Kumar. All Rights Reserved.</p>
+            <p>© 2026 Om Kumar. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -711,24 +773,29 @@
                 });
             });
 
-            // --- Contact Form Submission Handler (Client-side demo) ---
+            // --- Contact Form Submission Handler (Mailto Draft) ---
             const projectForm = document.getElementById('projectForm');
-            projectForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                // In a real application, you would send this data to a backend service.
-                // For this static demo, we'll show a success message.
-                const submitBtn = projectForm.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerText;
+
+            projectForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent the page from refreshing
                 
-                submitBtn.innerText = 'Sending...';
-                submitBtn.disabled = true;
+                // 1. Get the values the user typed in
+                const name = document.getElementById('senderName').value;
+                const email = document.getElementById('senderEmail').value;
+                const message = document.getElementById('senderMessage').value;
                 
-                setTimeout(() => {
-                    alert('Thank you! Your message has been sent successfully. I will contact you shortly.');
-                    projectForm.reset();
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false;
-                }, 1500);
+                // 2. Format the email subject and body
+                const subject = encodeURIComponent(`New Project Inquiry from ${name}`);
+                const body = encodeURIComponent(`Hi Om,\n\n${message}\n\n---\nSender Details:\nName: ${name}\nEmail: ${email}`);
+                
+                // 3. Create the mailto link pointing to your email
+                const mailtoLink = `mailto:w3.omkumar@gmail.com?subject=${subject}&body=${body}`;
+                
+                // 4. Open the user's default email app with the draft
+                window.location.href = mailtoLink;
+                
+                // 5. Clear the form fields after they click send
+                projectForm.reset();
             });
 
             // --- Download CV Button Handler (Demo) ---
@@ -782,8 +849,126 @@
                 currentIndex = 0;
                 updateCarousel();
             });
+        // --- Particle Network Background Effect ---
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Function to set canvas dimensions based on the hero section size
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = document.getElementById('hero').offsetHeight;
+            }
+            setCanvasSize();
+
+            let particlesArray = [];
+            
+            // Effect Settings
+            const numParticles = 80; // Number of dots
+            const maxDistance = 150; // How close dots need to be to draw a line
+            const particleColor = 'rgba(74, 144, 226, 0.6)'; // Blue dots matching your theme
+            const lineColor = 'rgba(74, 144, 226, 0.2)';     // Faint blue lines
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1; // Dot size between 1px and 4px
+                    this.speedX = (Math.random() * 1) - 0.5; // Random speed and direction
+                    this.speedY = (Math.random() * 1) - 0.5;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    // Bounce the dots off the edges of the screen
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+
+                draw() {
+                    ctx.fillStyle = particleColor;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particlesArray = [];
+                for (let i = 0; i < numParticles; i++) {
+                    particlesArray.push(new Particle());
+                }
+            }
+
+            function handleParticles() {
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                    particlesArray[i].draw();
+
+                    // Check distance between dots to draw lines
+                    for (let j = i; j < particlesArray.length; j++) {
+                        const dx = particlesArray[i].x - particlesArray[j].x;
+                        const dy = particlesArray[i].y - particlesArray[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < maxDistance) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = lineColor;
+                            // Make lines fade out as dots get further apart
+                            ctx.lineWidth = 1 - (distance / maxDistance); 
+                            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                handleParticles();
+                requestAnimationFrame(animateParticles);
+            }
+
+            // Recalculate canvas size and dots if the user resizes their browser window
+            window.addEventListener('resize', () => {
+                setCanvasSize();
+                initParticles(); 
+            });
+
+            // Start the effect
+            initParticles();
+            animateParticles();
+        // --- Back to Top Button Logic ---
+            const backToTopBtn = document.getElementById('backToTop');
+
+            // Show or hide the button based on scroll position
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+
+            // Smoothly scroll back to the top when clicked
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
     </script>
+    <button id="backToTop" class="back-to-top" aria-label="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+    </button>
 </body>
 </html>
+
 
 
