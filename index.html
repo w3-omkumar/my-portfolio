@@ -1089,6 +1089,44 @@
                     behavior: 'smooth'
                 });
             });
+        // --- Dark Mode Toggle Logic ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const moonIcon = document.querySelector('.moon-icon');
+            const sunIcon = document.querySelector('.sun-icon');
+            const body = document.body;
+
+            // Function to update the icons based on current theme
+            const updateIcons = () => {
+                if (body.classList.contains('dark-mode')) {
+                    moonIcon.style.display = 'none';
+                    sunIcon.style.display = 'block';
+                } else {
+                    moonIcon.style.display = 'block';
+                    sunIcon.style.display = 'none';
+                }
+            };
+
+            // 1. Check if the user previously chose dark mode
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+                updateIcons();
+            }
+
+            // 2. Listen for clicks on the toggle button
+            themeToggleBtn.addEventListener('click', () => {
+                // Toggle the dark-mode class on the body
+                body.classList.toggle('dark-mode');
+                
+                // Update the icons
+                updateIcons();
+
+                // Save the user's preference to local storage
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
     </script>
     <button id="backToTop" class="back-to-top" aria-label="Back to Top">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1098,6 +1136,7 @@
     </button>
 </body>
 </html>
+
 
 
 
