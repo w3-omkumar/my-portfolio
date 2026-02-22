@@ -8,6 +8,75 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* --- Hero Buttons & Hidden PDF Section --- */
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        body.dark-mode .btn-secondary { color: #6fb6ff; border-color: #6fb6ff; }
+        body.dark-mode .btn-secondary:hover { color: white; background-color: #6fb6ff; }
+
+        .hidden-pdf-box {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+            background: rgba(74, 144, 226, 0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 0 20px;
+            margin-top: 10px;
+            border-radius: 0 10px 10px 0;
+            max-width: 500px;
+        }
+
+        .hidden-pdf-box.show {
+            max-height: 400px; 
+            opacity: 1;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .hidden-pdf-box h4 { font-size: 1.1rem; margin-bottom: 5px; color: var(--secondary-color); }
+        .hidden-pdf-box p { font-size: 0.95rem; margin-bottom: 0; }
+        
+        body.dark-mode .hidden-pdf-box h4 { color: #fff; }
+
+        .pdf-links { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        
+        .pdf-link-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--bg-white);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            border: 1px solid #eee;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode .pdf-link-item { background: #2c2c2c; border-color: #444; color: #fff; }
+        
+        .pdf-link-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
         /* --- Experience Timeline Styles --- */
         #experience {
             background-color: var(--bg-light); /* Alternates with the white background of the skills section */
@@ -950,7 +1019,23 @@
                 <h3>Hello, I'm</h3>
                 <h1>Om Kumar</h1>
                 <p>Bridging the gap between healthcare and technology. I am a final year <span class="highlight">B. Pharm student</span> and a professional <span class="highlight">Web Developer</span> specializing in building robust business websites.</p>
-                <a href="#" class="btn" id="download-cv">Download CV</a>
+                <div class="hero-buttons">
+                    <a href="#" class="btn" id="download-cv">Download CV</a>
+                    <button id="youtube-pdf-trigger" class="btn btn-secondary">YouTube PDF</button>
+                </div>
+
+                <div id="youtube-pdf-section" class="hidden-pdf-box">
+                    <h4>Babita Mam Classes - Study Materials</h4>
+                    <p>Download the latest question practice series notes below:</p>
+                    <div class="pdf-links">
+                        <a href="https://docs.google.com/document/d/1a4ezY-eDLQdJVQnu8z3lMBImvwuKsm5986Zc04g77ws/edit?usp=sharing" target="_blank" class="pdf-link-item">
+                            <span>📄 Vedic Age Top 50 MCQs</span>
+                        </a>
+                        <a href="https://docs.google.com/document/d/1jIx7hvKT9C2PoZ6uQ98ErOSQ0MXBgglH67lc-1_B3Sc/edit?usp=sharing" target="_blank" class="pdf-link-item">
+                            <span>📄 Indus Valley Civilization Top 30 MCQs</span>
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="hero-image">
                 <img src="images/profile.png" alt="Om Kumar">
@@ -1294,6 +1379,21 @@
             });
         });
 
+        // 9. Hidden YouTube PDF Section Toggle
+            const pdfTrigger = document.getElementById('youtube-pdf-trigger');
+            const pdfSection = document.getElementById('youtube-pdf-section');
+            
+            pdfTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                pdfSection.classList.toggle('show');
+                
+                // Change the button text depending on whether it is open or closed
+                if (pdfSection.classList.contains('show')) {
+                    pdfTrigger.innerText = 'Close PDFs';
+                } else {
+                    pdfTrigger.innerText = 'YouTube PDF';
+                }
+            });
         // 5. 3D Round Portfolio Carousel
             const track = document.querySelector('.carousel-track');
             
@@ -1499,6 +1599,7 @@
 
 </body>
 </html>
+
 
 
 
