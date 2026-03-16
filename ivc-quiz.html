@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indus Valley Civilization Quiz</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        /* Main Layout */
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            flex: 1;
+            min-width: 350px;
+            max-width: 800px;
+        }
+
+        /* Right Palette Section */
+        .palette-section {
+            width: 280px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .palette-btn.active {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .palette-btn.visited {
+            background: #e2e8f0;
+        }
+
+        .palette-btn.correct {
+            background: var(--success);
+            color: white;
+            border: none;
+        }
+
+        .palette-btn.wrong {
+            background: var(--danger);
+            color: white;
+            border: none;
+        }
+
+        /* Timer Controls */
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-start {
+            background: var(--success);
+        }
+
+        .btn-stop {
+            background: var(--danger);
+        }
+
+        /* Card Styles */
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: 0.3s;
+        }
+
+        .question-hindi {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .question-english {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.05rem;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+        }
+
+        #explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-left: 4px solid var(--primary);
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        /* Registration Overlay & Leaderboard Styles */
+        .registration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+
+        .registration-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .registration-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .registration-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .lb-container {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .lb-item:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .rank-1 {
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        /* Gold */
+        .rank-2 {
+            font-weight: bold;
+            color: #94a3b8;
+        }
+
+        /* Silver */
+        .rank-3 {
+            font-weight: bold;
+            color: #b45309;
+        }
+
+        /* Bronze */
+    </style>
+</head>
+
+<body>
+    <div id="registration-overlay" class="registration-overlay">
+        <div class="registration-box">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Live Quiz Registration</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Join to be included on the Live
+                Leaderboard.</p>
+            <form id="reg-form">
+                <input type="text" id="reg-name" placeholder="Full Name" required>
+                <input type="text" id="reg-contact" placeholder="Email or Phone No." required>
+                <button type="submit" id="reg-submit" class="nav-btn" style="width: 100%; height: 45px;">Start
+                    Quiz</button>
+            </form>
+            <div id="reg-loader" style="display: none; margin-top: 15px; color: var(--primary); font-weight: bold;">
+                Connecting to database... ⏳</div>
+            <div id="reg-error" style="color: var(--danger); margin-top: 10px; display: none;">Error registering. Try
+                again.</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 15px; line-height: 1.4;">Google Script
+                Backend URL waiting to be added.<br>Using local demo mode until connected.</p>
+        </div>
+    </div>
+    <header>
+        <h1>Indus Valley Civilization Quiz</h1>
+        <div class="subtitle">Ancient History Mock Test</div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="quiz-section">
+            <div class="timer-controls">
+                <button class="control-btn btn-start" onclick="startTimer()">▶ START TIMER</button>
+                <button class="control-btn btn-stop" onclick="stopTimer()">⏹ STOP TIMER</button>
+                <div style="font-size: 1.5rem; font-weight: bold; margin-left: 20px; color: var(--danger);">
+                    ⏱️ <span id="timer-sec">15</span>s
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+
+            <div class="quiz-card" id="quiz-box">
+                <div style="font-weight: bold; color: var(--primary); margin-bottom: 10px;" id="q-count">Question 1 of
+                    40</div>
+                <div class="question-hindi" id="q-hindi"></div>
+                <div class="question-english" id="q-english"></div>
+
+                <div class="options-grid" id="options-box"></div>
+
+                <div id="explanation">
+                    <strong>Explanation:</strong>
+                    <p id="exp-text" style="margin-top: 5px;"></p>
+                </div>
+
+                <div class="nav-footer">
+                    <button class="nav-btn" id="prev-btn" onclick="prevQ()">Previous</button>
+                    <button class="nav-btn" id="next-btn" onclick="nextQ()">Next</button>
+                </div>
+            </div>
+
+            <div class="quiz-card" id="result-screen">
+                <h2>Quiz Completed!</h2>
+                <h1 style="font-size: 4rem; margin: 20px 0; color: var(--primary);" id="final-score">0 / 0</h1>
+                <p id="total-text">Total Questions: 0</p>
+
+                <div class="lb-container">
+                    <h3 style="margin-bottom: 15px; text-align: center; color: var(--text-main);">🏆 Live Leaderboard
+                    </h3>
+                    <div id="lb-loading"
+                        style="text-align: center; color: var(--text-muted); padding: 10px; display: none;">Fetching
+                        scores... ⏳</div>
+                    <div id="lb-list"></div>
+                </div>
+
+                <button class="nav-btn" style="margin-top: 25px; width: 100%;" onclick="location.reload()">Restart
+                    Quiz</button>
+            </div>
+        </div>
+
+        <div class="palette-section">
+            <h3 style="border-bottom: 2px solid #eee; padding-bottom: 10px;">Question Palette</h3>
+            <div class="palette-grid" id="palette"></div>
+            <div style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
+                <p>Score: <span id="live-score">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data truncated for brevity in code view but included in the logic
+        const questions = [
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "मिस्र (Egypt)",
+            "मेसोपोटामिया (Mesopotamia)",
+            "सिंधु घाटी सभ्यता (Indus Valley)",
+            "चीन (China)"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "रजत (Silver)",
+            "टिन (Tin)",
+            "स्वर्ण (Gold)",
+            "कांस्य (Bronze)"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "1926",
+            "1932",
+            "1921",
+            "1905"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "सर जॉन मार्शल",
+            "आर. डी. बनर्जी",
+            "ए. कनिंघम",
+            "दयाराम साहनी"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "लोथल (Lothal)",
+            "मोहनजोदड़ो (Mohenjo-Daro)",
+            "चन्हुदड़ो (Chanhudaro)",
+            "हड़प्पा (Harappa)"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "रेगिस्तान का टीला",
+            "नदीमुख-भूमि का टीला",
+            "मृतकों का टीला",
+            "जीवन का टीला"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "मोहनजोदड़ो",
+            "लोथल",
+            "धोलावीरा",
+            "कालीबंगा"
+        ],
+        "ans": 0,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "चट्टान कटौती की वस्तुकला",
+            "बंदरगाह",
+            "कपास की खेती",
+            "मिट्टी के पात्र"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "चन्हूदड़ों",
+            "कालीबंगा",
+            "हड़प्पा",
+            "मोहनजोदड़ों"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "कालीबंगन",
+            "हड़प्पा",
+            "मोहनजोदड़ो",
+            "चन्हुदड़ो"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "चन्हूदड़ो",
+            "धोलावीरा",
+            "लोथल",
+            "कालीबंगा"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "साबरमती",
+            "कृष्णा",
+            "पेरियार",
+            "नर्मदा"
+        ],
+        "ans": 0,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "चार (Four)",
+            "दो (Two)",
+            "पाँच (Five)",
+            "तीन (Three)"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "चट्टान से निर्मित स्थापत्य",
+            "बंदरगाह",
+            "जल संरक्षण",
+            "मिट्टी के पात्र"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "लोथल",
+            "बनवाली",
+            "कश्मीर",
+            "अमृणाल"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "भैंस (Buffalo)",
+            "भेड़ (Sheep)",
+            "गाय (Cow)",
+            "सूअर (Pig)"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "राणा घुंडई",
+            "बुर्ज़होम",
+            "मेहरगढ़",
+            "पलवोय"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "बालाकोट",
+            "कालीबंगन",
+            "नागेश्वर",
+            "शोरतुगई"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "ईंटों (Bricks)",
+            "सिलखड़ी (Steatite)",
+            "पीतल (Brass)",
+            "ग्रेनाइट (Granite)"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "मेसोपोटामियाई सभ्यता",
+            "सिंधु घाटी सभ्यता",
+            "फारस सभ्यता",
+            "मिस्त्र सभ्यता"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "विष्णु",
+            "पशुपति",
+            "इंद्र",
+            "ब्रह्मा"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "ग्रामीण",
+            "शहरी",
+            "खानाबदोश",
+            "जनजातीय"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "ईंट (Brick)",
+            "बाँस (Bamboo)",
+            "पत्थर (Stone)",
+            "लकड़ी (Wood)"
+        ],
+        "ans": 0,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "मिस्त्री सभ्यता",
+            "सिंधु घाटी सभ्यता",
+            "चीनी सभ्यता",
+            "मेसोपोटामिया सभ्यता"
+        ],
+        "ans": 1,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "सोना (Gold)",
+            "तांबा (Copper)",
+            "चांदी (Silver)",
+            "लोहा (Iron)"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "व्यापार",
+            "पशुपालन",
+            "शिकार",
+            "कृषि"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "चन्हूदड़ो",
+            "मोहनजोदड़ो",
+            "लोथल",
+            "कालीबंगा"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "मोहनजोदड़ो",
+            "हड़प्पा",
+            "चन्हुदाड़ो",
+            "लोथल"
+        ],
+        "ans": 3,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "सोतका कोह",
+            "सुत्कगेंडोर",
+            "सुरकोटदा",
+            "रंगपुर"
+        ],
+        "ans": 2,
+        "exp": ""
+    },
+    {
+        "qH": "",
+        "qE": "",
+        "opt": [
+            "राखीगढ़ी",
+            "कालीबंगा",
+            "लोथल",
+            "धोलावीरा"
+        ],
+        "ans": 0,
+        "exp": ""
+    }
+];
+
+        let cur = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 15;
+        let answered = new Array(questions.length).fill(null);
+
+        function initPalette() {
+            const palette = document.getElementById('palette');
+            palette.innerHTML = '';
+            questions.forEach((_, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-btn';
+                btn.id = `pal-${i}`;
+                btn.textContent = i + 1;
+                btn.onclick = () => jumpTo(i);
+                palette.appendChild(btn);
+            });
+        }
+
+        function jumpTo(i) {
+            cur = i;
+            loadQ();
+        }
+
+        function loadQ() {
+            stopTimer();
+            timeLeft = 15;
+            document.getElementById('timer-sec').textContent = timeLeft;
+
+            const q = questions[cur];
+            document.getElementById('q-count').textContent = `Question ${cur + 1} of ${questions.length}`;
+            document.getElementById('q-hindi').textContent = q.qH;
+            document.getElementById('q-english').textContent = q.qE;
+            document.getElementById('progress-fill').style.width = `${((cur + 1) / questions.length) * 100}%`;
+
+            const box = document.getElementById('options-box');
+            box.innerHTML = '';
+            q.opt.forEach((o, i) => {
+                const b = document.createElement('button');
+                b.className = 'option-btn';
+                if (answered[cur] !== null) {
+                    if (i === q.ans) b.classList.add('correct');
+                    if (answered[cur] === i && i !== q.ans) b.classList.add('wrong');
+                    b.disabled = true;
+                }
+                b.innerHTML = `<b>${String.fromCharCode(65 + i)})</b> ${o}`;
+                b.onclick = () => select(i);
+                box.appendChild(b);
+            });
+
+            const exp = document.getElementById('explanation');
+            if (answered[cur] !== null) {
+                exp.style.display = 'block';
+                document.getElementById('exp-text').textContent = q.exp;
+            } else {
+                exp.style.display = 'none';
+            }
+
+            // Update Palette
+            document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`pal-${cur}`).classList.add('active');
+
+            document.getElementById('prev-btn').disabled = cur === 0;
+            document.getElementById('next-btn').textContent = cur === questions.length - 1 ? "Finish" : "Next";
+        }
+
+        function select(idx) {
+            if (answered[cur] !== null) return;
+            stopTimer();
+            answered[cur] = idx;
+            const q = questions[cur];
+            const pBtn = document.getElementById(`pal-${cur}`);
+
+            if (idx === q.ans) {
+                score++;
+                pBtn.classList.add('correct');
+            } else {
+                pBtn.classList.add('wrong');
+            }
+            document.getElementById('live-score').textContent = score;
+            loadQ();
+        }
+
+        function startTimer() {
+            if (answered[cur] !== null) return;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-sec').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    select(-1); // Mark as wrong/missed
+                }
+            }, 1000);
+        }
+
+        function stopTimer() { clearInterval(timer); }
+
+        function nextQ() {
+            if (cur < questions.length - 1) { cur++; loadQ(); }
+            else { showResult(); }
+        }
+
+        function prevQ() { if (cur > 0) { cur--; loadQ(); } }
+
+        function showResult() {
+            document.getElementById('quiz-box').style.display = 'none';
+            const rs = document.getElementById('result-screen');
+            rs.style.display = 'block';
+            document.getElementById('final-score').textContent = `${score} / ${questions.length}`;
+            document.getElementById('total-text').textContent = `Total Questions: ${questions.length}`;
+
+            const lbLoading = document.getElementById('lb-loading');
+            lbLoading.style.display = 'block';
+
+            if (studentId === 'demo-id' || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                setTimeout(() => {
+                    const currentScore = { name: document.getElementById('reg-name').value || 'You', score: score };
+                    let mockData = [
+                        { name: 'Demo Hero', score: 39 },
+                        { name: 'Om Kumar', score: 36 },
+                        { name: 'Test Student', score: 30 },
+                        currentScore
+                    ];
+                    // sort by score descending
+                    mockData.sort((a, b) => b.score - a.score);
+                    // take top 10
+                    renderLeaderboard(mockData.slice(0, 10));
+                }, 1000);
+            } else if (studentId) {
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'submitScore', id: studentId, score: score })
+                }).then(() => fetchLeaderboard())
+                    .catch(e => { console.error(e); lbLoading.innerText = 'Failed to load leaderboard.'; });
+            }
+        }
+
+        function fetchLeaderboard() {
+            fetch(SCRIPT_URL + '?quizName=' + encodeURIComponent(QUIZ_NAME))
+                .then(r => r.json())
+                .then(data => renderLeaderboard(data))
+                .catch(e => { console.error(e); document.getElementById('lb-loading').innerText = 'Failed to load leaderboard.'; });
+        }
+
+        function renderLeaderboard(data) {
+            document.getElementById('lb-loading').style.display = 'none';
+            const lbList = document.getElementById('lb-list');
+            lbList.innerHTML = '';
+            if (!data || data.length === 0) { lbList.innerHTML = '<p style="text-align: center;">No scores yet.</p>'; return; }
+            data.forEach((entry, i) => {
+                let rClass = '';
+                if (i === 0) rClass = 'rank-1'; else if (i === 1) rClass = 'rank-2'; else if (i === 2) rClass = 'rank-3';
+                lbList.innerHTML += `<div class="lb-item"><span class="${rClass}">#${i + 1} ${entry.name}</span><span style="font-weight:bold;">${entry.score} pts</span></div>`;
+            });
+        }
+
+        // --- Live Quiz Registration Logic ---
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKp_hbUcFmKuAFl3GdkvnzGAeYvP-SQ3fKAm7yJKqJoKYGisjvxSsq9elpdS0izyPEXA/exec';
+        const QUIZ_NAME = 'Indus Valley Civilization Quiz';
+        let studentId = null;
+
+        document.getElementById('reg-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const contact = document.getElementById('reg-contact').value;
+            const btn = document.getElementById('reg-submit');
+
+            if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                studentId = 'demo-id';
+                document.getElementById('registration-overlay').style.display = 'none';
+                return;
+            }
+
+            btn.disabled = true;
+            document.getElementById('reg-loader').style.display = 'block';
+            document.getElementById('reg-error').style.display = 'none';
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'register', quizName: QUIZ_NAME, name: name, contact: contact })
+            }).then(r => r.json()).then(data => {
+                if (data.status === 'success') {
+                    studentId = data.id;
+                    document.getElementById('registration-overlay').style.display = 'none';
+                } else {
+                    throw new Error('Server error');
+                }
+            }).catch(err => {
+                document.getElementById('reg-error').style.display = 'block';
+                btn.disabled = false;
+                document.getElementById('reg-loader').style.display = 'none';
+            });
+        });
+
+        initPalette();
+        loadQ();
+    </script>
+</body>
+
+</html>
