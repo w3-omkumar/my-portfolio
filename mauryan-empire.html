@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mauryan Empire Quiz - Your Target Exam Special</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --gray-light: #f1f5f9;
+            --gray-med: #cbd5e1;
+            --text-main: #1e293b;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        /* Header Area */
+        .header {
+            grid-column: 1 / -1;
+            text-align: center;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 1.1rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background: var(--gray-med);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Main Quiz Card */
+        .quiz-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .timer-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .timer-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .btn-timer {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: opacity 0.2s;
+        }
+        .start-btn { background-color: var(--success); }
+        .stop-btn { background-color: var(--danger); }
+        .btn-timer:hover { opacity: 0.9; }
+
+        .question-box { margin-bottom: 30px; }
+        .q-number { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+        .q-hindi { font-size: 1.8rem; font-weight: 700; line-height: 1.4; margin: 10px 0; }
+        .q-english { font-size: 1.2rem; color: #475569; font-style: italic; }
+
+        /* Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option {
+            background: var(--gray-light);
+            border: 2px solid var(--gray-med);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover { border-color: var(--primary); background: #eff6ff; }
+        .option.correct { background-color: var(--success) !important; color: white; border-color: var(--success); }
+        .option.wrong { background-color: var(--danger) !important; color: white; border-color: var(--danger); }
+        .option.disabled { cursor: not-allowed; pointer-events: none; }
+
+        /* Explanation */
+        .explanation-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f0fdf4;
+            border-left: 6px solid var(--success);
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Sidebar Palette */
+        .palette-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .palette-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-med);
+            color: var(--text-main);
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .palette-item.active { border-color: var(--primary); }
+        .palette-item.correct { background-color: var(--success); color: white; }
+        .palette-item.wrong { background-color: var(--danger); color: white; }
+
+        /* Navigation */
+        .nav-footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .nav-btn:disabled { background: var(--gray-med); cursor: not-allowed; }
+
+        /* Result Screen */
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 20px auto;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Registration Overlay & Leaderboard Styles */
+        .registration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+
+        .registration-box {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .registration-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .registration-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .lb-container {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .lb-item:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .rank-1 {
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        /* Gold */
+        .rank-2 {
+            font-weight: bold;
+            color: #94a3b8;
+        }
+
+        /* Silver */
+        .rank-3 {
+            font-weight: bold;
+            color: #b45309;
+        }
+
+        /* Bronze */
+    </style>
+</head>
+<body>
+
+    <div id="registration-overlay" class="registration-overlay">
+        <div class="registration-box">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Live Quiz Registration</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Join to be included on the Live
+                Leaderboard.</p>
+            <form id="reg-form">
+                <input type="text" id="reg-name" placeholder="Full Name" required>
+                <input type="text" id="reg-contact" placeholder="Email or Phone No." required>
+                <button type="submit" id="reg-submit" class="nav-btn" style="width: 100%; height: 45px;">Start
+                    Quiz</button>
+            </form>
+            <div id="reg-loader" style="display: none; margin-top: 15px; color: var(--primary); font-weight: bold;">
+                Connecting to database... ⏳</div>
+            <div id="reg-error" style="color: var(--danger); margin-top: 10px; display: none;">Error registering. Try
+                again.</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 15px; line-height: 1.4;">Registration is required for the live leaderboard.</p>
+        </div>
+    </div>
+
+<div class="container">
+    <div class="header">
+        <h1>Mauryan Empire PYQs</h1>
+        <p>Most Important MCQ Practice Session | मौर्य साम्राज्य MCQ Practice</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+    </div>
+
+    <main class="quiz-card" id="quiz-area">
+        <div class="timer-section">
+            <button class="btn-timer stop-btn" onclick="stopTimer()">STOP</button>
+            <div class="timer-circle" id="timer-display">25</div>
+            <button class="btn-timer start-btn" onclick="startTimer()">START</button>
+        </div>
+
+        <div id="question-content">
+            <div class="question-box">
+                <span class="q-number" id="q-label">Question 1 of 30</span>
+                <p class="q-hindi" id="q-hindi">Question loading...</p>
+                <p class="q-english" id="q-english">Translation loading...</p>
+            </div>
+
+            <div class="options-grid" id="options-container">
+                </div>
+
+            <div class="explanation-box" id="explanation-box">
+                <strong>स्पष्टीकरण:</strong>
+                <p id="explanation-text"></p>
+            </div>
+
+            <div class="nav-footer">
+                <button class="nav-btn" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+                <button class="nav-btn" id="next-btn" onclick="nextQuestion()">Next Question</button>
+            </div>
+        </div>
+
+        <div class="result-screen" id="result-screen">
+            <h2>Quiz Completed!</h2>
+            <div class="score-circle" id="final-score">0/0</div>
+            <p id="performance-msg"></p>
+            <button class="nav-btn" style="margin-top: 20px;" onclick="location.reload()">Restart Quiz</button>
+            
+            <div class="lb-container">
+                <h3 style="margin-bottom: 15px; text-align: center; color: var(--text-main);">🏆 Live Leaderboard</h3>
+                <div id="lb-loading" style="text-align: center; color: var(--text-muted); padding: 10px; display: none;">Fetching scores... ⏳</div>
+                <div id="lb-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="palette-card">
+        <h3>Question Palette</h3>
+        <div class="palette-grid" id="palette">
+            </div>
+    </aside>
+</div>
+
+
+
+<script>
+    const quizData = [
+        {
+            questionHindi: "चंद्रगुप्त मौर्य ने किसे उखाड़ फेंककर एक विशाल साम्राज्य की स्थापना की?",
+            questionEnglish: "Chandragupta Maurya established a vast empire overthrowing:",
+            options: ["गुप्त और चालुक्य", "नंद और ग्रीक क्षत्रप", "राष्ट्रकूट और नंद", "ग्रीक क्षत्रप और गुप्त"],
+            correctIndex: 1,
+            explanationHindi: "चंद्रगुप्त मौर्य ने नंदों और ग्रीक क्षत्रपों को हराकर अपने विशाल साम्राज्य की स्थापना की थी।"
+        },
+        {
+            questionHindi: "बिंदुसार की उपाधि के संबंध में निम्नलिखित में से कौन सा सही है?",
+            questionEnglish: "Which of the following is correct regarding Bindusara's title?",
+            options: ["बिंदुसार: दुश्मनों का नाशक", "चंद्रगुप्त: सबसे सुंदर", "बिंदुसार: देवताओं का प्रिय", "अशोक: सबसे महान"],
+            correctIndex: 0,
+            explanationHindi: "यूनानी इतिहासकार एथेनियस ने बिंदुसार को 'दुश्मनों का नाशक' (अमित्रघात) कहा था।"
+        },
+        {
+            questionHindi: "अशोक ने ............... को त्याग दिया और ................ को अपना लिया।",
+            questionEnglish: "Ashoka abandoned ............... and embraced ................",
+            options: ["भेरीघोष, दिग्विजय", "धम्मघोष, भेरीघोष", "भेरीघोष, धम्मघोष", "धम्मघोष, दिग्विजय"],
+            correctIndex: 2,
+            explanationHindi: "कलिंग युद्ध के बाद अशोक ने 'बल द्वारा विजय' (भेरीघोष) की नीति को त्याग दिया और धर्म की नीति (धम्मघोष) को अपना लिया।"
+        },
+        {
+            questionHindi: "मौर्य प्रशासन के अखिल भारतीय स्वरूप होने का क्या लाभ था?",
+            questionEnglish: "What was an advantage of the Mauryan administration having a Pan-Indian character?",
+            options: ["लोगों के सामाजिक-आर्थिक जीवन पर अधिक ध्यान", "छोटे प्रांतों में विद्रोह में वृद्धि", "विदेशी आक्रमणकारियों से सुरक्षित क्षेत्र में वृद्धि", "उपरोक्त सभी"],
+            correctIndex: 0,
+            explanationHindi: "अखिल भारतीय स्वरूप ने मौर्य राजाओं को लोगों के सामाजिक और आर्थिक जीवन पर अधिक ध्यान देने में मदद की, जिससे चहुंमुखी आर्थिक समृद्धि हुई।"
+        },
+        {
+            questionHindi: "निम्नलिखित में से कौन मौर्य साम्राज्य के प्रांत थे?",
+            questionEnglish: "Which of the following were provinces in the Mauryan Empire?",
+            options: ["मगध, अवंती, कलिंग और चोलमंडलम", "मगध, गांधार, अवंती, कलिंग और दक्षिणी प्रांत", "मगध, तक्षशिला, उज्जैन और तोसली", "उपरोक्त में से कोई नहीं"],
+            correctIndex: 1,
+            explanationHindi: "मगध, गांधार, अवंती, कलिंग और दक्षिणी प्रांत मौर्य साम्राज्य के प्रमुख प्रांत थे।"
+        },
+        {
+            questionHindi: "निम्नलिखित में से कौन प्रांतीय सरकार के अधिकारी थे?",
+            questionEnglish: "Which of the following were officers in the Provincial Government?",
+            options: ["पुरोहित, सेनापति, सन्निधाता, समाहर्ता", "महामात्र, प्रादेशिक, रज्जुक, युक्त", "प्रादेशिक, रज्जुक, युक्त", "बलि, भाग, शुल्क"],
+            correctIndex: 2,
+            explanationHindi: "प्रादेशिक (कर कलेक्टर), रज्जुक (राजस्व अधिकारी), और युक्त प्रांतीय सरकार में जिलों के प्रशासन की देखभाल करते थे।"
+        },
+        {
+            questionHindi: "मौर्य राजवंश के बाद 'मगध' पर किस राजवंश ने शासन किया?",
+            questionEnglish: "Which dynasty ruled over 'Magadha' after the Mauryan Dynasty?",
+            options: ["सातवाहन", "शुंग", "नंद", "कण्व"],
+            correctIndex: 1,
+            explanationHindi: "185 ईसा पूर्व में अंतिम मौर्य सम्राट बृहद्रथ की उनके सेनापति पुष्यमित्र शुंग द्वारा हत्या के बाद शुंग राजवंश की स्थापना हुई थी।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त मौर्य के प्रसिद्ध शिक्षक चाणक्य निम्नलिखित में से किस शिक्षा केंद्र से जुड़े थे?",
+            questionEnglish: "With which of the following centres of learning was Chanakya associated?",
+            options: ["तक्षशिला", "नालंदा", "विक्रमशिला", "वैशाली"],
+            correctIndex: 0,
+            explanationHindi: "तक्षशिला चाणक्य (कौटिल्य) के साथ अपने जुड़ाव के लिए जाना जाता है, जिन्होंने साम्राज्य की स्थापना में चंद्रगुप्त मौर्य का मार्गदर्शन किया था।"
+        },
+        {
+            questionHindi: "'दूसरा अशोक' किसे कहा जाता है?",
+            questionEnglish: "Who is called the 'second Ashoka'?",
+            options: ["समुद्रगुप्त", "चंद्रगुप्त मौर्य", "कनिष्क", "हर्षवर्धन"],
+            correctIndex: 2,
+            explanationHindi: "कुषाण राजा कनिष्क को 'दूसरा अशोक' कहा जाता है क्योंकि अशोक की तरह उन्होंने भी बौद्ध धर्म अपना लिया था।"
+        },
+        {
+            questionHindi: "कौटिल्य और चंद्रगुप्त मौर्य के हाथों नंदों के पतन का वर्णन किस संस्कृत नाटक में किया गया है?",
+            questionEnglish: "The decline of the Nandas is portrayed in which Sanskrit play?",
+            options: ["मुद्राराक्षस", "देवीचंद्रगुप्त", "मालविकाग्निमित्रम्", "मृच्छकटिकम्"],
+            correctIndex: 0,
+            explanationHindi: "विशाखदत्त द्वारा लिखित नाटक 'मुद्राराक्षस' में नंद वंश के पतन का वर्णन किया गया है।"
+        },
+        {
+            questionHindi: "'अर्थशास्त्र' के लेखक किसके समकालीन थे?",
+            questionEnglish: "The author of 'Arthashastra' was a contemporary of:",
+            options: ["अशोक", "चंद्रगुप्त मौर्य", "समुद्रगुप्त", "चंद्रगुप्त विक्रमादित्य"],
+            correctIndex: 1,
+            explanationHindi: "'अर्थशास्त्र' के लेखक कौटिल्य (चाणक्य) चंद्रगुप्त मौर्य के दरबार में मुख्यमंत्री थे।"
+        },
+        {
+            questionHindi: "किस घटना ने अशोक की प्रशासनिक नीति में गहरा बदलाव लाया?",
+            questionEnglish: "Which event brought about a profound change in Ashoka's administrative policy?",
+            options: ["तीसरी बौद्ध संगीति", "कलिंग युद्ध", "बौद्ध धर्म अपनाना", "सीलोन में मिशनरी भेजना"],
+            correctIndex: 1,
+            explanationHindi: "कलिंग युद्ध के रक्तपात और विनाश ने अशोक को अपनी नीतियों को अहिंसा में बदलने के लिए प्रेरित किया।"
+        },
+        {
+            questionHindi: "मौर्य काल के दौरान 'स्थानिक' कौन होते थे?",
+            questionEnglish: "Who was the spatial (Sthaanik) during the Mauryan period?",
+            options: ["जिला प्रशासक", "प्रांतीय प्रशासक", "ग्राम प्रशासक", "नगर प्रशासक"],
+            correctIndex: 0,
+            explanationHindi: "मौर्य साम्राज्य में स्थानिक जिला प्रशासक होते थे।"
+        },
+        {
+            questionHindi: "निम्नलिखित में से किसमें मौर्य समाज के सात वर्गों में विभाजन का उल्लेख है?",
+            questionEnglish: "Which one of the following mentioned the division of the Mauryan Society into seven classes?",
+            options: ["अशोक के शिलालेख", "इंडिका", "कौटिल्य का अर्थशास्त्र", "विष्णु पुराण"],
+            correctIndex: 1,
+            explanationHindi: "यूनानी राजदूत मेगस्थनीज द्वारा लिखित पुस्तक 'इंडिका' में मौर्य समाज के सात वर्गों का उल्लेख किया गया है।"
+        },
+        {
+            questionHindi: "निम्नलिखित में से कौन मौर्य राजवंश का हिस्सा नहीं था?",
+            questionEnglish: "Who, among the following, was not a part of the Mauryan dynasty?",
+            options: ["अजातशत्रु", "बिंदुसार", "चंद्रगुप्त मौर्य", "इनमें से कोई नहीं"],
+            correctIndex: 0,
+            explanationHindi: "अजातशत्रु मगध के हर्यक वंश के राजा थे, जो मौर्य वंश से पहले के थे।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त मौर्य अंततः किसके प्रबल अनुयायी बन गए थे?",
+            questionEnglish: "Chandragupta Maurya was an ardent follower of:",
+            options: ["सिख धर्म", "जैन धर्म", "बौद्ध धर्म", "यहूदी धर्म"],
+            correctIndex: 1,
+            explanationHindi: "चंद्रगुप्त ने अपने जीवन के उत्तरार्ध में जैन धर्म का पालन किया और श्रवणबेलगोला में एक भिक्षु के रूप में दिन बिताए।"
+        },
+        {
+            questionHindi: "अशोक को बौद्ध धर्म अपनाने के लिए प्रभावित करने वाले भिक्षु कौन थे?",
+            questionEnglish: "The monk who influenced Ashoka to embrace Buddhism was:",
+            options: ["विष्णु गुप्त", "उपगुप्त", "ब्रह्मा गुप्त", "बृहद्रथ"],
+            correctIndex: 1,
+            explanationHindi: "उपगुप्त एक बौद्ध भिक्षु थे जो मौर्य सम्राट अशोक के आध्यात्मिक गुरु थे।"
+        },
+        {
+            questionHindi: "मौर्य दरबार में यूनानी राजदूत का नाम क्या था?",
+            questionEnglish: "Name the Greek Ambassador at the Mauryan Court:",
+            options: ["सिकंदर", "मेगस्थनीज", "प्लेटो", "अरस्तू"],
+            correctIndex: 1,
+            explanationHindi: "मेगस्थनीज सेल्यूकस प्रथम निकेटर के राजदूत थे जो चंद्रगुप्त मौर्य के दरबार में रहे।"
+        },
+        {
+            questionHindi: "अंतिम मौर्य शासक बृहद्रथ की हत्या करने के बाद सत्ता किसने छीन ली?",
+            questionEnglish: "Who usurped power after killing the last ruler Brihadratha?",
+            options: ["पुष्यमित्र शुंग", "अग्निमित्र", "वसुमित्र", "ज्येष्ठमित्र"],
+            correctIndex: 0,
+            explanationHindi: "बृहद्रथ की हत्या उनके सेनापति पुष्यमित्र शुंग ने की थी, जिसने शुंग साम्राज्य की स्थापना की।"
+        },
+        {
+            questionHindi: "मौर्य काल में समाज की निम्नलिखित में से कौन सी विशेषता नहीं थी?",
+            questionEnglish: "Which one was not a characteristic of society in Mauryan times?",
+            options: ["गुलामी", "जाति की कठोरता", "वेश्यावृत्ति", "विधवा पुनर्विवाह"],
+            correctIndex: 3,
+            explanationHindi: "मौर्य समाज में विधवा पुनर्विवाह को सामान्यतः अच्छा नहीं माना जाता था।"
+        },
+        {
+            questionHindi: "मौर्य काल के दौरान सबसे अधिक इस्तेमाल किया जाने वाला सिक्का कौन सा था?",
+            questionEnglish: "The most commonly used coin during the Mauryan period was:",
+            options: ["कार्षापण", "निष्क", "सुवर्ण", "काकिणी"],
+            correctIndex: 0,
+            explanationHindi: "मौर्य साम्राज्य के दौरान कार्षापण (चांदी का सिक्का) सबसे अधिक इस्तेमाल किया जाने वाला सिक्का था।"
+        },
+        {
+            questionHindi: "मौर्य काल के दौरान धर्ममहामात्र कौन थे?",
+            questionEnglish: "Dharmamahamatras were __________ during the Mauryan period.",
+            options: ["अधिकारी", "बौद्ध भिक्षु", "जैन भिक्षु", "सैनिक"],
+            correctIndex: 0,
+            explanationHindi: "वे अशोक द्वारा स्थापित वरिष्ठ अधिकारी थे, जो नैतिकता और धर्म के प्रसार के प्रभारी थे।"
+        },
+        {
+            questionHindi: "अशोक के कलिंग अभियान की जानकारी का प्रमुख स्रोत कौन सा है?",
+            questionEnglish: "Which is the principle source of info for Ashoka's campaign against Kalinga?",
+            options: ["स्तंभ शिलालेख-VII", "महावंश", "दिव्यावदान", "शिलालेख-XIII"],
+            correctIndex: 3,
+            explanationHindi: "13वाँ शिलालेख (Rock Edict XIII) कलिंग युद्ध के विनाश और अशोक के हृदय परिवर्तन का वर्णन करता है।"
+        },
+        {
+            questionHindi: "मौर्य दरबार की आधिकारिक भाषा क्या थी?",
+            questionEnglish: "The official language of the Mauryan Court was:",
+            options: ["मागधी", "प्राकृत", "मैथिली", "संस्कृत"],
+            correctIndex: 0,
+            explanationHindi: "मागधी मौर्य दरबार की आधिकारिक भाषा थी, जिसमें अशोक के अधिकांश शिलालेख लिखे गए थे।"
+        },
+        {
+            questionHindi: "सेल्यूकस निकेटर को किसने हराया था?",
+            questionEnglish: "Seleucus Nicator was defeated by:",
+            options: ["अशोक", "चंद्रगुप्त मौर्य", "बिंदुसार", "बृहद्रथ"],
+            correctIndex: 1,
+            explanationHindi: "चंद्रगुप्त मौर्य ने सेल्यूकस प्रथम निकेटर को हराया और हेरात, काबुल, कंधार प्राप्त किए।"
+        },
+        {
+            questionHindi: "मौर्य साम्राज्य की राजधानी कहाँ स्थित थी?",
+            questionEnglish: "The capital of the Mauryan kingdom was located at:",
+            options: ["पाटलिपुत्र", "वैशाली", "लुंबिनी", "गया"],
+            correctIndex: 0,
+            explanationHindi: "मौर्य साम्राज्य की राजधानी पाटलिपुत्र (वर्तमान पटना) थी।"
+        },
+        {
+            questionHindi: "मौर्य कला के सर्वश्रेष्ठ नमूने किसके द्वारा दर्शाए गए हैं?",
+            questionEnglish: "The best specimens of Mauryan art are represented by their:",
+            options: ["स्तूप", "स्तंभ", "चैत्य", "गुफाएँ"],
+            correctIndex: 1,
+            explanationHindi: "अशोक के एकाश्म स्तंभ (Pillars) मौर्य कला के सबसे उत्कृष्ट उदाहरण माने जाते हैं।"
+        },
+        {
+            questionHindi: "जिला स्तर पर मौर्य अधिकारियों का सही अवरोही क्रम क्या था?",
+            questionEnglish: "Correct descending order of Mauryan officers at district level:",
+            options: ["रज्जुक, प्रादेशिक, युक्त", "युक्त, रज्जुक, प्रादेशिक", "प्रादेशिक, युक्त, रज्जुक", "प्रादेशिक, रज्जुक, युक्त"],
+            correctIndex: 3,
+            explanationHindi: "सही क्रम था: प्रादेशिक (सबसे ऊपर), रज्जुक (मध्य), और युक्त (अधीनस्थ)।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त मौर्य ने नंदों को उखाड़ फेंकने का फैसला क्यों किया?",
+            questionEnglish: "Why did Chandragupta decide to overthrow the Nandas?",
+            options: ["चाणक्य का अपमान", "नंद नीची जाति के थे", "नंदों का उत्पीड़न और धन संचय", "क्षत्रिय शासन की बहाली"],
+            correctIndex: 2,
+            explanationHindi: "नंदों ने जबरन वसूली और जनता के उत्पीड़न से भारी धन जमा किया था, जिससे जनता असंतुष्ट थी।"
+        },
+        {
+            questionHindi: "किस मौर्य राजा के पास 'अमित्रघात' की उपाधि है?",
+            questionEnglish: "Which Mauryan king holds the title of Amitraghata?",
+            options: ["बिम्बिसार", "चंद्रगुप्त मौर्य", "बिंदुसार", "अशोक"],
+            correctIndex: 2,
+            explanationHindi: "बिंदुसार को यूनानी स्रोतों में 'अमित्रघात' (शत्रुओं का संहारक) कहा गया है।"
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let timeLeft = 25;
+    let timerId = null;
+    let isAnswered = false;
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    const timerDisplay = document.getElementById('timer-display');
+    const optionsContainer = document.getElementById('options-container');
+    const explanationBox = document.getElementById('explanation-box');
+    const palette = document.getElementById('palette');
+    const progressBar = document.getElementById('progress');
+
+    // Initialize Palette
+    function initPalette() {
+        palette.innerHTML = '';
+        quizData.forEach((_, index) => {
+            const div = document.createElement('div');
+            div.className = 'palette-item';
+            div.innerText = index + 1;
+            div.id = `pal-${index}`;
+            div.onclick = () => jumpToQuestion(index);
+            palette.appendChild(div);
+        });
+    }
+
+    function loadQuestion() {
+        isAnswered = false;
+        const q = quizData[currentQuestion];
+        
+        document.getElementById('q-label').innerText = `Question ${currentQuestion + 1} of ${quizData.length}`;
+        document.getElementById('q-hindi').innerText = q.questionHindi;
+        document.getElementById('q-english').innerText = q.questionEnglish;
+        
+        optionsContainer.innerHTML = '';
+        explanationBox.style.display = 'none';
+        
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'option';
+            btn.innerHTML = `<strong>${String.fromCharCode(65 + index)})</strong> &nbsp; ${opt}`;
+            btn.onclick = () => checkAnswer(index);
+            optionsContainer.appendChild(btn);
+        });
+
+        // Update Nav
+        document.getElementById('prev-btn').disabled = currentQuestion === 0;
+        document.getElementById('next-btn').innerText = currentQuestion === quizData.length - 1 ? "Finish Quiz" : "Next Question";
+        
+        // Update Palette Active
+        document.querySelectorAll('.palette-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(`pal-${currentQuestion}`).classList.add('active');
+
+        // Update Progress
+        progressBar.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+
+        resetTimer();
+        startTimer();
+    }
+
+    function checkAnswer(index) {
+        if (isAnswered) return;
+        isAnswered = true;
+        stopTimer();
+
+        const q = quizData[currentQuestion];
+        userAnswers[currentQuestion] = index;
+        const options = optionsContainer.children;
+
+        if (index === q.correctIndex) {
+            options[index].classList.add('correct');
+            document.getElementById(`pal-${currentQuestion}`).classList.add('correct');
+            score++;
+        } else {
+            options[index].classList.add('wrong');
+            options[q.correctIndex].classList.add('correct');
+            document.getElementById(`pal-${currentQuestion}`).classList.add('wrong');
+        }
+
+        // Disable all options
+        for (let opt of options) opt.classList.add('disabled');
+
+        // Show Explanation
+        explanationBox.style.display = 'block';
+        document.getElementById('explanation-text').innerText = q.explanationHindi;
+    }
+
+    function startTimer() {
+        if (timerId) clearInterval(timerId);
+        timerId = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                autoSelectWrong();
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerId);
+    }
+
+    function resetTimer() {
+        timeLeft = 25;
+        timerDisplay.innerText = timeLeft;
+    }
+
+    function autoSelectWrong() {
+        if (!isAnswered) {
+            checkAnswer(-1); // Automatically reveal correct answer as user didn't pick
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestion < quizData.length - 1) {
+            currentQuestion++;
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            loadQuestion();
+        }
+    }
+
+    function jumpToQuestion(index) {
+        currentQuestion = index;
+        loadQuestion();
+    }
+
+    // Start
+    initPalette();
+    loadQuestion();
+
+    // --- Live Quiz Registration & Leaderboard Logic ---
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKp_hbUcFmKuAFl3GdkvnzGAeYvP-SQ3fKAm7yJKqJoKYGisjvxSsq9elpdS0izyPEXA/exec';
+    const QUIZ_NAME = 'Mauryan Empire Quiz';
+    let studentId = null;
+
+    document.getElementById('reg-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value;
+        const contact = document.getElementById('reg-contact').value;
+        const btn = document.getElementById('reg-submit');
+
+        btn.disabled = true;
+        document.getElementById('reg-loader').style.display = 'block';
+        document.getElementById('reg-error').style.display = 'none';
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'register', quizName: QUIZ_NAME, name: name, contact: contact })
+        }).then(r => r.json()).then(data => {
+            if (data.status === 'success') {
+                studentId = data.id;
+                document.getElementById('registration-overlay').style.display = 'none';
+            } else {
+                throw new Error('Server error');
+            }
+        }).catch(err => {
+            console.error('Registration error:', err);
+            document.getElementById('reg-error').style.display = 'block';
+            btn.disabled = false;
+            document.getElementById('reg-loader').style.display = 'none';
+        });
+    });
+
+    function showResults() {
+        document.getElementById('question-content').style.display = 'none';
+        document.querySelector('.timer-section').style.display = 'none';
+        const resultScreen = document.getElementById('result-screen');
+        resultScreen.style.display = 'block';
+        
+        const finalScore = document.getElementById('final-score');
+        finalScore.innerText = `${score} / ${quizData.length}`;
+        
+        const percent = (score / quizData.length) * 100;
+        let msg = "";
+        if (percent >= 80) msg = "Excellent! You are a Mauryan Empire expert.";
+        else if (percent >= 50) msg = "Good job! A bit more revision and you'll be perfect.";
+        else msg = "Keep studying! The Mauryan Empire has much to teach.";
+        
+        document.getElementById('performance-msg').innerText = msg;
+
+        // Submit score and fetch leaderboard
+        const lbLoading = document.getElementById('lb-loading');
+        lbLoading.style.display = 'block';
+
+        if (studentId) {
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'submitScore', id: studentId, score: score })
+            }).then(() => fetchLeaderboard())
+                .catch(e => { console.error(e); lbLoading.innerText = 'Failed to load leaderboard.'; });
+        } else {
+            // Fallback for demo or if registration was skipped/failed
+            fetchLeaderboard();
+        }
+    }
+
+    function fetchLeaderboard() {
+        fetch(SCRIPT_URL + '?quizName=' + encodeURIComponent(QUIZ_NAME))
+            .then(r => r.json())
+            .then(data => renderLeaderboard(data))
+            .catch(e => { 
+                console.error(e); 
+                document.getElementById('lb-loading').innerText = 'Failed to load leaderboard.'; 
+            });
+    }
+
+    function renderLeaderboard(data) {
+        document.getElementById('lb-loading').style.display = 'none';
+        const lbList = document.getElementById('lb-list');
+        lbList.innerHTML = '';
+        if (!data || data.length === 0) { 
+            lbList.innerHTML = '<p style="text-align: center;">No scores yet.</p>'; 
+            return; 
+        }
+        data.forEach((entry, i) => {
+            let rClass = '';
+            if (i === 0) rClass = 'rank-1'; 
+            else if (i === 1) rClass = 'rank-2'; 
+            else if (i === 2) rClass = 'rank-3';
+            lbList.innerHTML += `<div class="lb-item"><span class="${rClass}">#${i + 1} ${entry.name}</span><span style="font-weight:bold;">${entry.score} pts</span></div>`;
+        });
+    }
+
+</script>
+</body>
+</html>
+
+```
