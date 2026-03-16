@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedic Age History Quiz</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        /* Main Layout */
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            flex: 1;
+            min-width: 350px;
+            max-width: 800px;
+        }
+
+        /* Right Palette Section */
+        .palette-section {
+            width: 280px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .palette-btn.active {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .palette-btn.visited {
+            background: #e2e8f0;
+        }
+
+        .palette-btn.correct {
+            background: var(--success);
+            color: white;
+            border: none;
+        }
+
+        .palette-btn.wrong {
+            background: var(--danger);
+            color: white;
+            border: none;
+        }
+
+        /* Timer Controls */
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-start {
+            background: var(--success);
+        }
+
+        .btn-stop {
+            background: var(--danger);
+        }
+
+        /* Card Styles */
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: 0.3s;
+        }
+
+        .question-hindi {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .question-english {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.05rem;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+        }
+
+        #explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-left: 4px solid var(--primary);
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        /* Registration Overlay & Leaderboard Styles */
+        .registration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+
+        .registration-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .registration-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .registration-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .lb-container {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .lb-item:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .rank-1 {
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        /* Gold */
+        .rank-2 {
+            font-weight: bold;
+            color: #94a3b8;
+        }
+
+        /* Silver */
+        .rank-3 {
+            font-weight: bold;
+            color: #b45309;
+        }
+
+        /* Bronze */
+    </style>
+</head>
+
+<body>
+    <div id="registration-overlay" class="registration-overlay">
+        <div class="registration-box">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Live Quiz Registration</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Join to be included on the Live
+                Leaderboard.</p>
+            <form id="reg-form">
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: 0.3s;
+        }
+
+        .question-hindi {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .question-english {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.05rem;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .option-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+        }
+
+        #explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-left: 4px solid var(--primary);
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        /* Registration Overlay & Leaderboard Styles */
+        .registration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+
+        .registration-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .registration-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .registration-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .lb-container {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .lb-item:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .rank-1 {
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        /* Gold */
+        .rank-2 {
+            font-weight: bold;
+            color: #94a3b8;
+        }
+
+        /* Silver */
+        .rank-3 {
+            font-weight: bold;
+            color: #b45309;
+        }
+
+        /* Bronze */
+    </style>
+</head>
+
+<body>
+    <div id="registration-overlay" class="registration-overlay">
+        <div class="registration-box">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Live Quiz Registration</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Join to be included on the Live
+                Leaderboard.</p>
+            <form id="reg-form">
+                <input type="text" id="reg-name" placeholder="Full Name" required>
+                <input type="text" id="reg-contact" placeholder="Email or Phone No." required>
+                <button type="submit" id="reg-submit" class="nav-btn" style="width: 100%; height: 45px;">Start
+                    Quiz</button>
+            </form>
+            <div id="reg-loader" style="display: none; margin-top: 15px; color: var(--primary); font-weight: bold;">
+                Connecting to database... ⏳</div>
+            <div id="reg-error" style="color: var(--danger); margin-top: 10px; display: none;">Error registering. Try
+                again.</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 15px; line-height: 1.4;">Google Script
+                Backend URL waiting to be added.<br>Using local demo mode until connected.</p>
+        </div>
+    </div>
+    <header>
+        <h1>Vedic Age History Quiz</h1>
+        <div class="subtitle">Target Exam Special | Top 50 MCQs</div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="quiz-section">
+            <div class="timer-controls">
+                <button class="control-btn btn-start" onclick="startTimer()">▶ START TIMER</button>
+                <button class="control-btn btn-stop" onclick="stopTimer()">⏹ STOP TIMER</button>
+                <div style="font-size: 1.5rem; font-weight: bold; margin-left: 20px; color: var(--danger);">
+                    ⏱️ <span id="timer-sec">15</span>s
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+
+            <div class="quiz-card" id="quiz-box">
+                <div style="font-weight: bold; color: var(--primary); margin-bottom: 10px;" id="q-count">Question 1 of
+                    40</div>
+                <div class="question-hindi" id="q-hindi"></div>
+                <div class="question-english" id="q-english"></div>
+
+                <div class="options-grid" id="options-box"></div>
+
+                <div id="explanation">
+                    <strong>Explanation:</strong>
+                    <p id="exp-text" style="margin-top: 5px;"></p>
+                </div>
+
+                <div class="nav-footer">
+                    <button class="nav-btn" id="prev-btn" onclick="prevQ()">Previous</button>
+                    <button class="nav-btn" id="next-btn" onclick="nextQ()">Next</button>
+                </div>
+            </div>
+
+            <div class="quiz-card" id="result-screen">
+                <h2>Quiz Completed!</h2>
+                <h1 style="font-size: 4rem; margin: 20px 0; color: var(--primary);" id="final-score">0 / 0</h1>
+                <p id="total-text">Total Questions: 0</p>
+
+                <div class="lb-container">
+                    <h3 style="margin-bottom: 15px; text-align: center; color: var(--text-main);">🏆 Live Leaderboard
+                    </h3>
+                    <div id="lb-loading"
+                        style="text-align: center; color: var(--text-muted); padding: 10px; display: none;">Fetching
+                        scores... ⏳</div>
+                    <div id="lb-list"></div>
+                </div>
+
+                <button class="nav-btn" style="margin-top: 25px; width: 100%;" onclick="location.reload()">Restart
+                    Quiz</button>
+            </div>
+        </div>
+
+        <div class="palette-section">
+            <h3 style="border-bottom: 2px solid #eee; padding-bottom: 10px;">Question Palette</h3>
+            <div class="palette-grid" id="palette"></div>
+            <div style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
+                <p>Score: <span id="live-score">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data truncated for brevity in code view but included in the logic
+        const questions = [
+    {
+        "qH": "ऋग्वेद में सबसे प्रमुख देवता कौन है?",
+        "qE": "Who is the most prominent deity in the Rigveda?",
+        "opt": [
+            "इंद्र",
+            "अग्नि",
+            "पशुपति",
+            "विष्णु"
+        ],
+        "ans": 0,
+        "exp": "ऋग्वेद में इंद्र सबसे प्रमुख देवता हैं, और वे युद्ध व वर्षा के देवता माने जाते हैं।"
+    },
+    {
+        "qH": "निम्नलिखित में से कौन सा वेद वेदत्रयी का भाग नहीं है?",
+        "qE": "Which of the following Vedas is not a part of Vedatrayi?",
+        "opt": [
+            "ऋग्वेद",
+            "यजुर्वेद",
+            "सामवेद",
+            "अथर्ववेद"
+        ],
+        "ans": 3,
+        "exp": "वेदत्रयी (तीन वेदों का समूह) में केवल ऋग्वेद, यजुर्वेद और सामवेद को शामिल किया जाता है, अथर्ववेद इसका हिस्सा नहीं है।"
+    },
+    {
+        "qH": "निम्नलिखित में से किस वेद में जादू, चमत्कार तथा मंत्र दिए गए हैं?",
+        "qE": "Which of the following Vedas contains magic, miracles, and spells?",
+        "opt": [
+            "ऋग्वेद",
+            "सामवेद",
+            "यजुर्वेद",
+            "अथर्ववेद"
+        ],
+        "ans": 3,
+        "exp": "अथर्ववेद में मुख्य रूप से जादू-टोना, वशीकरण, बुरी आत्माओं और बीमारियों से रक्षा करने वाले मंत्रों का संकलन है।"
+    },
+    {
+        "qH": "निम्नलिखित में से कौन-सा वेद प्राचीनतम है?",
+        "qE": "Which of the following is the oldest Veda?",
+        "opt": [
+            "यजुर्वेद",
+            "ऋग्वेद",
+            "सामवेद",
+            "अथर्ववेद"
+        ],
+        "ans": 1,
+        "exp": "ऋग्वेद भारत और विश्व का सबसे प्राचीन ग्रंथ है, जिसमें देवी-देवताओं की स्तुति में मंत्र लिखे गए हैं।"
+    },
+    {
+        "qH": "नचिकेता और यम के बीच सुप्रसिद्ध संवाद किस उपनिषद में उल्लिखित है?",
+        "qE": "The famous dialogue between Nachiketa and Yama is mentioned in which Upanishad?",
+        "opt": [
+            "छान्दोग्योपनिषद",
+            "मुंडकोपनिषद",
+            "कठोपनिषद",
+            "केनोपनिषद"
+        ],
+        "ans": 2,
+        "exp": "कठोपनिषद में मृत्यु के रहस्य और आध्यात्मिक ज्ञान पर यमराज और नचिकेता के बीच प्रसिद्ध संवाद मिलता है।"
+    },
+    {
+        "qH": "निम्न में से किस वैदिक ग्रंथ में पहली बार पूर्वी एवं पश्चिमी सागर का उल्लेख हुआ है?",
+        "qE": "In which of the following Vedic texts is the Eastern and Western Sea mentioned for the first time?",
+        "opt": [
+            "तांड्य ब्राह्मण",
+            "सत्पथ ब्राह्मण",
+            "गोपथ ब्राह्मण",
+            "कौष्तिकी ब्राह्मण"
+        ],
+        "ans": 1,
+        "exp": "भौगोलिक विस्तार के संदर्भ में शतपथ ब्राह्मण में पहली बार पूर्वी और पश्चिमी सागरों का वर्णन मिलता है।"
+    },
+    {
+        "qH": "निम्न में से कौन उपवेद के अंतर्गत नहीं गिना जाता है?",
+        "qE": "Which of the following is not counted under Upaveda?",
+        "opt": [
+            "आयुर्वेद",
+            "यजुर्वेद",
+            "गंधर्ववेद",
+            "शिल्प वेद"
+        ],
+        "ans": 1,
+        "exp": "यजुर्वेद स्वयं चार मुख्य वेदों में से एक है; यह कोई उपवेद नहीं है।"
+    },
+    {
+        "qH": "उपनिषद् पुस्तकें हैं:",
+        "qE": "Upanishads are books on:",
+        "opt": [
+            "धर्म पर",
+            "योग पर",
+            "विधि पर",
+            "दर्शन पर"
+        ],
+        "ans": 3,
+        "exp": "उपनिषद मुख्य रूप से भारतीय दार्शनिक विचारों, आत्मा-परमात्मा और मोक्ष के सिद्धांतों पर आधारित ग्रंथ हैं।"
+    },
+    {
+        "qH": "ऋग्वेद में कई परिच्छेदों में प्रयुक्त ‘अधन्य’ शब्द संदर्भित है:",
+        "qE": "The word 'Adhanya' used in many passages in the Rigveda refers to:",
+        "opt": [
+            "पुजारी के लिए",
+            "स्त्री के लिए",
+            "गाय के लिए",
+            "ब्राह्मण के लिए"
+        ],
+        "ans": 2,
+        "exp": "वैदिक काल में गाय को सबसे मूल्यवान संपत्ति माना जाता था, इसीलिए उसे 'अधन्य' (जिसका वध न किया जाए) कहा गया है।"
+    },
+    {
+        "qH": "'तमसो मा ज्योतिर्गमय' कथन है मूलतः",
+        "qE": "The statement 'Tamaso Ma Jyotirgamaya' is originally from:",
+        "opt": [
+            "महाकाव्यों का",
+            "उपनिषदों का",
+            "पुराणों का",
+            "षड़दर्शन का",
+            "(e) इनमें से कोई नहीं"
+        ],
+        "ans": 1,
+        "exp": "यह अत्यंत प्रसिद्ध शांति मंत्र मूल रूप से उपनिषदों से लिया गया है, जिसका अर्थ है 'हमें अंधकार से प्रकाश की ओर ले चलो'।"
+    },
+    {
+        "qH": "भारतीय संस्कृति के अंतर्गत ‘ऋत्’ का अर्थ है-",
+        "qE": "Under Indian culture, 'Rita' means:",
+        "opt": [
+            "कृत्रिम नियम",
+            "प्राकृतिक नियम",
+            "मानवीय नियम",
+            "समाजिक नियम"
+        ],
+        "ans": 1,
+        "exp": "वैदिक दर्शन में 'ऋत्' से तात्पर्य उस ब्रह्मांडीय और प्राकृतिक व्यवस्था से है जो संपूर्ण सृष्टि का संचालन करती है।"
+    },
+    {
+        "qH": "कौन सा वेद धार्मिक अनुष्ठानों से संबंध रखता है?",
+        "qE": "Which Veda deals with religious rituals?",
+        "opt": [
+            "ऋग्वेद",
+            "यजुर्वेद",
+            "सामवेद",
+            "अथर्ववेद"
+        ],
+        "ans": 1,
+        "exp": "यजुर्वेद में धार्मिक अनुष्ठानों, यज्ञों और कर्मकांडों को संपन्न करने के निर्देश दिए गए हैं।"
+    },
+    {
+        "qH": "'सत्यमेव जयते' शब्द किस उपनिषद से लिया गया है?",
+        "qE": "The word 'Satyameva Jayate' is taken from which Upanishad?",
+        "opt": [
+            "अक्षि उपनिषद्",
+            "मुंडक उपनिषद्",
+            "गरुड़ उपनिषद",
+            "महावाक्य उपनिषद्"
+        ],
+        "ans": 1,
+        "exp": "भारत का राष्ट्रीय आदर्श वाक्य 'सत्यमेव जयते' (सत्य की हमेशा विजय होती है) मुंडकोपनिषद से लिया गया है।"
+    },
+    {
+        "qH": "वैदिक काल में ‘बलि’ शब्द का क्या अर्थ है?",
+        "qE": "What is the meaning of the word 'Bali' in the Vedic period?",
+        "opt": [
+            "बैल",
+            "बलिदान",
+            "आनुवांशिक",
+            "प्रजा द्वारा शासक को दी गई भेंट"
+        ],
+        "ans": 3,
+        "exp": "वैदिक काल में कर (Tax) की कोई नियमित व्यवस्था नहीं थी, लोग स्वेच्छा से राजा को जो अंश भेंट करते थे उसे 'बलि' कहा जाता था।"
+    },
+    {
+        "qH": "14वीं सदी ई. पूर्व का एक अभिलेख जिसमें वैदिक देवताओं का वर्णन है, प्राप्त हुआ है:",
+        "qE": "An inscription of the 14th century BC describing Vedic deities has been found from:",
+        "opt": [
+            "एकबटाना से",
+            "बोगज-कोई से",
+            "बैबिलोन से",
+            "बिसोटुन से"
+        ],
+        "ans": 1,
+        "exp": "एशिया माइनर स्थित बोगज-कोई अभिलेख (1400 ई.पू.) में इंद्र, मित्र, वरुण और नासत्य नामक वैदिक देवताओं का उल्लेख मिलता है।"
+    },
+    {
+        "qH": "निम्नलिखित में से कौन-सा ब्राह्मण ग्रंथ ऋग्वेद से संबंधित है?",
+        "qE": "Which of the following Brahmana texts is related to the Rigveda?",
+        "opt": [
+            "गोपथ ब्राह्मण",
+            "ऐतरेय ब्राह्मण",
+            "शतपथ ब्राह्मण",
+            "तैत्तिरीय ब्राह्मण"
+        ],
+        "ans": 1,
+        "exp": "ऐतरेय ब्राह्मण और कौषीतकि ब्राह्मण ऋग्वेद से जुड़े हुए प्रमुख ब्राह्मण ग्रंथ हैं।"
+    },
+    {
+        "qH": "वैदिक देवमंडल में निम्न में से कौन देवता युद्ध का देवता माना जाता है?",
+        "qE": "In the Vedic pantheon, which of the following deities is considered the god of war?",
+        "opt": [
+            "इंद्र",
+            "वरुण",
+            "मित्र",
+            "अग्नि"
+        ],
+        "ans": 0,
+        "exp": "इंद्र को ऋग्वेद में युद्ध का देवता और 'पुरंदर' (किलों को तोड़ने वाला) माना गया है।"
+    },
+    {
+        "qH": "सर्वप्रथम ‘स्तूप’ शब्द कहाँ मिलता है?",
+        "qE": "Where is the word 'Stupa' found for the first time?",
+        "opt": [
+            "जातक कथा",
+            "ऋग्वेद",
+            "अर्थशास्त्र",
+            "अष्टाध्यायी",
+            "(e) उपरोक्त में से कोई नहीं"
+        ],
+        "ans": 1,
+        "exp": "'स्तूप' शब्द का सबसे प्राचीन साहित्यिक संदर्भ ऋग्वेद ग्रंथ में प्राप्त होता है।"
+    },
+    {
+        "qH": "भारतीय उप-महाद्वीप में लोह का सर्वप्रथम साहित्यिक संदर्भ किसमें मिलता है?",
+        "qE": "Where is the first literary reference to iron found in the Indian subcontinent?",
+        "opt": [
+            "सामवेद",
+            "ऋग्वेद",
+            "यजुर्वेद",
+            "विनय पिटक"
+        ],
+        "ans": 2,
+        "exp": "यजुर्वेद और अथर्ववेद में लोहे को 'श्याम अयस' या 'कृष्ण अयस' के रूप में सबसे पहले उल्लेखित किया गया है।"
+    },
+    {
+        "qH": "वैदिक काल में अस्पृश्यता का आधार था-",
+        "qE": "The basis of untouchability in the Vedic period was-",
+        "opt": [
+            "व्यवसाय",
+            "अशुद्धता",
+            "गरीबी",
+            "उपर्युक्त में से कोई नहीं"
+        ],
+        "ans": 0,
+        "exp": "आरंभिक वैदिक काल में समाज पूरी तरह से व्यवसाय और कर्म पर आधारित था।"
+    },
+    {
+        "qH": "ऋग्वैदिक काल के प्रारंभ में निम्न में से किसे महत्वपूर्ण मूल्यवान संपत्ति समझा जाता था?",
+        "qE": "In the early Rigvedic period, which of the following was considered an important valuable asset?",
+        "opt": [
+            "गाय को",
+            "भूमि को",
+            "स्त्रियों को",
+            "जल को"
+        ],
+        "ans": 0,
+        "exp": "ऋग्वैदिक काल में गायों को धन का प्रमुख स्रोत माना जाता था और विनिमय के लिए इनका प्रयोग किया जाता था।"
+    },
+    {
+        "qH": "संस्कारों की कुल संख्या कितनी है?",
+        "qE": "What is the total number of Sanskaras?",
+        "opt": [
+            "12",
+            "10",
+            "15",
+            "16"
+        ],
+        "ans": 3,
+        "exp": "भारतीय प्राचीन वैदिक परंपरा और धर्मशास्त्रों में जीवन से मृत्यु तक कुल 16 महत्वपूर्ण संस्कारों का विधान है।"
+    },
+    {
+        "qH": "आर्यन जनजातियों की प्राचीनतम बस्ती कहाँ है?",
+        "qE": "Where is the oldest settlement of Aryan tribes?",
+        "opt": [
+            "उत्तर प्रदेश",
+            "बंगाल",
+            "सप्त सिंधु",
+            "दिल्ली"
+        ],
+        "ans": 2,
+        "exp": "आर्य जब भारत आए तो सबसे पहले सात नदियों के क्षेत्र 'सप्त सिंधु' (पंजाब और आस-पास के क्षेत्र) में बसे थे।"
+    },
+    {
+        "qH": "निम्नलिखित में से कौन-सी जनजातीय सभा सामान्य रूप से जनजातीय सरदार (मुखिया) के चुनाव में शामिल होती थी?",
+        "qE": "Which of the following tribal assemblies was normally involved in the election of the tribal chief?",
+        "opt": [
+            "समिति",
+            "सभा",
+            "गण",
+            "विदाता"
+        ],
+        "ans": 0,
+        "exp": "वैदिक काल में 'समिति' एक जनसभा थी जिसमें आम लोग शामिल होते थे और यह मुखिया (राजन) का चुनाव करती थी।"
+    },
+    {
+        "qH": "ऋग्वैदिक धर्म था-",
+        "qE": "The Rigvedic religion was-",
+        "opt": [
+            "एकेश्वरवादी",
+            "बहुदेववादी",
+            "अद्वैतवादी",
+            "निवृत्तमार्गी"
+        ],
+        "ans": 1,
+        "exp": "ऋग्वैदिक काल में प्रकृति की विभिन्न शक्तियों को देवता मानकर उनकी पूजा की जाती थी, अतः यह धर्म बहुदेववादी था।"
+    },
+    {
+        "qH": "किस वैदिक ग्रंथ में ‘वर्ण’ शब्द का सर्वप्रथम नामोल्लेख मिलता है?",
+        "qE": "In which Vedic text is the word 'Varna' mentioned for the first time?",
+        "opt": [
+            "अथर्ववेद",
+            "ऋग्वेद",
+            "सामवेद",
+            "यजुर्वेद"
+        ],
+        "ans": 1,
+        "exp": "ऋग्वेद के दसवें मंडल के 'पुरुष सूक्त' में पहली बार चारों वर्णों (ब्राह्मण, क्षत्रिय, वैश्य, शूद्र) का उल्लेख मिलता है।"
+    },
+    {
+        "qH": "गायत्री मंत्र के नाम से प्रसिद्ध मंत्र सर्वप्रथम किस ग्रंथ में मिलता है?",
+        "qE": "In which text is the famous Gayatri Mantra found first?",
+        "opt": [
+            "अथर्ववेद",
+            "भागवद गीता",
+            "ऋग्वेद",
+            "मनुस्मृति"
+        ],
+        "ans": 2,
+        "exp": "गायत्री मंत्र, जो सूर्य देवता को समर्पित है, सबसे पहले ऋग्वेद के तीसरे मंडल में विश्वामित्र द्वारा रचित माना जाता है।"
+    },
+    {
+        "qH": "वैदिक कर्मकांड में ‘होता’ का सम्बन्ध है-",
+        "qE": "In Vedic rituals, 'Hota' is related to-",
+        "opt": [
+            "यजुर्वेद से",
+            "ऋग्वेद से",
+            "सामवेद से",
+            "अथर्ववेद से"
+        ],
+        "ans": 1,
+        "exp": "ऋग्वेद की ऋचाओं और मंत्रों का उच्चारण करके देवताओं का आह्वान करने वाले पुरोहित को 'होता' कहा जाता था।"
+    },
+    {
+        "qH": "निम्नलिखित में से कौन-सा अन्न मनुष्य द्वारा सबसे पहले प्रयोग होने वालों में से था?",
+        "qE": "Which of the following grains was among the first to be used by humans?",
+        "opt": [
+            "जौ (यव)",
+            "जई (ओट)",
+            "राई",
+            "गेहूँ"
+        ],
+        "ans": 0,
+        "exp": "वैदिक आर्यों द्वारा मुख्य रूप से सबसे पहले 'यव' यानी जौ का प्रयोग अनाज के रूप में किया गया था।"
+    },
+    {
+        "qH": "आरंभिक वैदिक काल में वर्ण व्यवस्था आधारित थी-",
+        "qE": "In the early Vedic period, the Varna system was based on-",
+        "opt": [
+            "शिक्षा पर",
+            "जन्म पर",
+            "व्यवसाय पर",
+            "प्रतिभा पर"
+        ],
+        "ans": 2,
+        "exp": "शुरुआती (ऋग्वैदिक) काल में वर्ण व्यवस्था जन्म से तय नहीं होती थी, बल्कि व्यक्ति के कर्म और व्यवसाय पर आधारित थी।"
+    },
+    {
+        "qH": "आर्य आर्य-पूर्वों के साथ अपने संघर्षों में सफल रहे, क्योंकि-",
+        "qE": "Aryans were successful in their conflicts with the pre-Aryans because-",
+        "opt": [
+            "उन्होंने बड़े पैमाने पर हाथियों का प्रयोग किया",
+            "वे अधिक लंबे और अधिक बलवान थे",
+            "वे एक उन्नत शहरी संस्कृति से थे",
+            "उन्होंने घोड़ों द्वारा चलाए जा रहे रथों का प्रयोग किया"
+        ],
+        "ans": 3,
+        "exp": "आर्यों ने घोड़ों से खींचे जाने वाले तेज रथों का इस्तेमाल किया, जिसने उन्हें युद्ध में गति और विजय प्रदान की।"
+    },
+    {
+        "qH": "ऋग्वेद में सर्वाधिक संख्या में मंत्र सम्बन्धित है-",
+        "qE": "The maximum number of hymns in the Rigveda are related to-",
+        "opt": [
+            "वरुण से",
+            "अग्नि से",
+            "विष्णु से",
+            "यम से"
+        ],
+        "ans": 1,
+        "exp": "यद्यपि सर्वाधिक सूक्त (250) इंद्र के लिए हैं, लेकिन दिए गए विकल्पों में सबसे अधिक (200 सूक्त) अग्नि देवता के लिए समर्पित हैं।"
+    },
+    {
+        "qH": "ऋग्वेद में ________ ऋचाएँ हैं-",
+        "qE": "There are ________ hymns in the Rigveda-",
+        "opt": [
+            "1017",
+            "1028",
+            "1128",
+            "1020"
+        ],
+        "ans": 1,
+        "exp": "ऋग्वेद को 10 मंडलों में बांटा गया है और इसमें कुल मिलाकर 1028 मंत्र या सूक्त हैं।"
+    },
+    {
+        "qH": "पुराणों की कुल संख्या है-",
+        "qE": "The total number of Puranas is-",
+        "opt": [
+            "16",
+            "12",
+            "18",
+            "20"
+        ],
+        "ans": 2,
+        "exp": "हिंदू धर्मग्रंथों में प्राचीन ज्ञान को समेटे हुए कुल 18 मुख्य पुराण माने गए हैं।"
+    },
+    {
+        "qH": "शतपथ ब्राह्मण सम्बन्धित है-",
+        "qE": "Satapatha Brahmana is related to-",
+        "opt": [
+            "यजुर्वेद से",
+            "ऋग्वेद से",
+            "सामवेद से",
+            "अथर्ववेद से"
+        ],
+        "ans": 0,
+        "exp": "शतपथ ब्राह्मण शुक्ल यजुर्वेद से संबंधित है, जो सबसे महत्वपूर्ण और विस्तृत ब्राह्मण ग्रंथों में गिना जाता है।"
+    },
+    {
+        "qH": "दश-राजाओं के युद्ध में भरतों का पुरोहित कौन था?",
+        "qE": "Who was the priest of the Bharatas in the Battle of Ten Kings?",
+        "opt": [
+            "वशिष्ठ",
+            "विश्वामित्र",
+            "अत्रि",
+            "भृगु"
+        ],
+        "ans": 0,
+        "exp": "'दशराज युद्ध' (दस राजाओं का युद्ध) में भरत कबीले के राजा सुदास के पुरोहित महर्षि वशिष्ठ थे।"
+    },
+    {
+        "qH": "किस वेद में सभा और समिति को प्रजापति की दो पुत्रियां कहा गया है?",
+        "qE": "In which Veda are Sabha and Samiti called the two daughters of Prajapati?",
+        "opt": [
+            "सामवेद",
+            "ऋग्वेद",
+            "यजुर्वेद",
+            "अथर्ववेद"
+        ],
+        "ans": 3,
+        "exp": "अथर्ववेद में लोकतांत्रिक संस्थाओं (सभा और समिति) का महत्व दर्शाते हुए उन्हें प्रजापति की दो पुत्रियां माना गया है।"
+    },
+    {
+        "qH": "निम्नलिखित अभिलेखों में से कौन-सा ईरान से भारत में आर्यों के आने की सूचना देता है?",
+        "qE": "Which of the following inscriptions gives information about the coming of Aryans from Iran to India?",
+        "opt": [
+            "शहबाजगढ़ी",
+            "मान सेहरा",
+            "बोगजकोई",
+            "जूनागढ़"
+        ],
+        "ans": 2,
+        "exp": "बोगजकोई अभिलेख (1400 ई.पू.) में वैदिक देवताओं के नामों का उल्लेख है, जो आर्यों के मध्य एशिया से भारत आने की पुष्टि करता है।"
+    },
+    {
+        "qH": "जिस ग्रंथ में ‘पुरुष मेघ’ का उल्लेख हुआ है, वह है-",
+        "qE": "The text in which 'Purusha Medha' is mentioned is-",
+        "opt": [
+            "शुक्ल यजुर्वेद",
+            "कृष्ण यजुर्वेद",
+            "शतपथ ब्राह्मण",
+            "पंचविश ब्राह्मण"
+        ],
+        "ans": 2,
+        "exp": "पुरुषमेध यज्ञ जैसे महत्वपूर्ण अनुष्ठान का वर्णन मुख्य रूप से शतपथ ब्राह्मण ग्रंथ में प्राप्त होता है।"
+    },
+    {
+        "qH": "निम्नलिखित ग्रंथों में से प्रमुखत: किसमें यज्ञ वेदियों के निर्माण का विवरण मिलता है?",
+        "qE": "Which of the following texts mainly gives details of the construction of sacrificial altars?",
+        "opt": [
+            "धर्मसूत्र",
+            "ब्राह्मसूत्र",
+            "गृहसूत्र",
+            "शुल्वसूत्र"
+        ],
+        "ans": 3,
+        "exp": "शुल्वसूत्र वैदिक गणित और ज्यामिति (Geometry) का सबसे पुराना स्रोत है, जिसमें यज्ञ वेदियों के सटीक निर्माण की विधि है।"
+    },
+    {
+        "qH": "ऋग्वेद में उल्लिखित प्रसिद्ध ‘दश-राजाओं’ का युद्ध किस नदी के किनारे लड़ा गया था?",
+        "qE": "On the banks of which river was the famous 'Battle of Ten Kings' mentioned in the Rigveda fought?",
+        "opt": [
+            "सरस्वती",
+            "परुष्णी",
+            "विपाशा",
+            "असिक्नी"
+        ],
+        "ans": 1,
+        "exp": "दशराज युद्ध वर्तमान रावी नदी के तट पर लड़ा गया था, जिसे वैदिक काल में 'परुष्णी' नदी कहा जाता था।"
+    },
+    {
+        "qH": "निम्न में से किस नदी को ऋग्वेद में ‘मातेतमा’, ‘देवीतमा’ एवं ‘नदीतमा’ संबोधित किया गया है?",
+        "qE": "Which of the following rivers is addressed as 'Matetama', 'Devitama', and 'Naditama' in the Rigveda?",
+        "opt": [
+            "सरस्वती",
+            "सिंधु",
+            "वितस्ता",
+            "यमुना"
+        ],
+        "ans": 0,
+        "exp": "ऋग्वेद काल में सरस्वती सबसे पवित्र नदी थी, इसलिए इसे सभी नदियों और माताओं में श्रेष्ठ माना गया है।"
+    },
+    {
+        "qH": "ऋग्वेद की मूल लिपि थी-",
+        "qE": "The original script of Rigveda was-",
+        "opt": [
+            "खरोष्ठी",
+            "देवनागरी",
+            "पाली",
+            "ब्राह्मी"
+        ],
+        "ans": 3,
+        "exp": "यद्यपि वेदों को लंबे समय तक मौखिक रूप से संजोया गया था, लेकिन ऋग्वेद की मूल लिखित लिपि ब्राह्मी ही मानी जाती है।"
+    },
+    {
+        "qH": "'वेदत्रयी' के अंतर्गत सम्मिलित है-",
+        "qE": "Included under 'Vedatrayi' are-",
+        "opt": [
+            "ऋग्वेद, यजुर्वेद, सामवेद",
+            "ऋग्वेद, यजुर्वेद, अथर्ववेद",
+            "ऋग्वेद, सामदेव, अथर्ववेद",
+            "सामवेद, अथर्ववेद, यजुर्वेद"
+        ],
+        "ans": 0,
+        "exp": "प्राचीनतम तीन वेदों को सामूहिक रूप से 'वेदत्रयी' कहा जाता है, जिसमें बाद में रचित अथर्ववेद शामिल नहीं है।"
+    },
+    {
+        "qH": "ऋग्वैदिक काल में निष्क किस अंग का आभूषण था?",
+        "qE": "In the Rigvedic period, Nishka was an ornament of which body part?",
+        "opt": [
+            "गला का",
+            "कान का",
+            "बाहु का",
+            "कलाई का"
+        ],
+        "ans": 0,
+        "exp": "'निष्क' ऋग्वैदिक काल में गले में पहने जाने वाला स्वर्ण आभूषण था, जो बाद में विनिमय के माध्यम (मुद्रा) के रूप में भी प्रयुक्त होने लगा।"
+    },
+    {
+        "qH": "उपनिषदों को क्या कहा जाता है-",
+        "qE": "What are the Upanishads called?",
+        "opt": [
+            "धर्मशास्त्र",
+            "वेदांत",
+            "पुराण",
+            "ब्राह्मण ग्रंथ"
+        ],
+        "ans": 1,
+        "exp": "उपनिषद वैदिक साहित्य का अंतिम दार्शनिक भाग हैं, इसलिए इन्हें वेदों का अंत अर्थात् 'वेदांत' भी कहा जाता है।"
+    },
+    {
+        "qH": "निम्नलिखित वैदिक देवताओं में से कौन अवेस्ता के देवता अहुरमज्दा से सादृश्य रखता है?",
+        "qE": "Which of the following Vedic deities bears a resemblance to the Avestan deity Ahura Mazda?",
+        "opt": [
+            "वरुण",
+            "इंद्र",
+            "रूद्र",
+            "विष्णु"
+        ],
+        "ans": 0,
+        "exp": "ईरानी पवित्र ग्रंथ जेंद अवेस्ता के महान देवता अहुरमज्दा की विशेषताएं ऋग्वैदिक देवता वरुण से बहुत मिलती-जुलती हैं।"
+    },
+    {
+        "qH": "'राजसूय' से संबंधित अनुष्ठानों का वर्णन है-",
+        "qE": "Rituals related to 'Rajasuya' are described in-",
+        "opt": [
+            "यजुर्वेद में",
+            "ऋग्वेद में",
+            "सामवेद में",
+            "अथर्ववेद में"
+        ],
+        "ans": 0,
+        "exp": "राजा द्वारा किए जाने वाले राजसूय और वाजपेय जैसे बड़े यज्ञों और उनके कर्मकांडों का विस्तृत वर्णन यजुर्वेद में किया गया है।"
+    },
+    {
+        "qH": "अयोध्या का उल्लेख सर्वप्रथम कहाँ मिलता है?",
+        "qE": "Where is Ayodhya first mentioned?",
+        "opt": [
+            "अथर्ववेद में",
+            "ऋग्वेद में",
+            "रामायण में",
+            "महाभारत में"
+        ],
+        "ans": 1,
+        "exp": "अयोध्या जैसे प्राचीन नगरों का सबसे पहला साहित्यिक उल्लेख ऋग्वेद में प्राप्त होता है।"
+    },
+    {
+        "qH": "गोत्र शब्द का प्रयोग सर्वप्रथम हुआ था-",
+        "qE": "The word 'Gotra' was first used in-",
+        "opt": [
+            "ऋग्वेद में",
+            "अथर्ववेद में",
+            "सामवेद में",
+            "यजुर्वेद में"
+        ],
+        "ans": 0,
+        "exp": "गोत्र शब्द का पहला प्रयोग ऋग्वेद में हुआ था, जिसका प्रारंभिक अर्थ गोष्ठ यानी वह स्थान था जहाँ संपूर्ण कुल की गाएं बांधी जाती थीं।"
+    }
+];
+
+        let cur = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 15;
+        let answered = new Array(questions.length).fill(null);
+
+        function initPalette() {
+            const palette = document.getElementById('palette');
+            palette.innerHTML = '';
+            questions.forEach((_, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-btn';
+                btn.id = `pal-${i}`;
+                btn.textContent = i + 1;
+                btn.onclick = () => jumpTo(i);
+                palette.appendChild(btn);
+            });
+        }
+
+        function jumpTo(i) {
+            cur = i;
+            loadQ();
+        }
+
+        function loadQ() {
+            stopTimer();
+            timeLeft = 15;
+            document.getElementById('timer-sec').textContent = timeLeft;
+
+            const q = questions[cur];
+            document.getElementById('q-count').textContent = `Question ${cur + 1} of ${questions.length}`;
+            document.getElementById('q-hindi').textContent = q.qH;
+            document.getElementById('q-english').textContent = q.qE;
+            document.getElementById('progress-fill').style.width = `${((cur + 1) / questions.length) * 100}%`;
+
+            const box = document.getElementById('options-box');
+            box.innerHTML = '';
+            q.opt.forEach((o, i) => {
+                const b = document.createElement('button');
+                b.className = 'option-btn';
+                if (answered[cur] !== null) {
+                    if (i === q.ans) b.classList.add('correct');
+                    if (answered[cur] === i && i !== q.ans) b.classList.add('wrong');
+                    b.disabled = true;
+                }
+                b.innerHTML = `<b>${String.fromCharCode(65 + i)})</b> ${o}`;
+                b.onclick = () => select(i);
+                box.appendChild(b);
+            });
+
+            const exp = document.getElementById('explanation');
+            if (answered[cur] !== null) {
+                exp.style.display = 'block';
+                document.getElementById('exp-text').textContent = q.exp;
+            } else {
+                exp.style.display = 'none';
+            }
+
+            // Update Palette
+            document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`pal-${cur}`).classList.add('active');
+
+            document.getElementById('prev-btn').disabled = cur === 0;
+            document.getElementById('next-btn').textContent = cur === questions.length - 1 ? "Finish" : "Next";
+        }
+
+        function select(idx) {
+            if (answered[cur] !== null) return;
+            stopTimer();
+            answered[cur] = idx;
+            const q = questions[cur];
+            const pBtn = document.getElementById(`pal-${cur}`);
+
+            if (idx === q.ans) {
+                score++;
+                pBtn.classList.add('correct');
+            } else {
+                pBtn.classList.add('wrong');
+            }
+            document.getElementById('live-score').textContent = score;
+            loadQ();
+        }
+
+        function startTimer() {
+            if (answered[cur] !== null) return;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-sec').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    select(-1); // Mark as wrong/missed
+                }
+            }, 1000);
+        }
+
+        function stopTimer() { clearInterval(timer); }
+
+        function nextQ() {
+            if (cur < questions.length - 1) { cur++; loadQ(); }
+            else { showResult(); }
+        }
+
+        function prevQ() { if (cur > 0) { cur--; loadQ(); } }
+
+        function showResult() {
+            document.getElementById('quiz-box').style.display = 'none';
+            const rs = document.getElementById('result-screen');
+            rs.style.display = 'block';
+            document.getElementById('final-score').textContent = `${score} / ${questions.length}`;
+            document.getElementById('total-text').textContent = `Total Questions: ${questions.length}`;
+
+            const lbLoading = document.getElementById('lb-loading');
+            lbLoading.style.display = 'block';
+
+            if (studentId === 'demo-id' || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                setTimeout(() => {
+                    const currentScore = { name: document.getElementById('reg-name').value || 'You', score: score };
+                    let mockData = [
+                        { name: 'Demo Hero', score: 39 },
+                        { name: 'Om Kumar', score: 36 },
+                        { name: 'Test Student', score: 30 },
+                        currentScore
+                    ];
+                    // sort by score descending
+                    mockData.sort((a, b) => b.score - a.score);
+                    // take top 10
+                    renderLeaderboard(mockData.slice(0, 10));
+                }, 1000);
+            } else if (studentId) {
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'submitScore', id: studentId, score: score })
+                }).then(() => fetchLeaderboard())
+                    .catch(e => { console.error(e); lbLoading.innerText = 'Failed to load leaderboard.'; });
+            }
+        }
+
+        function fetchLeaderboard() {
+            fetch(SCRIPT_URL + '?quizName=' + encodeURIComponent(QUIZ_NAME))
+                .then(r => r.json())
+                .then(data => renderLeaderboard(data))
+                .catch(e => { console.error(e); document.getElementById('lb-loading').innerText = 'Failed to load leaderboard.'; });
+        }
+
+        function renderLeaderboard(data) {
+            document.getElementById('lb-loading').style.display = 'none';
+            const lbList = document.getElementById('lb-list');
+            lbList.innerHTML = '';
+            if (!data || data.length === 0) { lbList.innerHTML = '<p style="text-align: center;">No scores yet.</p>'; return; }
+            data.forEach((entry, i) => {
+                let rClass = '';
+                if (i === 0) rClass = 'rank-1'; else if (i === 1) rClass = 'rank-2'; else if (i === 2) rClass = 'rank-3';
+                lbList.innerHTML += `<div class="lb-item"><span class="${rClass}">#${i + 1} ${entry.name}</span><span style="font-weight:bold;">${entry.score} pts</span></div>`;
+            });
+        }
+
+        // --- Live Quiz Registration Logic ---
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKp_hbUcFmKuAFl3GdkvnzGAeYvP-SQ3fKAm7yJKqJoKYGisjvxSsq9elpdS0izyPEXA/exec';
+        const QUIZ_NAME = 'Vedic Age History Quiz';
+        let studentId = null;
+
+        document.getElementById('reg-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const contact = document.getElementById('reg-contact').value;
+            const btn = document.getElementById('reg-submit');
+
+            if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                studentId = 'demo-id';
+                document.getElementById('registration-overlay').style.display = 'none';
+                return;
+            }
+
+            btn.disabled = true;
+            document.getElementById('reg-loader').style.display = 'block';
+            document.getElementById('reg-error').style.display = 'none';
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'register', quizName: QUIZ_NAME, name: name, contact: contact })
+            }).then(r => r.json()).then(data => {
+                if (data.status === 'success') {
+                    studentId = data.id;
+                    document.getElementById('registration-overlay').style.display = 'none';
+                } else {
+                    throw new Error('Server error');
+                }
+            }).catch(err => {
+                document.getElementById('reg-error').style.display = 'block';
+                btn.disabled = false;
+                document.getElementById('reg-loader').style.display = 'none';
+            });
+        });
+
+        initPalette();
+        loadQ();
+    </script>
+</body>
+
+</html>
