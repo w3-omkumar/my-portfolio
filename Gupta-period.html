@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gupta Period Quiz - Your Target Exam Special</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --gray-light: #f8fafc;
+            --gray-med: #e2e8f0;
+            --text-main: #1e293b;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+        }
+
+        /* Header Area */
+        .header-card {
+            grid-column: 1 / -1;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .header-card h1 { color: var(--primary); font-size: 2.2rem; margin-bottom: 5px; }
+        .header-card p { font-weight: 600; color: var(--text-main); font-size: 1.1rem; }
+
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background: var(--gray-med);
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Quiz Main Section */
+        .quiz-card {
+            background: var(--white);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .timer-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .timer-display {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--danger);
+            background: var(--white);
+        }
+
+        .ctrl-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 800;
+            color: white;
+            transition: transform 0.1s;
+        }
+        .start-btn { background: var(--success); }
+        .stop-btn { background: var(--danger); }
+        .ctrl-btn:active { transform: scale(0.95); }
+
+        .question-box { margin-bottom: 30px; }
+        .q-meta { color: var(--primary); font-weight: bold; font-size: 1.2rem; margin-bottom: 8px; }
+        .q-hindi { font-size: 1.9rem; font-weight: 700; line-height: 1.4; margin-bottom: 12px; color: #000; }
+        .q-english { font-size: 1.3rem; color: #4b5563; font-style: italic; border-left: 4px solid var(--gray-med); padding-left: 15px; }
+
+        /* Options */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option {
+            background: var(--gray-light);
+            border: 2px solid var(--gray-med);
+            padding: 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover:not(.disabled) { border-color: var(--primary); background: #eff6ff; }
+        .option.correct { background: var(--success) !important; color: white; border-color: var(--success); }
+        .option.wrong { background: var(--danger) !important; color: white; border-color: var(--danger); }
+        .option.disabled { cursor: not-allowed; }
+
+        /* Explanation Box */
+        .explanation {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f0fdf4;
+            border-left: 6px solid var(--success);
+            border-radius: 10px;
+            display: none;
+            animation: slideUp 0.4s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Sidebar Palette */
+        .sidebar { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content; }
+        .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px; }
+        .palette-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-med);
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: 0.2s;
+        }
+        .palette-item.active { border-color: var(--primary); }
+        .palette-item.correct { background: var(--success); color: white; }
+        .palette-item.wrong { background: var(--danger); color: white; }
+
+        /* Navigation */
+        .nav-footer { margin-top: 35px; display: flex; justify-content: space-between; }
+        .nav-btn { padding: 14px 35px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        .nav-btn:disabled { background: var(--gray-med); cursor: not-allowed; }
+
+        .result-screen { text-align: center; display: none; }
+        .score-display { font-size: 4rem; font-weight: 900; color: var(--primary); margin: 20px 0; }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Registration Overlay & Leaderboard Styles */
+        .registration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+
+        .registration-box {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .registration-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .registration-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .lb-container {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .lb-item:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .rank-1 { font-weight: bold; color: #fbbf24; } /* Gold */
+        .rank-2 { font-weight: bold; color: #94a3b8; } /* Silver */
+        .rank-3 { font-weight: bold; color: #b45309; } /* Bronze */
+    </style>
+</head>
+<body>
+
+    <div id="registration-overlay" class="registration-overlay">
+        <div class="registration-box">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Live Quiz Registration</h2>
+            <p style="color: #64748b; margin-bottom: 20px; font-size: 0.9rem;">Join to be included on the Live Leaderboard.</p>
+            <form id="reg-form">
+                <input type="text" id="reg-name" placeholder="Full Name" required>
+                <input type="text" id="reg-contact" placeholder="Email or Phone No." required>
+                <button type="submit" id="reg-submit" class="nav-btn" style="width: 100%; height: 45px;">Start Quiz</button>
+            </form>
+            <div id="reg-loader" style="display: none; margin-top: 15px; color: var(--primary); font-weight: bold;">Connecting to database... ⏳</div>
+            <div id="reg-error" style="color: var(--danger); margin-top: 10px; display: none;">Error registering. Try again.</div>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px; line-height: 1.4;">Registration is required for the live leaderboard.</p>
+        </div>
+    </div>
+
+<div class="main-container">
+    <div class="header-card">
+        <h1>Gupta Period Quiz</h1>
+        <p>गुप्त साम्राज्य - Most Important MCQs for Exams | Your Target Exam Special</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <main class="quiz-card">
+        <div id="quiz-ui">
+            <div class="timer-controls">
+                <button class="ctrl-btn stop-btn" onclick="stopTimer()">STOP</button>
+                <div class="timer-display" id="timer-text">25</div>
+                <button class="ctrl-btn start-btn" onclick="startTimer()">START</button>
+            </div>
+
+            <div class="question-box">
+                <div class="q-meta" id="q-label">Question 1 of 30</div>
+                <p class="q-hindi" id="q-hindi"></p>
+                <p class="q-english" id="q-english"></p>
+            </div>
+
+            <div class="options-grid" id="options-grid"></div>
+
+            <div class="explanation" id="exp-box">
+                <strong style="color:var(--success); font-size: 1.2rem;">स्पष्टीकरण (Explanation):</strong>
+                <p id="exp-text" style="font-size: 1.25rem; margin-top: 8px; line-height: 1.5;"></p>
+            </div>
+
+            <div class="nav-footer">
+                <button class="nav-btn" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+                <button class="nav-btn" id="next-btn" onclick="nextQuestion()">Next Question</button>
+            </div>
+        </div>
+
+        <div class="result-screen" id="result-screen">
+            <h2 style="font-size: 2.5rem;">🎉 Quiz Completed!</h2>
+            <div class="score-display" id="final-score">0/30</div>
+            <p id="result-msg" style="font-size: 1.3rem; margin-bottom: 30px;"></p>
+            <button class="nav-btn" onclick="location.reload()">Restart Quiz</button>
+            
+            <div class="lb-container">
+                <h3 style="margin-bottom: 15px; text-align: center; color: var(--text-main);">🏆 Live Leaderboard</h3>
+                <div id="lb-loading" style="text-align: center; color: #64748b; padding: 10px; display: none;">Fetching scores... ⏳</div>
+                <div id="lb-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="sidebar">
+        <h3 style="border-bottom: 2px solid var(--gray-med); padding-bottom: 10px;">Question Palette</h3>
+        <div class="palette-grid" id="palette-grid"></div>
+        <div style="margin-top: 30px; font-size: 0.9rem;">
+            <p>🟢 Green: Correct</p>
+            <p>🔴 Red: Wrong</p>
+            <p>⚪ Gray: Unvisited</p>
+        </div>
+    </aside>
+</div>
+
+<script>
+    const questions = [
+        {
+            questionHindi: "गुप्त वंश का संस्थापक किसे माना जाता है?",
+            questionEnglish: "Who is considered the founder of the Gupta dynasty?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Srigupta / श्रीगुप्त", "Chandragupta II / चंद्रगुप्त II"],
+            correctIndex: 2,
+            explanationHindi: "The Gupta dynasty was founded by Sri Gupta. / गुप्त वंश की स्थापना श्रीगुप्त द्वारा की गई थी।"
+        },
+        {
+            questionHindi: "किस गुप्त शासक को \"भारत का नेपोलियन\" कहा जाता है?",
+            questionEnglish: "Which Gupta ruler is known as the \"Napoleon of India\"?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Chandragupta II / चंद्रगुप्त II", "Samudragupta / समुद्रगुप्त", "Skandagupta / स्कंदगुप्त"],
+            correctIndex: 2,
+            explanationHindi: "Samudragupta is known as the Napoleon of India due to his military conquests. / समुद्रगुप्त को उनकी सैन्य विजयों के कारण भारत का नेपोलियन कहा जाता है।"
+        },
+        {
+            questionHindi: "गुप्त काल को अक्सर क्या कहा जाता है?",
+            questionEnglish: "The Gupta period is often referred to as?",
+            options: ["Silver Age of India / भारत का रजत युग", "Iron Age of India / भारत का लौह युग", "Bronze Age of India / भारत का कांस्य युग", "Golden Age of India / भारत का स्वर्ण युग"],
+            correctIndex: 3,
+            explanationHindi: "The Gupta period is called the \"Golden Age\" of India due to its achievements. / गुप्त काल को कला, विज्ञान और संस्कृति में महत्वपूर्ण उपलब्धियों के कारण भारत का \"स्वर्ण युग\" कहा जाता है।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त II के दरबार में प्रसिद्ध कवि और नाटककार कौन थे?",
+            questionEnglish: "Who was the famous poet and playwright in the court of Chandragupta II?",
+            options: ["Kalidasa / कालिदास", "Banabhatta / बाणभट्ट", "Bhavabhuti / भवभूति", "Bhasa / भास"],
+            correctIndex: 0,
+            explanationHindi: "Kalidasa was the most famous literary figure of Chandragupta II's court. / कालिदास चंद्रगुप्त II के दरबार के सबसे प्रसिद्ध साहित्यिक व्यक्ति थे।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त II के शासनकाल में किस विदेशी यात्री ने भारत का दौरा किया था?",
+            questionEnglish: "Which foreign traveler visited India during the reign of Chandragupta II?",
+            options: ["Ibn Battuta / इब्न बतूता", "Al-Biruni / अल-बिरूनी", "Faxian (Fa Hien) / फाह्यान", "Megasthenes / मेगस्थनीज"],
+            correctIndex: 2,
+            explanationHindi: "The famous Chinese traveler Faxian (Fa Hien) visited India during Chandragupta II's reign. / प्रसिद्ध चीनी यात्री फाह्यान ने चंद्रगुप्त II के शासनकाल के दौरान भारत का दौरा किया था।"
+        },
+        {
+            questionHindi: "किस गुप्त शासक ने 'विक्रमादित्य' की उपाधि धारण की थी?",
+            questionEnglish: "Which Gupta ruler assumed the title of 'Vikramaditya'?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Skandagupta / स्कंदगुप्त"],
+            correctIndex: 2,
+            explanationHindi: "Chandragupta II adopted the title \"Vikramaditya\". / चंद्रगुप्त II ने \"विक्रमादित्य\" की उपाधि अपनाई थी।"
+        },
+        {
+            questionHindi: "निम्नलिखित में से कौन सा ग्रंथ कालिदास द्वारा लिखा गया था?",
+            questionEnglish: "Which of the following texts was written by Kalidasa?",
+            options: ["Arthashastra / अर्थशास्त्र", "Manusmriti / मनुस्मृति", "Raghuvamsha / रघुवंश", "Harshacharita / हर्षचरित"],
+            correctIndex: 2,
+            explanationHindi: "\"Raghuvamsha\", \"Shakuntala\", and \"Meghadutam\" were written by Kalidasa. / \"रघुवंश\", \"शकुंतला\" और \"मेघदूतम्\" प्रसिद्ध कवि कालिदास द्वारा लिखे गए थे।"
+        },
+        {
+            questionHindi: "गुप्त काल के दौरान कौन से प्रसिद्ध गणितज्ञ और खगोलशास्त्री रहते थे?",
+            questionEnglish: "Which famous mathematician and astronomer lived during the Gupta period?",
+            options: ["Aryabhata / आर्यभट्ट", "Varahamihira / वराहमिहिर", "Brahmagupta / ब्रह्मगुप्त", "All of the above / उपरोक्त सभी"],
+            correctIndex: 3,
+            explanationHindi: "Aryabhata, Varahamihira, and Brahmagupta all lived during the Gupta period. / आर्यभट्ट, वराहमिहिर और ब्रह्मगुप्त सभी गुप्त काल के दौरान जीवित थे।"
+        },
+        {
+            questionHindi: "गुप्त लिपि किस प्राचीन लिपि से ली गई थी?",
+            questionEnglish: "The Gupta script was derived from which ancient script?",
+            options: ["Brahmi / ब्राह्मी", "Kharosthi / खरोष्ठी", "Devanagari / देवनागरी", "Siddham / सिद्धम"],
+            correctIndex: 0,
+            explanationHindi: "The Gupta script was derived from the ancient Brahmi script. / गुप्त लिपि प्राचीन ब्राह्मी लिपि से विकसित हुई थी।"
+        },
+        {
+            questionHindi: "गुप्त वंश का अंतिम शासक कौन था?",
+            questionEnglish: "Who was the last ruler of the Gupta dynasty?",
+            options: ["Kumaragupta I / कुमारगुप्त I", "Skandagupta / स्कंदगुप्त", "Vishnugupta / विष्णुगुप्त", "Narasimhagupta / नरसिंहगुप्त"],
+            correctIndex: 2,
+            explanationHindi: "Vishnugupta is known as the last ruler of the Gupta dynasty. / विष्णुगुप्त को गुप्त वंश का अंतिम शासक माना जाता है।"
+        },
+        {
+            questionHindi: "श्रीगुप्त का उत्तराधिकारी कौन सा गुप्त शासक था?",
+            questionEnglish: "Which Gupta ruler was the successor of Sri Gupta?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Chandragupta II / चंद्रगुप्त II", "Samudragupta / समुद्रगुप्त", "Ghatotkacha / घटोत्कच"],
+            correctIndex: 3,
+            explanationHindi: "Ghatotkacha was the successor of the founder, Sri Gupta. / घटोत्कच संस्थापक श्रीगुप्त के उत्तराधिकारी थे।"
+        },
+        {
+            questionHindi: "महरौली का प्रसिद्ध लौह स्तंभ किस गुप्त शासक के शासनकाल में स्थापित किया गया था?",
+            questionEnglish: "The famous iron pillar at Mehrauli was erected during the reign of which Gupta ruler?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Chandragupta II / चंद्रगुप्त II", "Kumaragupta I / कुमारगुप्त I", "Skandagupta / स्कंदगुप्त"],
+            correctIndex: 1,
+            explanationHindi: "The Iron Pillar in Delhi was erected during the reign of Chandragupta II. / दिल्ली का लौह स्तंभ चंद्रगुप्त II के शासनकाल में स्थापित किया गया था।"
+        },
+        {
+            questionHindi: "गुप्त काल के दौरान कौन सा प्रसिद्ध विश्वविद्यालय फला-फूला?",
+            questionEnglish: "Which famous university flourished during the Gupta period?",
+            options: ["Nalanda / नालंदा", "Takshashila / तक्षशिला", "Vikramashila / विक्रमशिला", "Odantapuri / ओदंतपुरी"],
+            correctIndex: 0,
+            explanationHindi: "Nalanda University became a major center of learning during the Gupta period. / गुप्त काल के दौरान नालंदा विश्वविद्यालय शिक्षा का एक प्रमुख केंद्र बन गया।"
+        },
+        {
+            questionHindi: "किस गुप्त शासक ने 'कविराज' की उपाधि धारण की थी?",
+            questionEnglish: "Which Gupta ruler assumed the title 'Kaviraja'?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Kumaragupta I / कुमारगुप्त I"],
+            correctIndex: 1,
+            explanationHindi: "Samudragupta assumed the title 'Kaviraja', as he was also a musician. / समुद्रगुप्त ने 'कविराज' की उपाधि धारण की थी, क्योंकि वे एक संगीतकार भी थे।"
+        },
+        {
+            questionHindi: "किस गुप्त सम्राट को 'महाराजाधिराज' कहा जाता था?",
+            questionEnglish: "Which Gupta emperor was referred to as 'Maharajadhiraja'?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Kumaragupta I / कुमारगुप्त I"],
+            correctIndex: 0,
+            explanationHindi: "Chandragupta I was the first Gupta ruler to be referred to as 'Maharajadhiraja'. / चंद्रगुप्त I को 'महाराजाधिराज' कहा जाता था।"
+        },
+        {
+            questionHindi: "प्रसिद्ध अजंता की गुफाएँ किस राजवंश के दौरान पूरी हुई थीं?",
+            questionEnglish: "The famous Ajanta caves were completed during which dynasty?",
+            options: ["Maurya / मौर्य", "Satavahana / सातवाहन", "Gupta / गुप्त", "Chola / चोल"],
+            correctIndex: 2,
+            explanationHindi: "The creation of the Ajanta cave paintings happened primarily during the Gupta dynasty. / अजंता गुफा की चित्रकारी का निर्माण मुख्य रूप से गुप्त काल में हुआ था।"
+        },
+        {
+            questionHindi: "हूणों के आक्रमणों को सफलतापूर्वक विफल करने के लिए किस गुप्त शासक को जाना जाता है?",
+            questionEnglish: "Which Gupta ruler was known for successfully repelling the Huns invasions?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Skandagupta / स्कंदगुप्त"],
+            correctIndex: 3,
+            explanationHindi: "Skandagupta successfully repelled the invasions of the Huns. / स्कंदगुप्त ने हूणों के आक्रमणों को सफलतापूर्वक विफल किया।"
+        },
+        {
+            questionHindi: "नालंदा विश्वविद्यालय मुख्य रूप से किस अध्ययन के लिए जाना जाता था?",
+            questionEnglish: "The Nalanda University was primarily known for the study of?",
+            options: ["Medicine / चिकित्सा", "Astronomy / खगोल विज्ञान", "Buddhist philosophy / बौद्ध दर्शन", "Mathematics / गणित"],
+            correctIndex: 2,
+            explanationHindi: "The Nalanda University was a world center for Buddhist philosophy. / नालंदा विश्वविद्यालय मुख्य रूप से बौद्ध दर्शन के लिए प्रसिद्ध था।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त II के दरबारी खगोलशास्त्री कौन थे?",
+            questionEnglish: "Who was the court astronomer of Chandragupta II?",
+            options: ["Aryabhata / आर्यभट्ट", "Varahamihira / वराहमिहिर", "Brahmagupta / ब्रह्मगुप्त", "Bhaskara I / भास्कर I"],
+            correctIndex: 1,
+            explanationHindi: "Varahamihira served as the court astronomer for Chandragupta II. / वराहमिहिर चंद्रगुप्त II के दरबारी खगोलशास्त्री थे।"
+        },
+        {
+            questionHindi: "प्रयागराज स्तंभ शिलालेख किस गुप्त शासक के बारे में जानकारी प्रदान करता है?",
+            questionEnglish: "The Allahabad Pillar inscription provides information about which Gupta ruler?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Skandagupta / स्कंदगुप्त"],
+            correctIndex: 1,
+            explanationHindi: "The Allahabad Pillar Inscription (Prayaga Prashasti) describes Samudragupta. / प्रयाग प्रशस्ति समुद्रगुप्त की उपलब्धियों का वर्णन करता है।"
+        },
+        {
+            questionHindi: "किस गुप्त सम्राट ने संप्रभुता घोषित करने के लिए अश्वमेध यज्ञ किया था?",
+            questionEnglish: "Which Gupta emperor performed the Ashvamedha sacrifice?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Kumaragupta I / कुमारगुप्त I"],
+            correctIndex: 1,
+            explanationHindi: "Samudragupta performed the Ashvamedha Yajna to proclaim his sovereignty. / समुद्रगुप्त ने अपनी संप्रभुता घोषित करने के लिए अश्वमेध यज्ञ किया था।"
+        },
+        {
+            questionHindi: "किस गुप्त शासक ने 'महेन्द्रादित्य' की उपाधि धारण की थी?",
+            questionEnglish: "Which Gupta ruler assumed the title 'Mahendraditya'?",
+            options: ["Purugupta / पुरुगुप्त", "Kumargupta I / कुमारगुप्त I", "Kumargupta II / कुमारगुप्त II", "Buddhgupta / बुद्धगुप्त"],
+            correctIndex: 1,
+            explanationHindi: "Kumargupta I assumed the title 'Mahendraditya'. / कुमारगुप्त I ने 'महेन्द्रादित्य' की उपाधि धारण की थी।"
+        },
+        {
+            questionHindi: "किस शासक को खुद को वीणा बजाते हुए दर्शाने वाले सोने के सिक्के जारी करने के लिए जाना जाता था?",
+            questionEnglish: "Who issued gold coins depicting himself playing the veena?",
+            options: ["Chandragupta I / चंद्रगुप्त I", "Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Kumaragupta I / कुमारगुप्त I"],
+            correctIndex: 1,
+            explanationHindi: "Samudragupta issued coins depicting himself playing the veena. / समुद्रगुप्त ने खुद को वीणा बजाते हुए दर्शाने वाले सिक्के जारी किए।"
+        },
+        {
+            questionHindi: "खगोल विज्ञान पर प्रसिद्ध ग्रंथ \"बृहत संहिता\" किसने लिखा था?",
+            questionEnglish: "Who wrote the famous treatise on astronomy called “Brihat Samhita”?",
+            options: ["Aryabhata / आर्यभट्ट", "Varahamihira / वराहमिहिर", "Brahmagupta / ब्रह्मगुप्त", "Bhaskara I / भास्कर I"],
+            correctIndex: 1,
+            explanationHindi: "“Brihat Samhita” was written by the scholar Varahamihira. / \"बृहत संहिता\" विद्वान वराहमिहिर द्वारा लिखा गया था।"
+        },
+        {
+            questionHindi: "\"आर्यभटीय\" के लेखक कौन हैं?",
+            questionEnglish: "Who is the author of “Aryabhatiya”?",
+            options: ["Aryabhata / आर्यभट्ट", "Varahamihira / वराहमिहिर", "Brahmagupta / ब्रह्मगुप्त", "Bhaskara I / भास्कर I"],
+            correctIndex: 0,
+            explanationHindi: "\"Aryabhatiya\" and \"Surya Siddhanta\" were authored by Aryabhata. / \"आर्यभटीय\" और \"सूर्य सिद्धांत\" प्रसिद्ध विद्वान आर्यभट्ट द्वारा लिखे गए थे।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त I की मुख्य रानी कौन थीं?",
+            questionEnglish: "Who was the chief queen of Chandragupta I?",
+            options: ["Dattadevi / दत्तदेवी", "Kumaradevi / कुमारदेवी", "Dhruvadevi / ध्रुवदेवी", "Kuberanaga / कुबेरनागा"],
+            correctIndex: 1,
+            explanationHindi: "Kumaradevi (Lichchhavi princess) was the chief queen of Chandragupta I. / कुमारदेवी चंद्रगुप्त I की मुख्य रानी थीं।"
+        },
+        {
+            questionHindi: "चंद्रगुप्त II के शासनकाल में गुप्त साम्राज्य की राजधानी क्या थी?",
+            questionEnglish: "What was the capital of the Gupta Empire during Chandragupta II's reign?",
+            options: ["Pataliputra / पाटलिपुत्र", "Ujjain / उज्जैन", "Mathura / मथुरा", "Kanauj / कन्नौज"],
+            correctIndex: 0,
+            explanationHindi: "Pataliputra remained the primary capital of the Gupta Empire. / पाटलिपुत्र गुप्त साम्राज्य की राजधानी थी।"
+        },
+        {
+            questionHindi: "किस गुप्त सम्राट को पश्चिमी भारत के शक शासकों को हराने का श्रेय दिया जाता है?",
+            questionEnglish: "Which Gupta emperor defeated the Shaka rulers of western India?",
+            options: ["Samudragupta / समुद्रगुप्त", "Chandragupta II / चंद्रगुप्त II", "Skandagupta / स्कंदगुप्त", "Chandragupta I / चंद्रगुप्त I"],
+            correctIndex: 1,
+            explanationHindi: "Chandragupta II is credited with the conquest of the Shaka rulers (Western Satraps). / चंद्रगुप्त II को शक शासकों पर विजय का श्रेय दिया जाता है।"
+        },
+        {
+            questionHindi: "\"गुप्त युग\" (Gupta era) की शुरुआत किस वर्ष में होती है?",
+            questionEnglish: "The term “Gupta era” begins in which year?",
+            options: ["319-320 CE", "375-376 CE", "450-451 CE", "600-601 CE"],
+            correctIndex: 0,
+            explanationHindi: "The Gupta era begins in 319-320 CE with the accession of Chandragupta I. / गुप्त युग 319-320 ईस्वी में शुरू होता है।"
+        },
+        {
+            questionHindi: "निम्नलिखित में से कौन चंद्रगुप्त II का नवरत्न नहीं था?",
+            questionEnglish: "Who among the following was not a navaratna of Chandragupta II?",
+            options: ["Amarsimha / अमरसिंह", "Dhanvantri / धन्वंतरि", "Varahamihira / वराहमिहिर", "Bhaskaracharya / भास्कराचार्य"],
+            correctIndex: 3,
+            explanationHindi: "Bhaskaracharya lived much later and was not part of the Navaratnas. / भास्कराचार्य चंद्रगुप्त II के नवरत्नों में से एक नहीं थे।"
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+    let timeLeft = 25;
+    let timerId = null;
+    let answered = new Array(questions.length).fill(null);
+
+    // Elements
+    const qHindi = document.getElementById('q-hindi');
+    const qEnglish = document.getElementById('q-english');
+    const optionsGrid = document.getElementById('options-grid');
+    const expBox = document.getElementById('exp-box');
+    const expText = document.getElementById('exp-text');
+    const timerText = document.getElementById('timer-text');
+    const progressBar = document.getElementById('progress-bar');
+    const paletteGrid = document.getElementById('palette-grid');
+    const qLabel = document.getElementById('q-label');
+    const quizUI = document.getElementById('quiz-ui');
+    const resultScreen = document.getElementById('result-screen');
+
+    function initPalette() {
+        paletteGrid.innerHTML = '';
+        questions.forEach((_, i) => {
+            const item = document.createElement('div');
+            item.className = 'palette-item';
+            item.innerText = i + 1;
+            item.id = `pal-${i}`;
+            item.onclick = () => jumpTo(i);
+            paletteGrid.appendChild(item);
+        });
+    }
+
+    function jumpTo(index) {
+        currentQ = index;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        stopTimer();
+        const q = questions[currentQ];
+        
+        qLabel.innerText = `Question ${currentQ + 1} of ${questions.length}`;
+        qHindi.innerText = q.questionHindi;
+        qEnglish.innerText = q.questionEnglish;
+        
+        optionsGrid.innerHTML = '';
+        expBox.style.display = 'none';
+        
+        q.options.forEach((opt, i) => {
+            const btn = document.createElement('div');
+            btn.className = 'option';
+            btn.innerHTML = `<strong>${String.fromCharCode(65+i)}.</strong> &nbsp; ${opt}`;
+            
+            if (answered[currentQ] !== null) {
+                btn.classList.add('disabled');
+                if (i === q.correctIndex) btn.classList.add('correct');
+                if (answered[currentQ] === i && i !== q.correctIndex) btn.classList.add('wrong');
+            } else {
+                btn.onclick = () => selectOption(i);
+            }
+            optionsGrid.appendChild(btn);
+        });
+
+        if (answered[currentQ] !== null) {
+            showExplanation();
+        } else {
+            timeLeft = 25;
+            timerText.innerText = timeLeft;
+            startTimer();
+        }
+
+        updateUI();
+    }
+
+    function selectOption(index) {
+        if (answered[currentQ] !== null) return;
+        
+        stopTimer();
+        answered[currentQ] = index;
+        const q = questions[currentQ];
+        
+        if (index === q.correctIndex) {
+            score++;
+        }
+        
+        loadQuestion();
+    }
+
+    function showExplanation() {
+        expBox.style.display = 'block';
+        expText.innerText = questions[currentQ].explanationHindi;
+    }
+
+    function startTimer() {
+        if (timerId) clearInterval(timerId);
+        timerId = setInterval(() => {
+            timeLeft--;
+            timerText.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                stopTimer();
+                selectOption(-1); // Mark as skipped/wrong
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerId);
+    }
+
+    function updateUI() {
+        // Progress Bar
+        const percent = ((currentQ + 1) / questions.length) * 100;
+        progressBar.style.width = `${percent}%`;
+
+        // Palette
+        document.querySelectorAll('.palette-item').forEach(el => el.classList.remove('active'));
+        const activePal = document.getElementById(`pal-${currentQ}`);
+        activePal.classList.add('active');
+
+        questions.forEach((_, i) => {
+            const pal = document.getElementById(`pal-${i}`);
+            if (answered[i] !== null) {
+                if (answered[i] === questions[i].correctIndex) {
+                    pal.classList.add('correct');
+                } else {
+                    pal.classList.add('wrong');
+                }
+            }
+        });
+
+        // Nav Buttons
+        document.getElementById('prev-btn').disabled = currentQ === 0;
+        document.getElementById('next-btn').innerText = currentQ === questions.length - 1 ? 'Finish' : 'Next Question';
+    }
+
+    function nextQuestion() {
+        if (currentQ < questions.length - 1) {
+            currentQ++;
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQ > 0) {
+            currentQ--;
+            loadQuestion();
+        }
+    }
+
+    function showResults() {
+        quizUI.style.display = 'none';
+        resultScreen.style.display = 'block';
+        document.getElementById('final-score').innerText = `${score} / ${questions.length}`;
+        
+        let msg = "";
+        const ratio = score / questions.length;
+        if (ratio >= 0.8) msg = "Excellent! You are a master of Gupta History.";
+        else if (ratio >= 0.5) msg = "Good Job! Keep practicing to improve your score.";
+        else msg = "Keep studying! The Gupta Period is full of fascinating history.";
+        
+        document.getElementById('result-msg').innerText = msg;
+
+        // Submit score and fetch leaderboard
+        const lbLoading = document.getElementById('lb-loading');
+        lbLoading.style.display = 'block';
+
+        if (studentId) {
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'submitScore', id: studentId, score: score })
+            }).then(() => fetchLeaderboard())
+                .catch(e => { console.error(e); lbLoading.innerText = 'Failed to load leaderboard.'; });
+        } else {
+            fetchLeaderboard();
+        }
+    }
+
+    // --- Live Quiz Registration & Leaderboard Logic ---
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKp_hbUcFmKuAFl3GdkvnzGAeYvP-SQ3fKAm7yJKqJoKYGisjvxSsq9elpdS0izyPEXA/exec';
+    const QUIZ_NAME = 'Gupta Period Quiz';
+    let studentId = null;
+
+    document.getElementById('reg-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value;
+        const contact = document.getElementById('reg-contact').value;
+        const btn = document.getElementById('reg-submit');
+
+        btn.disabled = true;
+        document.getElementById('reg-loader').style.display = 'block';
+        document.getElementById('reg-error').style.display = 'none';
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'register', quizName: QUIZ_NAME, name: name, contact: contact })
+        }).then(r => r.json()).then(data => {
+            if (data.status === 'success') {
+                studentId = data.id;
+                document.getElementById('registration-overlay').style.display = 'none';
+            } else {
+                throw new Error('Server error');
+            }
+        }).catch(err => {
+            console.error('Registration error:', err);
+            document.getElementById('reg-error').style.display = 'block';
+            btn.disabled = false;
+            document.getElementById('reg-loader').style.display = 'none';
+        });
+    });
+
+    // Start App
+    initPalette();
+    loadQuestion();
+
+    function fetchLeaderboard() {
+        fetch(SCRIPT_URL + '?quizName=' + encodeURIComponent(QUIZ_NAME))
+            .then(r => r.json())
+            .then(data => renderLeaderboard(data))
+            .catch(e => { 
+                console.error(e); 
+                document.getElementById('lb-loading').innerText = 'Failed to load leaderboard.'; 
+            });
+    }
+
+    function renderLeaderboard(data) {
+        document.getElementById('lb-loading').style.display = 'none';
+        const lbList = document.getElementById('lb-list');
+        lbList.innerHTML = '';
+        if (!data || data.length === 0) { 
+            lbList.innerHTML = '<p style="text-align: center;">No scores yet.</p>'; 
+            return; 
+        }
+        data.forEach((entry, i) => {
+            let rClass = '';
+            if (i === 0) rClass = 'rank-1'; 
+            else if (i === 1) rClass = 'rank-2'; 
+            else if (i === 2) rClass = 'rank-3';
+            lbList.innerHTML += `<div class="lb-item"><span class="${rClass}">#${i + 1} ${entry.name}</span><span style="font-weight:bold;">${entry.score} pts</span></div>`;
+        });
+    }
+
+</script>
+
+</body>
+</html>
