@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pushyabhuti Dynasty Quiz - Vardhana Empire</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --gray-bg: #f1f5f9;
+            --gray-border: #cbd5e1;
+            --text-dark: #0f172a;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        body {
+            background-color: var(--gray-bg);
+            color: var(--text-dark);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 1250px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+        }
+
+        /* Top Header & Progress */
+        .header-section {
+            grid-column: 1 / -1;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .header-section h1 { color: var(--primary); font-size: 2.4rem; margin-bottom: 5px; }
+        .header-section h2 { font-size: 1.3rem; color: #64748b; margin-bottom: 15px; }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 14px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Main Quiz Area */
+        .quiz-container {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .timer-circle {
+            width: 80px;
+            height: 80px;
+            border: 5px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--danger);
+            background: #fff;
+        }
+
+        .btn-ctrl {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 1rem;
+        }
+        .btn-start { background: var(--success); }
+        .btn-stop { background: var(--danger); }
+
+        /* Question Styles */
+        .question-content { margin-bottom: 35px; }
+        .q-num { color: var(--primary); font-weight: 800; font-size: 1.4rem; margin-bottom: 10px; }
+        .q-hindi { font-size: 2.1rem; font-weight: 700; line-height: 1.3; color: #000; margin-bottom: 15px; }
+        .q-english { font-size: 1.4rem; color: #475569; font-style: italic; border-left: 5px solid #cbd5e1; padding-left: 15px; }
+
+        /* Options */
+        .options-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .option-item {
+            background: #f8fafc;
+            border: 2px solid var(--gray-border);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.4rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .option-item:hover:not(.disabled) { border-color: var(--primary); background: #f0f7ff; }
+        .option-item.correct { background: var(--success) !important; color: white; border-color: var(--success); }
+        .option-item.wrong { background: var(--danger) !important; color: white; border-color: var(--danger); }
+        .option-item.disabled { cursor: not-allowed; }
+
+        /* Explanation Section */
+        .explanation-box {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f0fdf4;
+            border-left: 8px solid var(--success);
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .exp-title { color: var(--success); font-weight: 800; font-size: 1.3rem; margin-bottom: 10px; display: block; }
+        .exp-body { font-size: 1.4rem; line-height: 1.5; color: #166534; }
+
+        /* Sidebar Palette */
+        .sidebar { background: var(--white); padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content; }
+        .palette-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--gray-bg); }
+        .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .palette-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e2e8f0;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        .palette-cell.current { border-color: var(--primary); }
+        .palette-cell.correct { background: var(--success); color: white; }
+        .palette-cell.wrong { background: var(--danger); color: white; }
+
+        /* Footer Nav */
+        .nav-buttons { margin-top: 40px; display: flex; justify-content: space-between; }
+        .btn-nav { padding: 15px 40px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
+        .btn-nav:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+        .result-view { text-align: center; display: none; padding: 50px 0; }
+        .score-circle { font-size: 5rem; font-weight: 900; color: var(--primary); margin: 30px 0; }
+
+        @media (max-width: 1000px) {
+            .wrapper { grid-template-columns: 1fr; }
+            .options-list { grid-template-columns: 1fr; }
+        }
+
+        /* Registration Overlay & Leaderboard Styles */
+        .registration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+
+        .registration-box {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .registration-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .registration-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .lb-container {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+        }
+
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .lb-item:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .rank-1 { font-weight: bold; color: #fbbf24; } /* Gold */
+        .rank-2 { font-weight: bold; color: #94a3b8; } /* Silver */
+        .rank-3 { font-weight: bold; color: #b45309; } /* Bronze */
+    </style>
+</head>
+<body>
+
+    <div id="registration-overlay" class="registration-overlay">
+        <div class="registration-box">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Live Quiz Registration</h2>
+            <p style="color: #64748b; margin-bottom: 20px; font-size: 0.9rem;">Join to be included on the Live Leaderboard.</p>
+            <form id="reg-form">
+                <input type="text" id="reg-name" placeholder="Full Name" required>
+                <input type="text" id="reg-contact" placeholder="Email or Phone No." required>
+                <button type="submit" id="reg-submit" class="btn-nav" style="width: 100%; height: 45px; padding: 0;">Start Quiz</button>
+            </form>
+            <div id="reg-loader" style="display: none; margin-top: 15px; color: var(--primary); font-weight: bold;">Connecting to database... ⏳</div>
+            <div id="reg-error" style="color: var(--danger); margin-top: 10px; display: none;">Error registering. Try again.</div>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px; line-height: 1.4;">Registration is required for the live leaderboard.</p>
+        </div>
+    </div>
+
+<div class="wrapper">
+    <header class="header-section">
+        <h1>पुष्यभूति वंश (वर्धन वंश)</h1>
+        <h2>वर्धन वंश - Most Important MCQs for Exams</h2>
+        <div class="progress-bar-bg">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+    </header>
+
+    <main class="quiz-container">
+        <div id="quiz-screen">
+            <div class="timer-row">
+                <button class="btn-ctrl btn-stop" onclick="pauseTimer()">STOP</button>
+                <div class="timer-circle" id="timer-val">25</div>
+                <button class="btn-ctrl btn-start" onclick="startTimer()">START</button>
+            </div>
+
+            <div class="question-content">
+                <div class="q-num" id="q-label">Question 1 of 30</div>
+                <div class="q-hindi" id="q-hindi"></div>
+                <div class="q-english" id="q-english"></div>
+            </div>
+
+            <div class="options-list" id="options-grid"></div>
+
+            <div class="explanation-box" id="explanation-box">
+                <span class="exp-title">व्याख्या (Explanation):</span>
+                <p class="exp-body" id="explanation-text"></p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-nav" id="prev-btn" onclick="goPrev()" disabled>Previous</button>
+                <button class="btn-nav" id="next-btn" onclick="goNext()">Next Question</button>
+            </div>
+        </div>
+
+        <div class="result-view" id="result-screen">
+            <h1>Quiz Summary</h1>
+            <div class="score-circle" id="final-score">0/30</div>
+            <p id="result-text" style="font-size: 1.5rem; margin-bottom: 30px;"></p>
+            <button class="btn-nav" onclick="location.reload()">Restart Quiz</button>
+            
+            <div class="lb-container">
+                <h3 style="margin-bottom: 15px; text-align: center; color: var(--text-dark);">🏆 Live Leaderboard</h3>
+                <div id="lb-loading" style="text-align: center; color: #64748b; padding: 10px; display: none;">Fetching scores... ⏳</div>
+                <div id="lb-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="palette-title">Question Palette</div>
+        <div class="palette-grid" id="palette-grid"></div>
+        <div style="margin-top: 40px; font-size: 0.95rem; color: #64748b; line-height: 2;">
+            <div style="display:flex; align-items:center; gap:8px;"><span style="width:15px; height:15px; background:var(--success); border-radius:3px;"></span> Correct Answer</div>
+            <div style="display:flex; align-items:center; gap:8px;"><span style="width:15px; height:15px; background:var(--danger); border-radius:3px;"></span> Wrong Answer</div>
+            <div style="display:flex; align-items:center; gap:8px;"><span style="width:15px; height:15px; background:#e2e8f0; border-radius:3px;"></span> Unvisited</div>
+        </div>
+    </aside>
+</div>
+
+<script>
+    const quizData = [
+        {
+            questionHindi: "पुष्यभूति वंश का संस्थापक कौन था?",
+            questionEnglish: "Who was the founder of the Pushyabhuti dynasty?",
+            options: ["Harshavardhana / हर्षवर्धन", "Pushyabhuti / पुष्यभूति", "Rajyavardhana / राज्यवर्धन", "Prabhakaravardhana / प्रभाकरवर्धन"],
+            correctIndex: 1,
+            explanationHindi: "The Pushyabhuti dynasty was founded by Pushyabhuti. / पुष्यभूति वंश की स्थापना पुष्यभूति ने की थी।"
+        },
+        {
+            questionHindi: "पुष्यभूति वंश के शासक के रूप में प्रभाकरवर्धन का उत्तराधिकारी कौन बना?",
+            questionEnglish: "Who succeeded Prabhakaravardhana as the ruler of the Pushyabhuti dynasty?",
+            options: ["Harshavardhana / हर्षवर्धन", "Rajyavardhana / राज्यवर्धन", "Bhaskaravardhana / भास्करवर्धन", "Grahavarman / ग्रहवर्मन"],
+            correctIndex: 1,
+            explanationHindi: "Rajyavardhana succeeded Prabhakaravardhana as the ruler of the dynasty. / प्रभाकरवर्धन के बाद राज्यवर्धन शासक बना।"
+        },
+        {
+            questionHindi: "किस वर्धन शासक को हर्ष के नाम से भी जाना जाता है?",
+            questionEnglish: "Which Vardhana ruler is also known as Harsha?",
+            options: ["Prabhakaravardhana / प्रभाकरवर्धन", "Rajyavardhana / राज्यवर्धन", "Harshavardhana / हर्षवर्धन", "Adityavardhana / आदित्यवर्धन"],
+            correctIndex: 2,
+            explanationHindi: "Harshavardhana is commonly referred to as king Harsha. / हर्षवर्धन को आमतौर पर राजा हर्ष के नाम से भी जाना जाता है।"
+        },
+        {
+            questionHindi: "हर्ष के शासनकाल में किस चीनी यात्री ने भारत का दौरा किया था?",
+            questionEnglish: "Which Chinese traveler visited India during the reign of Harsha?",
+            options: ["Fa-Hien / फाह्यान", "I-Tsing / इत्सिंग", "Xuanzang (Hiuen Tsang) / ह्वेन त्सांग", "Marco Polo / मार्को पोलो"],
+            correctIndex: 2,
+            explanationHindi: "Xuanzang (Hiuen Tsang) visited India during Harsha's reign to study Buddhism. / ह्वेन त्सांग ने बौद्ध धर्म का अध्ययन करने के लिए हर्ष के शासनकाल के दौरान भारत का दौरा किया था।"
+        },
+        {
+            questionHindi: "हर्षवर्धन की राजधानी कहाँ स्थित थी?",
+            questionEnglish: "Where was Harshavardhana's capital located?",
+            options: ["Pataliputra / पाटलिपुत्र", "Kannauj / कन्नौज", "Ujjain / उज्जैन", "Thanesar / थानेसर"],
+            correctIndex: 1,
+            explanationHindi: "Initial capital was Thanesar, and Harsha later shifted it to Kannauj. / पुष्यभूति वंश की प्रारंभिक राजधानी थानेसर थी, जिसे बाद में हर्ष ने कन्नौज स्थानांतरित कर दिया था।"
+        },
+        {
+            questionHindi: "राज्यवर्धन की हत्या किसने की, जिसके बाद हर्ष सिंहासन पर बैठा?",
+            questionEnglish: "Who killed Rajyavardhana, leading to Harsha's ascension to the throne?",
+            options: ["Shashanka / शशांक", "Pulakeshin II / पुलकेशिन द्वितीय", "Devagupta / देवगुप्त", "Kirtivarman / कीर्तिवर्मन"],
+            correctIndex: 0,
+            explanationHindi: "The Gauda king Shashanka treacherously killed Rajyavardhana. / गौड़ राजा शशांक ने धोखे से राज्यवर्धन की हत्या कर दी थी।"
+        },
+        {
+            questionHindi: "अपने जीवन के उत्तरार्ध में, हर्षवर्धन किस धर्म का अनुयायी बन गया?",
+            questionEnglish: "Later in his life, Harshavardhana became a follower of which religion?",
+            options: ["Hinduism / हिंदू धर्म", "Jainism / जैन धर्म", "Buddhism / बौद्ध धर्म", "Zoroastrianism / पारसी धर्म"],
+            correctIndex: 2,
+            explanationHindi: "Initially a Shaivite, Harsha later patronized and became a follower of Mahayana Buddhism. / हर्ष बाद में महायान बौद्ध धर्म के संरक्षक और अनुयायी बन गए।"
+        },
+        {
+            questionHindi: "हर्ष ने कौन से प्रसिद्ध संस्कृत नाटक लिखे?",
+            questionEnglish: "Which famous Sanskrit plays did Harsha write?",
+            options: ["Nagananda, Ratnavali, Priyadarsika / नागानंद, रत्नावली, प्रियदर्शिका", "Mrichchhakatika, Shakuntala", "Raghuvamsa, Kumarasambhava", "Abhijnanasakuntalam, Malavikagnimitram"],
+            correctIndex: 0,
+            explanationHindi: "Harsha authored three prominent Sanskrit plays: Nagananda, Ratnavali, and Priyadarshika. / हर्ष ने तीन प्रमुख संस्कृत नाटक लिखे: नागानंद, रत्नावली और प्रियदर्शिका।"
+        },
+        {
+            questionHindi: "हर्ष की प्रसिद्ध धार्मिक सभा का आयोजन किस नदी के तट पर हुआ था?",
+            questionEnglish: "Which river was the site of Harsha's famous religious assembly?",
+            options: ["Ganga / गंगा", "Yamuna / यमुना", "Saraswati / सरस्वती", "Narmada / नर्मदा"],
+            correctIndex: 0,
+            explanationHindi: "Harsha's significant religious and administrative assemblies took place around the Ganga river. / हर्ष की महत्वपूर्ण सभाएं गंगा नदी के आसपास हुईं।"
+        },
+        {
+            questionHindi: "हर्ष की बहन का क्या नाम था?",
+            questionEnglish: "What was the name of Harsha's sister?",
+            options: ["Chandralekha / चंद्रलेखा", "Rajyasri (Rajyashri) / राज्यश्री", "Vasavadatta / वासवदत्ता", "Sundari / सुंदरी"],
+            correctIndex: 1,
+            explanationHindi: "Harsha's sister was named Rajyasri, whose husband was killed by Shashanka. / हर्ष की बहन का नाम राज्यश्री था।"
+        },
+        {
+            questionHindi: "किस चालुक्य शासक ने हर्ष को हराया था?",
+            questionEnglish: "Who was the Chalukya ruler that defeated Harsha?",
+            options: ["Pulakeshin I / पुलकेशिन प्रथम", "Pulakeshin II / पुलकेशिन द्वितीय", "Kirtivarman / कीर्तिवर्मन", "Mangalesha / मंगलेश"],
+            correctIndex: 1,
+            explanationHindi: "Harsha was defeated by Pulakeshin II on the banks of the Narmada river. / हर्ष को नर्मदा नदी के तट पर चालुक्य शासक पुलकेशिन द्वितीय ने हराया था।"
+        },
+        {
+            questionHindi: "कौन सा ग्रंथ हर्ष के शासन और प्रशासन का विस्तृत विवरण प्रदान करता है?",
+            questionEnglish: "Which text provides a detailed account of Harsha's reign and administration?",
+            options: ["Arthashastra / अर्थशास्त्र", "Rajatarangini / राजतरंगिणी", "Harshacharita / हर्षचरित", "Ashtadhyayi / अष्टाध्यायी"],
+            correctIndex: 2,
+            explanationHindi: "The 'Harshacharita,' written by Banabhatta, provides a detailed account of Harsha's life. / बाणभट्ट द्वारा लिखित 'हर्षचरित' हर्ष के जीवन का विस्तृत विवरण प्रदान करती है।"
+        },
+        {
+            questionHindi: "हर्ष का दरबारी कवि कौन था?",
+            questionEnglish: "Who was the court poet of Harsha?",
+            options: ["Kalidasa / कालिदास", "Bhasa / भास", "Banabhatta / बाणभट्ट", "Bharavi / भारवि"],
+            correctIndex: 2,
+            explanationHindi: "Banabhatta was the Asthana Kavi (court poet) of King Harshavardhana. / बाणभट्ट राजा हर्षवर्धन के दरबारी कवि थे।"
+        },
+        {
+            questionHindi: "हर्ष के दरबार की प्राथमिक भाषा क्या थी?",
+            questionEnglish: "What was the primary language of Harsha's court?",
+            options: ["Prakrit / प्राकृत", "Pali / पाली", "Sanskrit / संस्कृत", "Tamil / तमिल"],
+            correctIndex: 2,
+            explanationHindi: "The primary language used for literary works and drama was Sanskrit. / हर्ष के दरबार में उपयोग की जाने वाली प्राथमिक भाषा संस्कृत थी।"
+        },
+        {
+            questionHindi: "हर्षवर्धन की माता कौन थीं?",
+            questionEnglish: "Who was the mother of Harshavardhana?",
+            options: ["Yasomati / यशोमती", "Mahadevi / महादेवी", "Rajyashri / राज्यश्री", "Vadhana / वधना"],
+            correctIndex: 0,
+            explanationHindi: "The mother of Harshavardhana was Yasomati. / हर्षवर्धन की माता का नाम यशोमती था।"
+        },
+        {
+            questionHindi: "हर्ष के दरबार में किस देश का दूत आया था?",
+            questionEnglish: "Harsha's court was visited by an envoy from which country?",
+            options: ["Persia / फारस", "Arabia / अरब", "China / चीन", "Rome / रोम"],
+            correctIndex: 2,
+            explanationHindi: "Harsha maintained diplomatic relations with China. / हर्ष ने चीन के साथ राजनयिक संबंध बनाए रखे।"
+        },
+        {
+            questionHindi: "हर्ष की मृत्यु किस वर्ष हुई थी?",
+            questionEnglish: "In which year did Harsha die?",
+            options: ["641 AD", "650 AD", "645 AD", "647 AD"],
+            correctIndex: 3,
+            explanationHindi: "Harsha died in 647 AD without an heir. / हर्ष की मृत्यु 647 ईस्वी में बिना किसी उत्तराधिकारी के हुई।"
+        },
+        {
+            questionHindi: "नालंदा विश्वविद्यालय में हर्ष की क्या भूमिका थी?",
+            questionEnglish: "What was Harsha's role in the Nalanda University?",
+            options: ["Founder / संस्थापक", "Chancellor / कुलाधिपति", "Patron / संरक्षक", "Teacher / शिक्षक"],
+            correctIndex: 2,
+            explanationHindi: "Harsha acted as a strong patron of the Nalanda University. / हर्ष ने नालंदा विश्वविद्यालय के एक मजबूत संरक्षक के रूप में कार्य किया।"
+        },
+        {
+            questionHindi: "हर्ष द्वारा हर पाँच वर्ष में कौन सी सभा आयोजित की जाती थी?",
+            questionEnglish: "Which assembly was held every five years by Harsha?",
+            options: ["Buddhist Council", "Prayag Assembly / प्रयाग सभा", "Hindu Conclave", "Jain Congregation"],
+            correctIndex: 1,
+            explanationHindi: "Harsha organized the Prayag Assembly every five years to promote charity. / हर्ष हर पांच साल में प्रयाग सभा का आयोजन करते थे।"
+        },
+        {
+            questionHindi: "हर्ष का नाटक \"रत्नावली\" किस विषय से संबंधित है?",
+            questionEnglish: "The “Ratnavali” play by Harsha deals with which theme?",
+            options: ["Romance / रोमांस (प्रेम प्रसंग)", "Warfare / युद्ध", "Philosophy / दर्शन", "Religion / धर्म"],
+            correctIndex: 0,
+            explanationHindi: "The play authored by Harsha deals with the theme of romance. / हर्ष द्वारा रचित नाटक 'रत्नावली' प्रेम प्रसंग के विषय से संबंधित है।"
+        },
+        {
+            questionHindi: "हर्ष का शासन किस प्राचीन भारतीय ग्रंथ से प्रभावित था?",
+            questionEnglish: "Harsha's governance was influenced by which ancient Indian treatise?",
+            options: ["Arthashastra / अर्थशास्त्र", "Manusmriti / मनुस्मृति", "Ramayana / रामायण", "Mahabharata / महाभारत"],
+            correctIndex: 0,
+            explanationHindi: "Harsha's administrative governance was influenced by the ancient treatise Arthashastra. / हर्ष का प्रशासन प्राचीन ग्रंथ अर्थशास्त्र से प्रभावित था।"
+        },
+        {
+            questionHindi: "राज्यश्री के पति का क्या नाम था?",
+            questionEnglish: "What was the name of the husband of Rajyashri?",
+            options: ["Deva Gupta / देवगुप्त", "Dhruvasena II", "Shashanka / शशांक", "Grahavarman / ग्रहवर्मन"],
+            correctIndex: 3,
+            explanationHindi: "The husband of King Harshavardhana's sister Rajyashri was Grahavarman. / हर्ष की बहन राज्यश्री के पति का नाम ग्रहवर्मन था।"
+        },
+        {
+            questionHindi: "हर्ष का युद्ध और शांति का मंत्री कौन था?",
+            questionEnglish: "Who was Harsha's minister of war and peace?",
+            options: ["Bana / बाण", "Xuanzang / ह्वेन त्सांग", "Bhandi / भंडी", "Skandagupta / स्कंदगुप्त"],
+            correctIndex: 2,
+            explanationHindi: "Bhandi served as Harsha's minister of war and peace. / भंडी ने हर्ष के युद्ध और शांति के मंत्री के रूप में कार्य किया।"
+        },
+        {
+            questionHindi: "हर्ष संवत किस वर्ष शुरू हुआ था?",
+            questionEnglish: "The Harsha era started in which year?",
+            options: ["606 CE", "610 CE", "612 CE", "620 CE"],
+            correctIndex: 0,
+            explanationHindi: "The Harsha era marks his coronation as emperor and began in 606 CE. / हर्ष संवत 606 ईस्वी में शुरू हुआ था।"
+        },
+        {
+            questionHindi: "हवर्धन को अन्य किस नाम से जाना जाता था?",
+            questionEnglish: "By which other name was Harshavardhana known?",
+            options: ["Rajyavardhan / राज्यवर्धन", "Siladitya / शीलादित्य", "Prabhakarvardha / प्रभाकरवर्धन", "Grahavarman / ग्रहवर्मन"],
+            correctIndex: 1,
+            explanationHindi: "Harshavardhana was also known by the alternate title 'Siladitya'. / हर्षवर्धन को 'शीलादित्य' के नाम से भी जाना जाता था।"
+        },
+        {
+            questionHindi: "वर्धन वंश का पहला महत्वपूर्ण (स्वतंत्र) शासक किसे माना जाता है?",
+            questionEnglish: "Who is considered the first important (independent) ruler of the Vardhana Dynasty?",
+            options: ["Harshvardhan / हर्षवर्धन", "Prabhakaravardhana / प्रभाकरवर्धन", "Rajyavardhan / राज्यवर्धन", "Grahavarman / ग्रहवर्मन"],
+            correctIndex: 1,
+            explanationHindi: "Prabhakaravardhana was the first independent monarch of the dynasty. / प्रभाकरवर्धन राजवंश के पहले स्वतंत्र सम्राट थे।"
+        },
+        {
+            questionHindi: "हर्ष के समकालीन प्रतिद्वंद्वी पुलकेशिन द्वितीय किस वंश के थे?",
+            questionEnglish: "Harsha's rival, Pulakeshin II, belonged to which dynasty?",
+            options: ["Pallava / पल्लव", "Chola / चोल", "Chalukya / चालुक्य", "Rashtrakuta / राष्ट्रकूट"],
+            correctIndex: 2,
+            explanationHindi: "Pulakeshin II, who successfully resisted Harsha, belonged to the Chalukya dynasty. / पुलकेशिन द्वितीय चालुक्य वंश के थे।"
+        },
+        {
+            questionHindi: "हर्ष ने किन नदियों के संगम पर प्रयाग सभा का आयोजन किया था?",
+            questionEnglish: "Harsha organized the Prayag Assembly at the confluence of which rivers?",
+            options: ["Ganges, Yamuna, Saraswati", "Ganges, Yamuna, Brahmaputra", "Ganges, Godavari, Krishna", "Ganges, Yamuna, Narmada"],
+            correctIndex: 0,
+            explanationHindi: "Historically organized at the confluence of the Ganges, Yamuna, and Saraswati rivers. / इसका आयोजन गंगा, यमुना और सरस्वती के संगम पर किया गया था।"
+        },
+        {
+            questionHindi: "निम्नलिखित में से कौन सा आधुनिक शहर हर्ष के साम्राज्य का हिस्सा था?",
+            questionEnglish: "Which of the following modern-day cities was part of Harsha's empire?",
+            options: ["Delhi / दिल्ली", "Bangalore / बैंगलोर", "Mumbai / मुंबई", "Kolkata / कोलकाता"],
+            correctIndex: 0,
+            explanationHindi: "Harsha's rule widely extended over northern India, including regions like Delhi. / हर्ष का शासन उत्तरी भारत तक फैला हुआ था, जिसमें दिल्ली भी शामिल थी।"
+        },
+        {
+            questionHindi: "अपनी जीत के कारण भारत का नेपोलियन किसे कहा जाता था?",
+            questionEnglish: "Who was called India's Napoleon because of his victories?",
+            options: ["Skandagupta / स्कंदगुप्त", "Chandragupta / चंद्रगुप्त", "Brahmagupta / ब्रह्मगुप्त", "Samudragupta / समुद्रगुप्त"],
+            correctIndex: 3,
+            explanationHindi: "Samudragupta of the Gupta dynasty is known as the Napoleon of India. / गुप्त वंश के समुद्रगुप्त को भारत का नेपोलियन कहा जाता है।"
+        }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+    let timer = 25;
+    let timerInterval = null;
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    // --- Live Quiz Registration & Leaderboard Logic ---
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKp_hbUcFmKuAFl3GdkvnzGAeYvP-SQ3fKAm7yJKqJoKYGisjvxSsq9elpdS0izyPEXA/exec';
+    const QUIZ_NAME = 'Pushyabhuti Dynasty Quiz';
+    let studentId = null;
+
+    document.getElementById('reg-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value;
+        const contact = document.getElementById('reg-contact').value;
+        const btn = document.getElementById('reg-submit');
+
+        btn.disabled = true;
+        document.getElementById('reg-loader').style.display = 'block';
+        document.getElementById('reg-error').style.display = 'none';
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'register', quizName: QUIZ_NAME, name: name, contact: contact })
+        }).then(r => r.json()).then(data => {
+            if (data.status === 'success') {
+                studentId = data.id;
+                document.getElementById('registration-overlay').style.display = 'none';
+            } else {
+                throw new Error('Server error');
+            }
+        }).catch(err => {
+            console.error('Registration error:', err);
+            document.getElementById('reg-error').style.display = 'block';
+            btn.disabled = false;
+            document.getElementById('reg-loader').style.display = 'none';
+        });
+    });
+
+    // Initial Load
+    window.onload = () => {
+        renderPalette();
+        loadQuestion();
+    };
+
+    function renderPalette() {
+        const grid = document.getElementById('palette-grid');
+        grid.innerHTML = '';
+        quizData.forEach((_, i) => {
+            const cell = document.createElement('div');
+            cell.className = 'palette-cell';
+            cell.innerText = i + 1;
+            cell.id = `pal-${i}`;
+            cell.onclick = () => { currentIdx = i; loadQuestion(); };
+            grid.appendChild(cell);
+        });
+    }
+
+    function loadQuestion() {
+        pauseTimer();
+        const data = quizData[currentIdx];
+        
+        // Reset View
+        document.getElementById('explanation-box').style.display = 'none';
+        document.getElementById('q-label').innerText = `Question ${currentIdx + 1} of ${quizData.length}`;
+        document.getElementById('q-hindi').innerText = data.questionHindi;
+        document.getElementById('q-english').innerText = data.questionEnglish;
+        
+        const grid = document.getElementById('options-grid');
+        grid.innerHTML = '';
+        
+        data.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            div.className = 'option-item';
+            div.innerHTML = `<strong>${String.fromCharCode(65 + i)}.</strong> &nbsp; ${opt}`;
+            
+            if (userAnswers[currentIdx] !== null) {
+                div.classList.add('disabled');
+                if (i === data.correctIndex) div.classList.add('correct');
+                if (userAnswers[currentIdx] === i && i !== data.correctIndex) div.classList.add('wrong');
+            } else {
+                div.onclick = () => handleAnswer(i);
+            }
+            grid.appendChild(div);
+        });
+
+        if (userAnswers[currentIdx] !== null) {
+            showExplanation();
+        } else {
+            // First question special rule: Wait for manual start
+            if (currentIdx === 0) {
+                timer = 25;
+                document.getElementById('timer-val').innerText = timer;
+            } else {
+                timer = 25;
+                document.getElementById('timer-val').innerText = timer;
+                startTimer();
+            }
+        }
+
+        updateSidebar();
+        updateProgress();
+    }
+
+    function handleAnswer(idx) {
+        pauseTimer();
+        userAnswers[currentIdx] = idx;
+        if (idx === quizData[currentIdx].correctIndex) score++;
+        loadQuestion();
+    }
+
+    function showExplanation() {
+        const box = document.getElementById('explanation-box');
+        box.style.display = 'block';
+        document.getElementById('explanation-text').innerText = quizData[currentIdx].explanationHindi;
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timer--;
+            document.getElementById('timer-val').innerText = timer;
+            if (timer <= 0) {
+                clearInterval(timerInterval);
+                if (userAnswers[currentIdx] === null) handleAnswer(-1);
+            }
+        }, 1000);
+    }
+
+    function pauseTimer() {
+        clearInterval(timerInterval);
+    }
+
+    function updateSidebar() {
+        quizData.forEach((_, i) => {
+            const cell = document.getElementById(`pal-${i}`);
+            cell.className = 'palette-cell';
+            if (i === currentIdx) cell.classList.add('current');
+            if (userAnswers[i] !== null) {
+                if (userAnswers[i] === quizData[i].correctIndex) cell.classList.add('correct');
+                else cell.classList.add('wrong');
+            }
+        });
+    }
+
+    function updateProgress() {
+        const percent = ((currentIdx + 1) / quizData.length) * 100;
+        document.getElementById('progress-bar').style.width = percent + '%';
+        document.getElementById('prev-btn').disabled = currentIdx === 0;
+        document.getElementById('next-btn').innerText = currentIdx === quizData.length - 1 ? "Finish Quiz" : "Next Question";
+    }
+
+    function goNext() {
+        if (currentIdx < quizData.length - 1) {
+            currentIdx++;
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function goPrev() {
+        if (currentIdx > 0) {
+            currentIdx--;
+            loadQuestion();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('final-score').innerText = `${score} / ${quizData.length}`;
+        
+        let msg = "Keep Practicing!";
+        if (score > 25) msg = "Excellent Knowledge! You are an expert.";
+        else if (score > 15) msg = "Good Effort! Study a bit more to master this topic.";
+        
+        document.getElementById('result-text').innerText = msg;
+
+        // Submit score and fetch leaderboard
+        const lbLoading = document.getElementById('lb-loading');
+        if (lbLoading) lbLoading.style.display = 'block';
+
+        if (studentId) {
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'submitScore', id: studentId, score: score })
+            }).then(() => fetchLeaderboard())
+                .catch(e => { console.error(e); if(lbLoading) lbLoading.innerText = 'Failed to load leaderboard.'; });
+        } else {
+            fetchLeaderboard();
+        }
+    }
+
+    function fetchLeaderboard() {
+        fetch(SCRIPT_URL + '?quizName=' + encodeURIComponent(QUIZ_NAME))
+            .then(r => r.json())
+            .then(data => renderLeaderboard(data))
+            .catch(e => { 
+                console.error(e); 
+                document.getElementById('lb-loading').innerText = 'Failed to load leaderboard.'; 
+            });
+    }
+
+    function renderLeaderboard(data) {
+        document.getElementById('lb-loading').style.display = 'none';
+        const lbList = document.getElementById('lb-list');
+        lbList.innerHTML = '';
+        if (!data || data.length === 0) { 
+            lbList.innerHTML = '<p style="text-align: center;">No scores yet.</p>'; 
+            return; 
+        }
+        data.forEach((entry, i) => {
+            let rClass = '';
+            if (i === 0) rClass = 'rank-1'; 
+            else if (i === 1) rClass = 'rank-2'; 
+            else if (i === 2) rClass = 'rank-3';
+            lbList.innerHTML += `<div class="lb-item"><span class="${rClass}">#${i + 1} ${entry.name}</span><span style="font-weight:bold;">${entry.score} pts</span></div>`;
+        });
+    }
+</script>
+
+</body>
+</html>
