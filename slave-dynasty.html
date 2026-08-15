@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>गुलाम वंश (Slave Dynasty) - Important PYQs Quiz</title>
+    <style>
+        /* Modern CSS Variables & Reset */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --correct: #16a34a;
+            --correct-bg: #dcfce7;
+            --wrong: #dc2626;
+            --wrong-bg: #fee2e2;
+            --unvisited: #cbd5e1;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif, 'Noto Sans Devanagari';
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Header Layout */
+        header {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-top: 8px;
+        }
+
+        .title-area h1 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .title-area .subtitle {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #dc2626;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Timer Controls */
+        .timer-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .timer-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-mono: monospace;
+            color: var(--text-main);
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .timer-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .timer-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .timer-btn.stop-btn {
+            background-color: #e11d48;
+        }
+
+        .timer-btn.stop-btn:hover {
+            background-color: #be123c;
+        }
+
+        /* Main Workspace Grid */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Quiz Main Area */
+        .quiz-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .question-text-hi {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .question-text-en {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.8rem;
+            line-height: 1.4;
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+            width: 100%;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-btn[disabled] {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct) !important;
+            color: #14532d !important;
+            font-weight: 600;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong) !important;
+            color: #7f1d1d !important;
+        }
+
+        .option-prefix {
+            font-weight: 700;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .explanation-box.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .explanation-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .exp-hi {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .exp-en {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Nav Footer */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            background-color: var(--text-main);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .action-btn:disabled {
+            background-color: var(--unvisited);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Question Palette Sidebar */
+        .sidebar {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-color: var(--unvisited);
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .palette-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .palette-btn.current {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        }
+
+        .palette-btn.correct {
+            background-color: var(--correct);
+            color: white;
+        }
+
+        .palette-btn.wrong {
+            background-color: var(--wrong);
+            color: white;
+        }
+
+        .legend {
+            margin-top: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        /* Responsive Layout Adjustments */
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+            .palette-grid {
+                grid-template-columns: repeat(10, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Responsive Top Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Application Header -->
+    <header>
+        <div class="title-area">
+            <h1>गुलाम वंश (Slave Dynasty)</h1>
+            <div class="subtitle"><span class="live-dot"></span> History Important PYQs (LIVE)</div>
+        </div>
+
+        <div class="timer-section">
+            <div class="timer-display" id="timerDisplay">25</div>
+            <button class="timer-btn" id="startTimerBtn">START</button>
+            <button class="timer-btn stop-btn" id="stopTimerBtn">STOP</button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="app-container">
+        
+        <!-- Interactive Quiz Container -->
+        <main class="quiz-card">
+            <div>
+                <div class="question-header" id="questionTracker">Question 1 of 30</div>
+                
+                <div class="question-text-hi" id="qHindi">Loading Question...</div>
+                <div class="question-text-en" id="qEnglish">Loading Question...</div>
+
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <div class="explanation-box" id="explanationBox">
+                    <div class="explanation-title">Explanation / व्याख्या:</div>
+                    <div class="exp-hi" id="expHindi"></div>
+                    <div class="exp-en" id="expEnglish"></div>
+                </div>
+            </div>
+
+            <div class="nav-footer">
+                <button class="action-btn" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
+                <button class="action-btn" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
+            </div>
+        </main>
+
+        <!-- Right Sidebar Palette -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Question Palette</div>
+            <div class="palette-grid" id="paletteGrid">
+                <!-- Dynamic Palette Buttons -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color" style="background: var(--unvisited);"></div> Unvisited</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--correct);"></div> Correct</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--wrong);"></div> Wrong</div>
+                <div class="legend-item"><div class="legend-color" style="border: 2px solid var(--primary);"></div> Current</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // Quiz Data Array
+        const quizData = [
+            {
+                questionHindi: "1. गुलाम वंश का संस्थापक कौन था?",
+                questionEnglish: "Who was the founder of the Slave Dynasty?",
+                options: ["Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Razia Sultan (रजिया सुल्तान)"],
+                correctIndex: 1,
+                explanationHindi: "कुतुब-उद-दीन ऐबक, जो मोहम्मद गोरी का एक तुर्की दास था, उसने 1206 ईस्वी में इस वंश की स्थापना की थी।",
+                explanationEnglish: "Qutb-ud-din Aibak, a Turkish slave of Muhammad Ghori, founded the dynasty in 1206 A.D."
+            },
+            {
+                questionHindi: "2. ममलुक (गुलाम) वंश की स्थापना किस वर्ष हुई थी?",
+                questionEnglish: "In which year was the Mamluk (Slave) Dynasty founded?",
+                options: ["1192 AD", "1210 AD", "1206 AD", "1290 AD"],
+                correctIndex: 2,
+                explanationHindi: "शहाब-उद-दीन गोरी की मृत्यु के बाद 1206 में यह वंश अस्तित्व में आया।",
+                explanationEnglish: "The dynasty came into being in 1206 after the death of Shahab-ud-Din Ghuri."
+            },
+            {
+                questionHindi: "3. दिल्ली सल्तनत का \"वास्तविक संस्थापक\" किसे माना जाता है?",
+                questionEnglish: "Who is known as the \"real founder\" of the Delhi Sultanate?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Aram Shah (आराम शाह)"],
+                correctIndex: 2,
+                explanationHindi: "इल्तुतमिश को वास्तविक संस्थापक माना जाता है क्योंकि उसने सल्तनत को सुदृढ़ किया और राजधानी को दिल्ली स्थानांतरित कर दिया।",
+                explanationEnglish: "Iltutmish is considered the real founder as he consolidated the Sultanate and shifted the capital to Delhi."
+            },
+            {
+                questionHindi: "4. किस शासक को \"लाख बख्श\" की उपाधि से जाना जाता था?",
+                questionEnglish: "Which ruler was known by the title \"Lakh Baksh\"?",
+                options: ["Iltutmish (इल्तुतमिश)", "Balban (बलबन)", "Razia Sultan (रजिया सुल्तान)", "Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)"],
+                correctIndex: 3,
+                explanationHindi: "उनकी अत्यधिक विनम्रता और उदारता के कारण उन्हें \"लाख बख्श\" (लाखों का दान देने वाला) कहा जाता था।",
+                explanationEnglish: "He was called \"Lakh Baksh\" (Giver of Lakhs) because of his great humility and generosity."
+            },
+            {
+                questionHindi: "5. कुतुब-उद-दीन ऐबक की मृत्यु किस खेल को खेलते समय हुई थी?",
+                questionEnglish: "Qutb-ud-din Aibak died while playing which sport?",
+                options: ["Archery (तीरंदाजी)", "Polo/Chaugan (पोलो/चौगान)", "Wrestling (कुश्ती)", "Horse Racing (घुड़दौड़)"],
+                correctIndex: 1,
+                explanationHindi: "ऐबक की मृत्यु 1210 ईस्वी में पोलो (चौगान) खेलते समय घोड़े से गिरने के कारण हुई थी।",
+                explanationEnglish: "Aibak died in 1210 AD after falling from a horse while playing Polo (Chaugan)."
+            },
+            {
+                questionHindi: "6. कुतुब मीनार का निर्माण किसने पूरा करवाया था?",
+                questionEnglish: "Who completed the construction of the Qutub Minar?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Razia Sultan (रजिया सुल्तान)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)"],
+                correctIndex: 2,
+                explanationHindi: "जबकि ऐबक ने निर्माण शुरू किया था, इल्तुतमिश ने इस संरचना को पूरा किया।",
+                explanationEnglish: "While Aibak started the construction, it was Iltutmish who completed the structure."
+            },
+            {
+                questionHindi: "7. दिल्ली सल्तनत की पहली और एकमात्र महिला शासक कौन थी?",
+                questionEnglish: "Who was the first and only woman ruler of the Delhi Sultanate?",
+                options: ["Mumtaz Begum (मुमताज बेगम)", "Razia Sultan (रजिया सुल्तान)", "Jahanara Begum (जहाँआरा बेगम)", "Chand Bibi (चाँद बीबी)"],
+                correctIndex: 1,
+                explanationHindi: "इल्तुतमिश की पुत्री रजिया सुल्तान ने 1236 से 1240 ईस्वी तक शासन किया।",
+                explanationEnglish: "Razia Sultan, daughter of Iltutmish, ruled from 1236 to 1240 AD."
+            },
+            {
+                questionHindi: "8. किस शासक ने चांदी का \"टका\" और तांबे का \"जीतल\" पेश किया था?",
+                questionEnglish: "Which ruler introduced the silver \"Tanka\" and copper \"Jital\"?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)", "Balban (बलबन)"],
+                correctIndex: 1,
+                explanationHindi: "इल्तुतमिश भारत में मानक अरबी सिक्के (टका और जीतल) पेश करने वाले पहले व्यक्ति थे।",
+                explanationEnglish: "Iltutmish was the first to introduce standard Arabic coinage (Tanka and Jital) in India."
+            },
+            {
+                questionHindi: "9. 'चालीसा' या चालीस रईसों के समूह की स्थापना किसने की थी?",
+                questionEnglish: "Who established the 'Chalisa' or the group of forty nobles?",
+                options: ["Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Razia Sultan (रजिया सुल्तान)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)"],
+                correctIndex: 3,
+                explanationHindi: "इल्तुतमिश ने अपने प्रशासन का समर्थन करने के लिए 40 तुर्की रईसों के इस समूह को बनाया था।",
+                explanationEnglish: "Iltutmish created this group of 40 Turkish nobles to support his administration."
+            },
+            {
+                questionHindi: "10. किस शासक ने 'चालीसा' (चालीस का समूह) को समाप्त कर दिया था?",
+                questionEnglish: "Which ruler abolished the 'Chalisa' (Group of Forty)?",
+                options: ["Razia Sultan (रजिया सुल्तान)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Muiz-ud-din Qaiqabad (मुइज़-उद-दीन कैकुबाद)", "Bahram Shah (बहराम शाह)"],
+                correctIndex: 1,
+                explanationHindi: "बलबन ने सत्ता को केंद्रीकृत करने और रईसों के प्रभाव को कम करने के लिए चालीसा को समाप्त कर दिया था।",
+                explanationEnglish: "Balban abolished the Chalisa to centralize power and reduce the influence of the nobles."
+            },
+            {
+                questionHindi: "11. कुतुब-उद-दीन ऐबक की राजधानी कौन सा शहर था?",
+                questionEnglish: "Which city was the capital of Qutb-ud-din Aibak?",
+                options: ["Delhi (दिल्ली)", "Ajmer (अजमेर)", "Lahore (लाहौर)", "Agra (आग्रा)"],
+                correctIndex: 2,
+                explanationHindi: "कुतुब-उद-दीन ऐबक ने लाहौर को अपनी राजधानी बनाकर शासन किया।",
+                explanationEnglish: "Qutb-ud-din Aibak ruled from Lahore as his capital."
+            },
+            {
+                questionHindi: "12. राजधानी को लाहौर से दिल्ली किसने स्थानांतरित किया?",
+                questionEnglish: "Who shifted the capital from Lahore to Delhi?",
+                options: ["Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Razia Sultan (रजिया सुल्तान)", "Aram Shah (आराम शाह)"],
+                correctIndex: 0,
+                explanationHindi: "इल्तुतमिश ने अपने साम्राज्य के लिए अधिक केंद्रीय स्थिति प्राप्त करने हेतु राजधानी को दिल्ली स्थानांतरित कर दिया।",
+                explanationEnglish: "Iltutmish moved the capital to Delhi to have a more central position for his empire."
+            },
+            {
+                questionHindi: "13. 'जिल्ल-ए-इलाही' (ईश्वर की छाया) की उपाधि किसने धारण की थी?",
+                questionEnglish: "Who assumed the title 'Zill-e-Ilahi' (Shadow of God)?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)"],
+                correctIndex: 2,
+                explanationHindi: "बलबन ने 'जिल्ल-ए-इलाही' की उपाधि धारण करके राजत्व की दैवीय प्रकृति पर जोर दिया।",
+                explanationEnglish: "Balban emphasized the divine nature of kingship by taking the title Zill-e-Ilahi."
+            },
+            {
+                questionHindi: "14. किस शासक ने 'रक्त और लौह' की नीति अपनाई थी?",
+                questionEnglish: "Which ruler introduced the policy of 'Blood and Iron'?",
+                options: ["Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Iltutmish (इल्तुतमिश)", "Razia Sultan (रजिया सुल्तान)", "Aibak (ऐबक)"],
+                correctIndex: 0,
+                explanationHindi: "बलबन ने आंतरिक विद्रोहों को दबाने और मंगोल आक्रमणों से रक्षा करने के लिए इस सख्त नीति का उपयोग किया।",
+                explanationEnglish: "Balban used this strict policy to suppress internal rebellions and protect against Mongol invasions."
+            },
+            {
+                questionHindi: "15. \"दीवान-ए-अर्ज़\" (सैन्य विभाग) की स्थापना किसने की थी?",
+                questionEnglish: "Who established the \"Diwan-i-Arz\" (Military Department)?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Razia Sultan (रजिया सुल्तान)", "Iltutmish (इल्तुतमिश)"],
+                correctIndex: 1,
+                explanationHindi: "सेना और केंद्रीय नियंत्रण को मजबूत करने के लिए, बलबन ने एक अलग सैन्य विभाग बनाया।",
+                explanationEnglish: "To strengthen the army and central control, Balban created a separate military department."
+            },
+            {
+                questionHindi: "16. किसे 'गुलाम का गुलाम' कहा जाता था?",
+                questionEnglish: "Who was known as the 'Slave of a Slave'?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)"],
+                correctIndex: 2,
+                explanationHindi: "इल्तुतमिश, कुतुब-उद-दीन ऐबक का गुलाम था, जो स्वयं मोहम्मद गोरी का गुलाम था।",
+                explanationEnglish: "Iltutmish was the slave of Qutb-ud-din Aibak, who himself was a slave of Muhammad Ghori."
+            },
+            {
+                questionHindi: "17. अजमेर में \"अढ़ाई दिन का झोंपड़ा\" मस्जिद का निर्माण किसने करवाया था?",
+                questionEnglish: "Who built the \"Adhai Din Ka Jhopra\" mosque in Ajmer?",
+                options: ["Iltutmish (इल्तुतमिश)", "Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Razia Sultan (रजिया सुल्तान)", "Balban (बलबन)"],
+                correctIndex: 1,
+                explanationHindi: "यह मस्जिद तुर्की शासन की स्थापना के कुछ समय बाद ऐबक द्वारा अजमेर में बनवाई गई थी।",
+                explanationEnglish: "This mosque was built by Aibak in Ajmer shortly after the establishment of Turkish rule."
+            },
+            {
+                questionHindi: "18. दिल्ली सल्तनत में \"इक्ता प्रणाली\" की शुरुआत किसने की थी?",
+                questionEnglish: "Who introduced the \"Iqta System\" in the Delhi Sultanate?",
+                options: ["Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)"],
+                correctIndex: 2,
+                explanationHindi: "इल्तुतमिश ने भू-राजस्व और सैन्य सेवा के प्रबंधन के लिए इक्ता प्रणाली की शुरुआत की।",
+                explanationEnglish: "Iltutmish introduced the Iqta system to manage land revenue and military service."
+            },
+            {
+                questionHindi: "19. रजिया सुल्तान का विवाह किससे हुआ था?",
+                questionEnglish: "Razia Sultan was married to whom?",
+                options: ["Yaqut (याकूत)", "Altunia (अल्तूनिया)", "Balban (बलबन)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)"],
+                correctIndex: 1,
+                explanationHindi: "उसने भटिंडा के गवर्नर मलिक अल्तूनिया से विवाह किया, जब उसने उसके विरुद्ध विद्रोह किया था।",
+                explanationEnglish: "She married Malik Altunia, the governor of Bathinda, after he rebelled against her."
+            },
+            {
+                questionHindi: "20. गुलाम वंश का अंतिम शासक कौन था?",
+                questionEnglish: "Who was the last ruler of the Slave Dynasty?",
+                options: ["Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Muiz-ud-din Qaiqabad (मुइज़-उद-दीन कैकुबाद)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)", "Aram Shah (आराम शाह)"],
+                correctIndex: 1,
+                explanationHindi: "कैकुबाद बलबन का पोता था और 1290 में खिलजी वंश के सत्ता में आने से पहले अंतिम शासक था।",
+                explanationEnglish: "Qaiqabad was the grandson of Balban and the last ruler before the Khiljis took over in 1290."
+            },
+            {
+                questionHindi: "21. ममलुक (गुलाम) वंश ने कुल कितने वर्षों तक शासन किया?",
+                questionEnglish: "For how many total years did the Mamluk (Slave) Dynasty rule?",
+                options: ["84 years (84 वर्ष)", "90 years (90 वर्ष)", "100 years (100 वर्ष)", "75 years (75 वर्ष)"],
+                correctIndex: 0,
+                explanationHindi: "गुलाम वंश ने 1206 से 1290 तक शासन किया, जो कुल 84 वर्ष होता है।",
+                explanationEnglish: "The Slave Dynasty ruled from 1206 to 1290, totaling 84 years."
+            },
+            {
+                questionHindi: "22. दिल्ली में कुव्वत-उल-इस्लाम मस्जिद का निर्माण किसने करवाया था?",
+                questionEnglish: "Who built the Quwwat-ul-Islam mosque in Delhi?",
+                options: ["Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Razia Sultan (रजिया सुल्तान)", "Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Ala-ud-Din Masood Shah (अला-उद-दीन मसूद शाह)"],
+                correctIndex: 2,
+                explanationHindi: "ऐबक ने दिल्ली में इस प्रसिद्ध मस्जिद का निर्माण करवाया था।",
+                explanationEnglish: "Aibak constructed this famous mosque in Delhi."
+            },
+            {
+                questionHindi: "23. गुलाम वंश को और किस नाम से जाना जाता है?",
+                questionEnglish: "The Slave Dynasty is also known as?",
+                options: ["Lodhi Dynasty (लोदी वंश)", "Mamluk Dynasty (ममलुक वंश)", "Tughlaq Dynasty (तुगलक वंश)", "Sayyid Dynasty (सैयद वंश)"],
+                correctIndex: 1,
+                explanationHindi: "अरबी में \"ममलुक\" का अर्थ \"स्वामित्व वाला\" (दास) होता है, जो शासकों के गुलाम मूल को संदर्भित करता है।",
+                explanationEnglish: "\"Mamluk\" means \"owned\" in Arabic, referring to the rulers' slave origins."
+            },
+            {
+                questionHindi: "24. गयासुद्दीन बलबन किस तुर्की कबीले से संबंधित था?",
+                questionEnglish: "Ghiyasuddin Balban belonged to which Turkish clan?",
+                options: ["Ghori (गोरी)", "Tughlaq (तुगलक)", "Ilbari Turk (इल्बारी तुर्क)", "Khilji (खिलजी)"],
+                correctIndex: 2,
+                explanationHindi: "बलबन तुर्कों के इल्बारी कबीले से संबंधित था।",
+                explanationEnglish: "Balban belonged to the Ilbari tribe of Turks."
+            },
+            {
+                questionHindi: "25. इल्तुतमिश ने किस वर्ष बंगाल पर अधिकार किया था?",
+                questionEnglish: "Bengal was captured by Iltutmish in which year?",
+                options: ["1206", "1225", "1210", "1236"],
+                correctIndex: 1,
+                explanationHindi: "इल्तुतमिश ने 1225 ईस्वी में सफलतापूर्वक बंगाल पर अधिकार कर लिया था।",
+                explanationEnglish: "Iltutmish successfully captured Bengal in 1225 AD."
+            },
+            {
+                questionHindi: "26. सल्तनत के शासक के रूप में कुतुब-उद-दीन ऐबक का उत्तराधिकारी कौन था?",
+                questionEnglish: "Who succeeded Qutb-ud-din Aibak as the ruler of the Sultanate?",
+                options: ["Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Aram Shah (आराम शाह)", "Razia Sultan (रजिया सुल्तान)"],
+                correctIndex: 2,
+                explanationHindi: "आराम शाह ने 1210 में थोड़े समय के लिए ऐबक का स्थान लिया, लेकिन वह अलोकप्रिय था और जल्द ही इल्तुतमिश द्वारा प्रतिस्थापित कर दिया गया।",
+                explanationEnglish: "Aram Shah briefly succeeded Aibak in 1210, but was unpopular and soon replaced by Iltutmish."
+            },
+            {
+                questionHindi: "27. किसने \"सिजदा\" और \"पैबोस\" जैसी सख्त अदालती शिष्टाचार प्रथाओं की शुरुआत की?",
+                questionEnglish: "Who introduced strict court etiquettes like \"Sijda\" and \"Paibos\"?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Razia Sultan (रजिया सुल्तान)"],
+                correctIndex: 1,
+                explanationHindi: "बलबन ने अपनी श्रेष्ठता दिखाने के लिए सिजदा (दंडवत प्रणाम) और पैबोस (सुल्तान के पैरों को चूमना) की प्रथा शुरू की।",
+                explanationEnglish: "Balban introduced Sijda (prostration) and Paibos (kissing the Sultan's feet) to show his superiority."
+            },
+            {
+                questionHindi: "28. \"नायब-ए-मामलिकात\" के पद की शुरुआत किसने की थी?",
+                questionEnglish: "Who introduced the office of \"Naib-i-Mamlikat\"?",
+                options: ["Razia Sultan (रजिया सुल्तान)", "Bahram Shah (बहराम शाह)", "Iltutmish (इल्तुतमिश)", "Qaiqabad (कैकुबाद)"],
+                correctIndex: 1,
+                explanationHindi: "इस पद का सृजन रजिया सुल्तान के उत्तराधिकारी बहराम शाह के शासनकाल के दौरान किया गया था।",
+                explanationEnglish: "This office was created during the reign of Bahram Shah, who succeeded Razia Sultan."
+            },
+            {
+                questionHindi: "29. रजिया सुल्तान के पिता कौन थे?",
+                questionEnglish: "Who was the father of Razia Sultan?",
+                options: ["Qutb-ud-din Aibak (कुतुब-उद-दीन ऐबक)", "Ghiyasuddin Balban (गयासुद्दीन बलबन)", "Shams-ud-din Iltutmish (शम्स-उद-दीन इल्तुतमिश)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)"],
+                correctIndex: 2,
+                explanationHindi: "इल्तुतमिश ने अपनी पुत्री रजिया को अपना उत्तराधिकारी नामित किया क्योंकि वह अपने पुत्रों को अयोग्य मानता था।",
+                explanationEnglish: "Iltutmish nominated his daughter Razia as his successor because he considered his sons unfit."
+            },
+            {
+                questionHindi: "30. गुलाम वंश का अंत किस नए वंश के उदय के साथ हुआ?",
+                questionEnglish: "The Slave Dynasty ended with the rise of which new dynasty?",
+                options: ["Tughlaq Dynasty (तुगलक वंश)", "Khilji Dynasty (खिलजी वंश)", "Lodhi Dynasty (लोदी वंश)", "Mughal Dynasty (मुगल वंश)"],
+                correctIndex: 1,
+                explanationHindi: "1290 में, खिलजी परिवार ने सिंहासन पर कब्जा कर लिया, जिससे गुलाम वंश का अंत हो गया।",
+                explanationEnglish: "In 1290, the Khilji family took over the throne, marking the end of the Slave Dynasty."
+            }
+        ];
+
+        // State Management
+        let currentIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null); // null = unvisited/unanswered
+        let timerSeconds = 25;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // DOM Elements
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startTimerBtn = document.getElementById('startTimerBtn');
+        const stopTimerBtn = document.getElementById('stopTimerBtn');
+        const progressBar = document.getElementById('progressBar');
+        const questionTracker = document.getElementById('questionTracker');
+        const qHindi = document.getElementById('qHindi');
+        const qEnglish = document.getElementById('qEnglish');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const explanationBox = document.getElementById('explanationBox');
+        const expHindi = document.getElementById('expHindi');
+        const expEnglish = document.getElementById('expEnglish');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const paletteGrid = document.getElementById('paletteGrid');
+
+        // Init App
+        function initApp() {
+            renderPalette();
+            loadQuestion(currentIndex);
+            setupTimerControls();
+        }
+
+        // Render Palette Buttons
+        function renderPalette() {
+            paletteGrid.innerHTML = '';
+            quizData.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-btn';
+                btn.innerText = index + 1;
+                btn.onclick = () => jumpToQuestion(index);
+                
+                // Set state classes
+                if (index === currentIndex) btn.classList.add('current');
+                if (userAnswers[index] !== null) {
+                    if (userAnswers[index] === quizData[index].correctIndex) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                }
+                
+                paletteGrid.appendChild(btn);
+            });
+        }
+
+        // Load Question View
+        function loadQuestion(index) {
+            resetTimer();
+            const data = quizData[index];
+            
+            // Header & Tracker Updates
+            questionTracker.innerText = `Question ${index + 1} of ${quizData.length}`;
+            progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+            // Question Text
+            qHindi.innerText = data.questionHindi;
+            qEnglish.innerText = data.questionEnglish;
+
+            // Options Construction
+            optionsContainer.innerHTML = '';
+            const prefixes = ['A', 'B', 'C', 'D'];
+            
+            data.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-prefix">${prefixes[optIdx]}</span> <span>${optText}</span>`;
+                
+                // If question was already answered
+                if (userAnswers[index] !== null) {
+                    btn.disabled = true;
+                    if (optIdx === data.correctIndex) {
+                        btn.classList.add('correct');
+                    }
+                    if (userAnswers[index] === optIdx && optIdx !== data.correctIndex) {
+                        btn.classList.add('wrong');
+                    }
+                } else {
+                    btn.onclick = () => handleOptionClick(optIdx);
+                }
+
+                optionsContainer.appendChild(btn);
+            });
+
+            // Explanation Display Logic
+            if (userAnswers[index] !== null) {
+                expHindi.innerText = data.explanationHindi;
+                expEnglish.innerText = data.explanationEnglish;
+                explanationBox.classList.add('active');
+            } else {
+                explanationBox.classList.remove('active');
+            }
+
+            // Controls
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === quizData.length - 1;
+
+            // Update Palette state
+            renderPalette();
+            
+            // Auto start timer on load
+            startTimer();
+        }
+
+        // Option Select Handler
+        function handleOptionClick(selectedIndex) {
+            stopTimer();
+            userAnswers[currentIndex] = selectedIndex;
+
+            const data = quizData[currentIndex];
+            const optionButtons = optionsContainer.children;
+
+            // Disable all buttons and show colors
+            Array.from(optionButtons).forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === data.correctIndex) {
+                    btn.classList.add('correct');
+                }
+                if (idx === selectedIndex && selectedIndex !== data.correctIndex) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            // Show explanation box
+            expHindi.innerText = data.explanationHindi;
+            expEnglish.innerText = data.explanationEnglish;
+            explanationBox.classList.add('active');
+
+            // Refresh Palette
+            renderPalette();
+        }
+
+        // Navigation Handlers
+        function navigateQuestion(step) {
+            const targetIndex = currentIndex + step;
+            if (targetIndex >= 0 && targetIndex < quizData.length) {
+                currentIndex = targetIndex;
+                loadQuestion(currentIndex);
+            }
+        }
+
+        function jumpToQuestion(index) {
+            currentIndex = index;
+            loadQuestion(currentIndex);
+        }
+
+        // Timer Logic
+        function startTimer() {
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                timerDisplay.innerText = timerSeconds < 10 ? `0${timerSeconds}` : timerSeconds;
+                
+                if (timerSeconds <= 0) {
+                    stopTimer();
+                    // Optionally auto-reveal on timeout without marking selected
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerSeconds = 25;
+            timerDisplay.innerText = '25';
+        }
+
+        function setupTimerControls() {
+            startTimerBtn.onclick = () => startTimer();
+            stopTimerBtn.onclick = () => stopTimer();
+        }
+
+        // Run application initialization
+        window.onload = initApp;
+    </script>
+</body>
+</html>
