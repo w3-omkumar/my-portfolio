@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>तुगलक वंश (1320–1414) Tughlaq dynasty - Live Quiz</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --correct: #16a34a;
+            --correct-bg: #dcfce7;
+            --wrong: #dc2626;
+            --wrong-bg: #fee2e2;
+            --unvisited: #cbd5e1;
+            --border: #e2e8f0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif, 'Noto Sans Devanagari';
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Responsive Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Header Area */
+        header {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            margin-top: 8px;
+        }
+
+        .title-area h1 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .title-area .subtitle {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #dc2626;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.25); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Live Timer & Creator Controls */
+        .timer-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .timer-display {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-family: monospace;
+            color: var(--text-main);
+            min-width: 48px;
+            text-align: center;
+        }
+
+        .timer-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .timer-btn:active {
+            transform: scale(0.97);
+        }
+
+        .timer-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .timer-btn.stop-btn {
+            background-color: #dc2626;
+        }
+
+        .timer-btn.stop-btn:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Workspace Grid */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 2rem;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Main Quiz Card */
+        .quiz-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 2.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Large Hindi Font for Recording Visibility */
+        .question-text-hi {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        .question-text-en {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        /* Option Buttons Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text-main);
+            width: 100%;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-btn[disabled] {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct) !important;
+            color: #14532d !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong) !important;
+            color: #7f1d1d !important;
+        }
+
+        .option-prefix {
+            font-weight: 800;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .option-btn.correct .option-prefix {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.wrong .option-prefix {
+            background: var(--wrong);
+            color: white;
+        }
+
+        /* Immediate Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border-left: 5px solid var(--primary);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .explanation-box.active {
+            display: block;
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .exp-hi {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .exp-en {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Bottom Controls */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            background-color: var(--text-main);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover:not([disabled]) {
+            opacity: 0.9;
+        }
+
+        .action-btn:disabled {
+            background-color: var(--unvisited);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Sidebar Question Palette */
+        .sidebar {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-color: var(--unvisited);
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .palette-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .palette-btn.current {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+        }
+
+        .palette-btn.correct {
+            background-color: var(--correct);
+            color: white;
+        }
+
+        .palette-btn.wrong {
+            background-color: var(--wrong);
+            color: white;
+        }
+
+        .legend {
+            margin-top: 1.75rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        /* Mobile / Small Screen Fallbacks */
+        @media (max-width: 960px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+            .palette-grid {
+                grid-template-columns: repeat(10, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Header & Creator Timer Controls -->
+    <header>
+        <div class="title-area">
+            <h1>तुगलक वंश (1320–1414) Tughlaq dynasty</h1>
+            <div class="subtitle"><span class="live-dot"></span> History Important PYQs (LIVE) | Exam Buddy Om</div>
+        </div>
+
+        <div class="timer-section">
+            <div class="timer-display" id="timerDisplay">25</div>
+            <button class="timer-btn" id="startTimerBtn">START</button>
+            <button class="timer-btn stop-btn" id="stopTimerBtn">STOP</button>
+        </div>
+    </header>
+
+    <!-- Main Content Workspace -->
+    <div class="app-container">
+        
+        <!-- Main Quiz Workspace -->
+        <main class="quiz-card">
+            <div>
+                <div class="question-header" id="questionTracker">Question 1 of 30</div>
+                
+                <div class="question-text-hi" id="qHindi">Loading Question...</div>
+                <div class="question-text-en" id="qEnglish">Loading Question...</div>
+
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Options Dynamically Rendered -->
+                </div>
+
+                <div class="explanation-box" id="explanationBox">
+                    <div class="explanation-title">Explanation / व्याख्या:</div>
+                    <div class="exp-hi" id="expHindi"></div>
+                    <div class="exp-en" id="expEnglish"></div>
+                </div>
+            </div>
+
+            <div class="nav-footer">
+                <button class="action-btn" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
+                <button class="action-btn" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
+            </div>
+        </main>
+
+        <!-- Question Palette Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Question Palette</div>
+            <div class="palette-grid" id="paletteGrid">
+                <!-- Palette Grid Dynamically Rendered -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color" style="background: var(--unvisited);"></div> Unvisited</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--correct);"></div> Correct</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--wrong);"></div> Wrong</div>
+                <div class="legend-item"><div class="legend-color" style="border: 2px solid var(--primary);"></div> Current</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // Data Structure Array
+        const quizData = [
+            {
+                questionHindi: "1. तुगलक वंश का संस्थापक कौन था?",
+                questionEnglish: "Who was the founder of the Tughlaq Dynasty?",
+                options: ["Muhammad bin Tughlaq (मुहम्मद बिन तुगलक)", "Firuz Shah Tughlaq (फिरोज शाह तुगलक)", "Ghiyasuddin Tughlaq (गयासुद्दीन तुगलक)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)"],
+                correctIndex: 2,
+                explanationHindi: "गयासुद्दीन तुगलक, जिसे गाजी मलिक के नाम से भी जाना जाता था, ने 1320 ईस्वी में खुसरो खान को हराकर इस वंश की स्थापना की थी।",
+                explanationEnglish: "Ghiyasuddin Tughlaq, also known as Ghazi Malik, founded the dynasty in 1320 AD after defeating Khusrau Khan."
+            },
+            {
+                questionHindi: "2. तुगलक वंश ने दिल्ली सल्तनत पर लगभग कितने वर्षों तक शासन किया?",
+                questionEnglish: "The Tughlaq Dynasty ruled the Delhi Sultanate for approximately how many years?",
+                options: ["84 years", "94 years", "75 years", "100 years"],
+                correctIndex: 1,
+                explanationHindi: "इस वंश ने 1320 से 1414 ईस्वी तक शासन किया, जिससे यह सल्तनत के सबसे लंबे समय तक शासन करने वाले वंशों में से एक बन गया (लगभग 93-94 वर्ष)।",
+                explanationEnglish: "The dynasty ruled from 1320 to 1414 AD, making it one of the longest-ruling dynasties (approx. 93-94 years)."
+            },
+            {
+                questionHindi: "3. मुहम्मद बिन तुगलक का असली नाम क्या था?",
+                questionEnglish: "What was the real name of Muhammad bin Tughlaq?",
+                options: ["Ghazi Malik (गाजी मलिक)", "Jauna Khan (जौना खान)", "Ulugh Khan (उलूग खान)", "Both B and C (B और C दोनों)"],
+                correctIndex: 3,
+                explanationHindi: "उनका जन्म जौना खान के रूप में हुआ था और सुल्तान बनने से पहले उन्हें उलूग खान के नाम से भी जाना जाता था।",
+                explanationEnglish: "He was born as Jauna Khan and was also known as Ulugh Khan before becoming Sultan."
+            },
+            {
+                questionHindi: "4. गयासुद्दीन तुगलक ने किस शहर को अपनी राजधानी के रूप में बनाया था?",
+                questionEnglish: "Which city was built by Ghiyasuddin Tughlaq as his capital?",
+                options: ["Firozabad (फिरोजाबाद)", "Tughlaqabad (तुगलकाबाद)", "Daulatabad (दौलताबाद)", "Siri (सीरी)"],
+                correctIndex: 1,
+                explanationHindi: "उन्होंने मंगोल आक्रमणों से सुरक्षा के लिए दिल्ली में तुगलकाबाद के विशाल किलेनुमा शहर का निर्माण किया था।",
+                explanationEnglish: "He built the massive fortress city of Tughlaqabad in Delhi to protect against Mongol invasions."
+            },
+            {
+                questionHindi: "5. 1325 ईस्वी में गयासुद्दीन तुगलक की मृत्यु कैसे हुई थी?",
+                questionEnglish: "How did Ghiyasuddin Tughlaq die in 1325 AD?",
+                options: ["In a battle against Mongols (मंगोलों के खिलाफ युद्ध में)", "Illness (बीमारी से)", "Collapse of a wooden pavilion (एक लकड़ी के मंडप के गिरने से)", "Assassination (हत्या)"],
+                correctIndex: 2,
+                explanationHindi: "अफगानपुर में उनके बेटे जौना खान द्वारा बनाए गए एक लकड़ी के मंडप के उन पर गिरने से उनकी मृत्यु हो गई थी।",
+                explanationEnglish: "He died when a wooden pavilion built by his son Jauna Khan collapsed on him at Afghanpur."
+            },
+            {
+                questionHindi: "6. \"हनुज दिल्ली दूर अस्त\" (दिल्ली अभी दूर है) वाक्यांश किस सूफी संत से जुड़ा है?",
+                questionEnglish: "Which Sufi saint is associated with the phrase \"Hunooz Dilli door ast\"?",
+                options: ["Moinuddin Chishti (मोइनुद्दीन चिश्ती)", "Nizamuddin Auliya (निजामुद्दीन औलिया)", "Salim Chishti (सलीम चिश्ती)", "Baba Farid (बाबा फरीद)"],
+                correctIndex: 1,
+                explanationHindi: "निजामुद्दीन औलिया ने कथित तौर पर यह तब कहा था जब गयासुद्दीन तुगलक ने दिल्ली लौटते समय उन्हें धमकी दी थी।",
+                explanationEnglish: "Nizamuddin Auliya reportedly said this when Ghiyasuddin Tughlaq threatened him while returning to Delhi."
+            },
+            {
+                questionHindi: "7. 1327 ईस्वी में, मुहम्मद बिन तुगलक ने राजधानी को दिल्ली से किस स्थान पर स्थानांतरित किया?",
+                questionEnglish: "In 1327 AD, Muhammad bin Tughlaq transferred the capital from Delhi to which place?",
+                options: ["Agra (आगरा)", "Lahore (लाहौर)", "Daulatabad (दौलताबाद)", "Jaunpur (जौनपुर)"],
+                correctIndex: 2,
+                explanationHindi: "उन्होंने दक्कन क्षेत्र पर बेहतर नियंत्रण के लिए राजधानी को दौलताबाद (देवगिरी) स्थानांतरित किया, लेकिन यह कदम विफल रहा।",
+                explanationEnglish: "He moved the capital to Daulatabad (Devagiri) to better control the Deccan region, but the move was a failure."
+            },
+            {
+                questionHindi: "8. मुहम्मद बिन तुगलक का सांकेतिक मुद्रा (token currency) का प्रयोग क्यों विफल रहा?",
+                questionEnglish: "Why did Muhammad bin Tughlaq's token currency experiment fail?",
+                options: ["Shortage of copper (तांबे की कमी)", "Large-scale counterfeiting (बड़े पैमाने पर नकली सिक्के बनाना)", "People refused to use it (लोगों ने उपयोग से इनकार कर दिया)", "Foreign invasion (विदेशी आक्रमण)"],
+                correctIndex: 1,
+                explanationHindi: "जालसाजी के खिलाफ कोई सुरक्षा उपाय नहीं थे, और लोगों ने घर पर ही तांबे/पीतल के नकली सिक्के ढालने शुरू कर दिए थे।",
+                explanationEnglish: "There were no safeguards against forgery, and people began minting fake copper/brass coins at home."
+            },
+            {
+                questionHindi: "9. प्रसिद्ध मोरक्को यात्री इब्न बतूता किसके शासनकाल में भारत आया था?",
+                questionEnglish: "The famous Moroccan traveler Ibn Battuta visited India during whose reign?",
+                options: ["Ghiyasuddin Tughlaq (गयासुद्दीन तुगलक)", "Firuz Shah Tughlaq (फिरोज शाह तुगलक)", "Muhammad bin Tughlaq (मुहम्मद बिन तुगलक)", "Alauddin Khalji (अलाउद्दीन खिलजी)"],
+                correctIndex: 2,
+                explanationHindi: "इब्न बतूता 1334 ईस्वी में आया था और उसे दिल्ली का मुख्य काजी (न्यायाधीश) नियुक्त किया गया था।",
+                explanationEnglish: "Ibn Battuta visited in 1334 AD and was appointed as the Chief Qadi (judge) of Delhi."
+            },
+            {
+                questionHindi: "10. इतिहासकारों ने किस तुगलक सुल्तान को \"विरोधों का मिश्रण\" कहा है?",
+                questionEnglish: "Historians have described which Tughlaq Sultan as a \"mixture of opposites\"?",
+                options: ["Ghiyasuddin Tughlaq (गयासुद्दीन तुगलक)", "Muhammad bin Tughlaq (मुहम्मद बिन तुगलक)", "Firuz Shah Tughlaq (फिरोज शाह तुगलक)", "Abu Bakr Shah (अबू बक्र शाह)"],
+                correctIndex: 1,
+                explanationHindi: "उन्हें एक विरोधाभास के रूप में देखा जाता था—वे दर्शन और विज्ञान में उच्च विद्वान थे, फिर भी उन्होंने अव्यावहारिक योजनाएं बनाईं।",
+                explanationEnglish: "He was seen as a paradox—highly learned in philosophy and science, yet undertaking impractical schemes."
+            },
+            {
+                questionHindi: "11. मुहम्मद बिन तुगलक ने अकाल के दौरान किस उपजाऊ क्षेत्र में कर (tax) बढ़ा दिया था?",
+                questionEnglish: "Muhammad bin Tughlaq increased taxes in which fertile region during a famine?",
+                options: ["Bengal (बंगाल)", "Doab (दोआब)", "Deccan (दक्कन)", "Gujarat (गुजरात)"],
+                correctIndex: 1,
+                explanationHindi: "अकाल के दौरान गंगा और यमुना के बीच की उपजाऊ भूमि (दोआब) पर कर लगाने से व्यापक भुखमरी और विद्रोह हुआ।",
+                explanationEnglish: "Taxing the fertile land between the Ganges and Yamuna (Doab) during a famine caused mass starvation and revolt."
+            },
+            {
+                questionHindi: "12. \"कराचिल अभियान\" किस क्षेत्र के लिए एक दुर्भाग्यपूर्ण सैन्य अभियान था?",
+                questionEnglish: "The \"Qarachil expedition\" was an ill-fated military campaign to which region?",
+                options: ["Persia (फारस)", "Central Asia (मध्य एशिया)", "Himalayas (हिमालयी क्षेत्र)", "South India (दक्षिण भारत)"],
+                correctIndex: 2,
+                explanationHindi: "मुहम्मद बिन तुगलक ने कुमाऊँ/हिमालयी क्षेत्र में एक सेना भेजी थी, जो इलाके और मौसम के कारण लगभग पूरी तरह नष्ट हो गई थी।",
+                explanationEnglish: "Muhammad bin Tughlaq sent an army to the Kumaon/Himalayan region, which was almost entirely destroyed due to the terrain and weather."
+            },
+            {
+                questionHindi: "13. 1351 ईस्वी में मुहम्मद बिन तुगलक का उत्तराधिकारी कौन बना?",
+                questionEnglish: "Who succeeded Muhammad bin Tughlaq in 1351 AD?",
+                options: ["Nasiruddin Mahmud (नासिरुद्दीन महमूद)", "Ghiyasuddin II (गयासुद्दीन द्वितीय)", "Firuz Shah Tughlaq (फिरोज शाह तुगलक)", "Abu Bakr (अबू बक्र)"],
+                correctIndex: 2,
+                explanationHindi: "सिंध में मुहम्मद बिन तुगलक की मृत्यु के बाद उनके चचेरे भाई, फिरोज शाह तुगलक सिंहासन पर बैठे।",
+                explanationEnglish: "His cousin, Firuz Shah Tughlaq, ascended the throne after Muhammad bin Tughlaq died in Sindh."
+            },
+            {
+                questionHindi: "14. फिरोज शाह तुगलक कई नहरों के निर्माण के लिए प्रसिद्ध हैं। सबसे प्रसिद्ध नहर यमुना से किस शहर तक थी?",
+                questionEnglish: "Firuz Shah Tughlaq is famous for building many canals. The most famous canal was from the Yamuna to which city?",
+                options: ["Delhi (दिल्ली)", "Agra (आगरा)", "Hissar (हिसार)", "Jaunpur (जौनपुर)"],
+                correctIndex: 2,
+                explanationHindi: "उन्होंने सिंचाई के लिए यमुना से हिसार तक रजवाह नहर (लगभग 150 मील) का निर्माण कराया था।",
+                explanationEnglish: "He built the Rajwah canal from the Yamuna to Hissar (about 150 miles) for irrigation."
+            },
+            {
+                questionHindi: "15. किस सुल्तान ने पहली बार ब्राह्मणों पर भी जजिया कर लगाया था?",
+                questionEnglish: "Which Sultan levied Jizya tax even on the Brahmins for the first time?",
+                options: ["Muhammad bin Tughlaq (मुहम्मद बिन तुगलक)", "Firuz Shah Tughlaq (फिरोज शाह तुगलक)", "Ghiyasuddin Tughlaq (गयासुद्दीन तुगलक)", "Alauddin Khalji (अलाउद्दीन खिलजी)"],
+                correctIndex: 1,
+                explanationHindi: "फिरोज शाह तुगलक ने जजिया को भू-राजस्व से अलग कर दिया और इसे ब्राह्मणों पर भी लागू कर दिया।",
+                explanationEnglish: "Firuz Shah Tughlaq separated Jizya from land revenue and imposed it on Brahmins."
+            },
+            {
+                questionHindi: "16. फिरोज शाह तुगलक द्वारा कितने नए कस्बों/शहरों के निर्माण का श्रेय दिया जाता है?",
+                questionEnglish: "How many new towns/cities are credited to be built by Firuz Shah Tughlaq?",
+                options: ["100", "200", "300", "50"],
+                correctIndex: 2,
+                explanationHindi: "उन्होंने जौनपुर, हिसार और फिरोजाबाद सहित 300 शहरों और कस्बों के निर्माण का दावा किया था।",
+                explanationEnglish: "He claimed to have built 300 cities and towns, including Jaunpur, Hissar, and Firozabad."
+            },
+            {
+                questionHindi: "17. फिरोज शाह तुगलक अशोक के दो स्तंभों को किन स्थानों से दिल्ली लाए थे?",
+                questionEnglish: "Firuz Shah Tughlaq transported two Ashokan pillars to Delhi from which locations?",
+                options: ["Sarnath and Sanchi (सारनाथ और सांची)", "Topra and Meerut (टोपरा और मेरठ)", "Allahabad and Vaishali (इलाहाबाद और वैशाली)", "Lumbini and Bodh Gaya (लुंबिनी और बोधगया)"],
+                correctIndex: 1,
+                explanationHindi: "वे टोपरा (हरियाणा) और मेरठ से ईसा पूर्व तीसरी शताब्दी के स्तंभों को दिल्ली में अपनी राजधानी में ले आए थे।",
+                explanationEnglish: "He moved 3rd-century BC pillars from Topra (Haryana) and Meerut to his capital in Delhi."
+            },
+            {
+                questionHindi: "18. फिरोज शाह तुगलक द्वारा स्थापित \"दारुल शिफा\" क्या था?",
+                questionEnglish: "What was the \"Darul Shifa\" established by Firuz Shah Tughlaq?",
+                options: ["A library (पुस्तकालय)", "A guest house (अतिथि गृह)", "A free hospital (मुफ्त अस्पताल)", "A school (स्कूल)"],
+                correctIndex: 2,
+                explanationHindi: "उन्होंने लगभग 100 \"दारुल शिफा\" (धर्मार्थ अस्पताल) बनवाए जो गरीबों को मुफ्त इलाज प्रदान करते थे।",
+                explanationEnglish: "He built about 100 \"Darul Shifa\" (charitable hospitals) providing free treatment to the poor."
+            },
+            {
+                questionHindi: "19. दासों की देखभाल के लिए फिरोज शाह तुगलक ने किस विभाग की स्थापना की थी?",
+                questionEnglish: "Which department was created by Firuz Shah Tughlaq to look after slaves?",
+                options: ["Diwan-i-Arz (दीवान-इ-अर्ज़)", "Diwan-i-Bandagan (दीवान-इ-बंदगान)", "Diwan-i-Khairat (दीवान-इ-खैरात)", "Diwan-i-Kohi (दीवान-इ-कोही)"],
+                correctIndex: 1,
+                explanationHindi: "उनके पास बड़ी संख्या में दास थे और उन्होंने उनके लिए एक विशेष विभाग, दीवान-इ-बंदगान बनाया था।",
+                explanationEnglish: "He had a huge number of slaves and created a special department, Diwan-i-Bandagan, for them."
+            },
+            {
+                questionHindi: "20. गरीब लड़कियों के विवाह के लिए स्थापित चैरिटी ब्यूरो को क्या कहा जाता था?",
+                questionEnglish: "The charity bureau established for the marriage of poor girls was called:",
+                options: ["Diwan-i-Mustakhraj (दीवान-इ-मुस्तखराज)", "Diwan-i-Khairat (दीवान-इ-खैरात)", "Diwan-i-Rasalat (दीवान-इ-रसालत)", "Diwan-i-Insha (दीवान-इ-इंशा)"],
+                correctIndex: 1,
+                explanationHindi: "दीवान-इ-खैरात दान विभाग था जो गरीबों और शादियों के लिए वित्तीय सहायता प्रदान करता था।",
+                explanationEnglish: "Diwan-i-Khairat was the department of charity that provided financial aid for the poor and marriages."
+            },
+            {
+                questionHindi: "21. मुहम्मद बिन तुगलक और फिरोज शाह तुगलक दोनों के दरबारी इतिहासकार कौन थे?",
+                questionEnglish: "Who was the court historian of both Muhammad bin Tughlaq and Firuz Shah Tughlaq?",
+                options: ["Amir Khusrow (अमीर खुसरो)", "Ziauddin Barani (जियाउद्दीन बरनी)", "Al-Beruni (अल-बिरूनी)", "Minhaj-us-Siraj (मिन्हाज-उस-सिराज)"],
+                correctIndex: 1,
+                explanationHindi: "जियाउद्दीन बरनी ने \"तारीख-ए-फिरोज शाही\" लिखी थी, जो तुगलक काल के लिए एक प्रमुख स्रोत है।",
+                explanationEnglish: "Ziauddin Barani wrote \"Tarikh-i-Firuz Shahi,\" which is a key source for the Tughlaq period."
+            },
+            {
+                questionHindi: "22. मुहम्मद बिन तुगलक के शासनकाल (1336 ईस्वी) के दौरान दक्षिण भारत में किस हिंदू साम्राज्य की स्थापना हुई थी?",
+                questionEnglish: "Which Hindu empire was founded in South India during Muhammad bin Tughlaq's reign (1336 AD)?",
+                options: ["Maratha Empire (मराठा साम्राज्य)", "Vijayanagara Empire (विजयनगर साम्राज्य)", "Bahmani Sultanate (बहमनी सल्तनत)", "Kakatiya Dynasty (काकतीय वंश)"],
+                correctIndex: 1,
+                explanationHindi: "विजयनगर साम्राज्य की स्थापना 1336 ईस्वी में हरिहर प्रथम और बुक्का राय प्रथम ने की थी।",
+                explanationEnglish: "The Vijayanagara Empire was founded by Harihara I and Bukka Raya I in 1336 AD."
+            },
+            {
+                questionHindi: "23. दक्कन में बहमनी सल्तनत (1347 ईस्वी) किसके शासनकाल में सत्ता में आई?",
+                questionEnglish: "The Bahmani Sultanate (1347 AD) in the Deccan rose to power during the reign of:",
+                options: ["Firuz Shah Tughlaq (फिरोज शाह तुगलक)", "Ghiyasuddin Tughlaq (गयासुद्दीन तुगलक)", "Muhammad bin Tughlaq (मुहम्मद बिन तुगलक)", "Nasiruddin Mahmud (नासिरुद्दीन महमूद)"],
+                correctIndex: 2,
+                explanationHindi: "MBT के शासनकाल के दौरान 1347 ईस्वी में दक्कन के रईसों ने विद्रोह किया और बहमनी सल्तनत की स्थापना की।",
+                explanationEnglish: "The Deccan nobles revolted and established the Bahmani Sultanate in 1347 AD during MBT's reign."
+            },
+            {
+                questionHindi: "24. बिजली गिरने से क्षतिग्रस्त होने के बाद किस सुल्तान ने कुतुब मीनार की मरम्मत कराई थी?",
+                questionEnglish: "Which Sultan repaired the Qutub Minar after it was damaged by lightning?",
+                options: ["Iltutmish (इल्तुतमिश)", "Alauddin Khalji (अलाउद्दीन खिलजी)", "Firuz Shah Tughlaq (फिरोज शाह तुगलक)", "Sikandar Lodi (सिकंदर लोदी)"],
+                correctIndex: 2,
+                explanationHindi: "फिरोज शाह ने कुतुब मीनार की ऊपरी मंजिलों की मरम्मत की और दो नई मंजिलें जोड़ीं।",
+                explanationEnglish: "Firuz Shah repaired the top storeys and added two new storeys to the Qutub Minar."
+            },
+            {
+                questionHindi: "25. तुगलक वंश का अंतिम शासक कौन था?",
+                questionEnglish: "Who was the last ruler of the Tughlaq Dynasty?",
+                options: ["Abu Bakr Shah (अबू बक्र शाह)", "Nasiruddin Mahmud Shah (नासिरुद्दीन महमूद शाह)", "Ghiyasuddin Tughlaq II (गयासुद्दीन तुगलक द्वितीय)", "Nusrat Shah (नुसरत शाह)"],
+                correctIndex: 1,
+                explanationHindi: "नासिरुद्दीन महमूद अंतिम सुल्तान थे, जिनके शासनकाल में तैमूर का विनाशकारी आक्रमण हुआ था।",
+                explanationEnglish: "Nasiruddin Mahmud was the last Sultan, whose reign saw the devastating invasion of Timur."
+            },
+            {
+                questionHindi: "26. तैमूर (तैमूरलंग) ने किस वर्ष भारत पर आक्रमण किया और दिल्ली को लूटा?",
+                questionEnglish: "Timur (Tamerlane) invaded India and sacked Delhi in which year?",
+                options: ["1320 AD", "1351 AD", "1398 AD", "1414 AD"],
+                correctIndex: 2,
+                explanationHindi: "1398 ईस्वी में तैमूर के आक्रमण ने तुगलक वंश को घातक रूप से कमजोर कर दिया और दिल्ली को नष्ट कर दिया।",
+                explanationEnglish: "Timur's invasion in 1398 AD fatally weakened the Tughlaq dynasty and destroyed Delhi."
+            },
+            {
+                questionHindi: "27. मुहम्मद बिन तुगलक ने कृषि ऋण शुरू किए जिन्हें कहा जाता था:",
+                questionEnglish: "Muhammad bin Tughlaq introduced agricultural loans called:",
+                options: ["Jizya (जजिया)", "Zakat (जकात)", "Taqavi (तकावी)", "Kharaj (खराज)"],
+                correctIndex: 2,
+                explanationHindi: "संकट के दौरान खेती को प्रोत्साहित करने के लिए किसानों को तकावी ऋण दिए जाते थे।",
+                explanationEnglish: "Taqavi loans were given to farmers to encourage cultivation during distress."
+            },
+            {
+                questionHindi: "28. गयासुद्दीन तुगलक की जातीयता क्या थी?",
+                questionEnglish: "What was Ghiyasuddin Tughlaq's ethnicity?",
+                options: ["Pure Turkish (शुद्ध तुर्की)", "Afghan (अफगान)", "Mixed – Turkish father and Hindu mother (मिश्रित – तुर्की पिता और हिंदू माँ)", "Arab (अरब)"],
+                correctIndex: 2,
+                explanationHindi: "उनके पिता एक तुर्की दास-सैनिक थे और उनकी माँ एक हिंदू जाट महिला थीं।",
+                explanationEnglish: "He had a Turkish slave-soldier father and a Hindu Jat mother."
+            },
+            {
+                questionHindi: "29. फिरोज शाह तुगलक की आत्मकथा का शीर्षक है:",
+                questionEnglish: "Firuz Shah Tughlaq's autobiographical account is titled:",
+                options: ["Baburnama (बाबरनामा)", "Futuhat-i-Firuz Shahi (फुतूहात-ए-फिरोज शाही)", "Tarikh-i-Firuz Shahi (तारीख-ए-फिरोज शाही)", "Akbarnama (अकबरनामा)"],
+                correctIndex: 1,
+                explanationHindi: "उन्होंने अपनी उपलब्धियों और सार्वजनिक कार्यों को \"फुतूहात-ए-फिरोज शाही\" में दर्ज किया था।",
+                explanationEnglish: "He recorded his achievements and public works in \"Futuhat-i-Firuz Shahi\"."
+            },
+            {
+                questionHindi: "30. 1414 ईस्वी में तुगलक वंश के बाद कौन सा वंश आया?",
+                questionEnglish: "Which dynasty succeeded the Tughlaqs in 1414 AD?",
+                options: ["Lodi Dynasty (लोदी वंश)", "Sayyid Dynasty (सैय्यद वंश)", "Mughal Dynasty (मुगल वंश)", "Slave Dynasty (गुलाम वंश)"],
+                correctIndex: 1,
+                explanationHindi: "तुगलकों के पतन के बाद, खिज्र खान ने 1414 ईस्वी में सैय्यद वंश की स्थापना की।",
+                explanationEnglish: "After the fall of the Tughlaqs, Khizr Khan founded the Sayyid Dynasty in 1414 AD."
+            }
+        ];
+
+        // Global State Variables
+        let currentIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let timerSeconds = 25;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // DOM Element Cache
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startTimerBtn = document.getElementById('startTimerBtn');
+        const stopTimerBtn = document.getElementById('stopTimerBtn');
+        const progressBar = document.getElementById('progressBar');
+        const questionTracker = document.getElementById('questionTracker');
+        const qHindi = document.getElementById('qHindi');
+        const qEnglish = document.getElementById('qEnglish');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const explanationBox = document.getElementById('explanationBox');
+        const expHindi = document.getElementById('expHindi');
+        const expEnglish = document.getElementById('expEnglish');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const paletteGrid = document.getElementById('paletteGrid');
+
+        // Initializer
+        function initApp() {
+            renderPalette();
+            loadQuestion(currentIndex);
+            setupTimerControls();
+        }
+
+        // Render Question Palette Buttons
+        function renderPalette() {
+            paletteGrid.innerHTML = '';
+            quizData.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-btn';
+                btn.innerText = index + 1;
+                btn.onclick = () => jumpToQuestion(index);
+                
+                if (index === currentIndex) btn.classList.add('current');
+                if (userAnswers[index] !== null) {
+                    if (userAnswers[index] === quizData[index].correctIndex) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                }
+                
+                paletteGrid.appendChild(btn);
+            });
+        }
+
+        // Load Question Function
+        function loadQuestion(index) {
+            resetTimer();
+            const data = quizData[index];
+            
+            questionTracker.innerText = `Question ${index + 1} of ${quizData.length}`;
+            progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+            qHindi.innerText = data.questionHindi;
+            qEnglish.innerText = data.questionEnglish;
+
+            optionsContainer.innerHTML = '';
+            const prefixes = ['A', 'B', 'C', 'D'];
+            
+            data.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-prefix">${prefixes[optIdx]}</span> <span>${optText}</span>`;
+                
+                if (userAnswers[index] !== null) {
+                    btn.disabled = true;
+                    if (optIdx === data.correctIndex) {
+                        btn.classList.add('correct');
+                    }
+                    if (userAnswers[index] === optIdx && optIdx !== data.correctIndex) {
+                        btn.classList.add('wrong');
+                    }
+                } else {
+                    btn.onclick = () => handleOptionClick(optIdx);
+                }
+
+                optionsContainer.appendChild(btn);
+            });
+
+            if (userAnswers[index] !== null) {
+                expHindi.innerText = data.explanationHindi;
+                expEnglish.innerText = data.explanationEnglish;
+                explanationBox.classList.add('active');
+            } else {
+                explanationBox.classList.remove('active');
+            }
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === quizData.length - 1;
+
+            renderPalette();
+            startTimer();
+        }
+
+        // Option Click Interaction
+        function handleOptionClick(selectedIndex) {
+            stopTimer();
+            userAnswers[currentIndex] = selectedIndex;
+
+            const data = quizData[currentIndex];
+            const optionButtons = optionsContainer.children;
+
+            Array.from(optionButtons).forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === data.correctIndex) {
+                    btn.classList.add('correct');
+                }
+                if (idx === selectedIndex && selectedIndex !== data.correctIndex) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            expHindi.innerText = data.explanationHindi;
+            expEnglish.innerText = data.explanationEnglish;
+            explanationBox.classList.add('active');
+
+            renderPalette();
+        }
+
+        // Next/Prev Navigation
+        function navigateQuestion(step) {
+            const targetIndex = currentIndex + step;
+            if (targetIndex >= 0 && targetIndex < quizData.length) {
+                currentIndex = targetIndex;
+                loadQuestion(currentIndex);
+            }
+        }
+
+        // Direct Palette Navigation
+        function jumpToQuestion(index) {
+            currentIndex = index;
+            loadQuestion(currentIndex);
+        }
+
+        // Timer Logic
+        function startTimer() {
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                timerDisplay.innerText = timerSeconds < 10 ? `0${timerSeconds}` : timerSeconds;
+                
+                if (timerSeconds <= 0) {
+                    stopTimer();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerSeconds = 25;
+            timerDisplay.innerText = '25';
+        }
+
+        function setupTimerControls() {
+            startTimerBtn.onclick = () => startTimer();
+            stopTimerBtn.onclick = () => stopTimer();
+        }
+
+        // Initialize App on DOM Load
+        window.onload = initApp;
+    </script>
+</body>
+</html>
