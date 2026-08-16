@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khilji Dynasty खिलजी राजवंश (1290-1320) - Live Quiz</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --correct: #16a34a;
+            --correct-bg: #dcfce7;
+            --wrong: #dc2626;
+            --wrong-bg: #fee2e2;
+            --unvisited: #cbd5e1;
+            --border: #e2e8f0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif, 'Noto Sans Devanagari';
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Responsive Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Header Area */
+        header {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            margin-top: 8px;
+        }
+
+        .title-area h1 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .title-area .subtitle {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #dc2626;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.25); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Live Timer & Creator Controls */
+        .timer-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .timer-display {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-family: monospace;
+            color: var(--text-main);
+            min-width: 48px;
+            text-align: center;
+        }
+
+        .timer-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .timer-btn:active {
+            transform: scale(0.97);
+        }
+
+        .timer-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .timer-btn.stop-btn {
+            background-color: #dc2626;
+        }
+
+        .timer-btn.stop-btn:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Workspace Grid */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 2rem;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Main Quiz Card */
+        .quiz-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 2.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Large Hindi Font for Recording Visibility */
+        .question-text-hi {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        .question-text-en {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        /* Option Buttons Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text-main);
+            width: 100%;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-btn[disabled] {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct) !important;
+            color: #14532d !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong) !important;
+            color: #7f1d1d !important;
+        }
+
+        .option-prefix {
+            font-weight: 800;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .option-btn.correct .option-prefix {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.wrong .option-prefix {
+            background: var(--wrong);
+            color: white;
+        }
+
+        /* Immediate Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border-left: 5px solid var(--primary);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .explanation-box.active {
+            display: block;
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .exp-hi {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .exp-en {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Bottom Controls */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            background-color: var(--text-main);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover:not([disabled]) {
+            opacity: 0.9;
+        }
+
+        .action-btn:disabled {
+            background-color: var(--unvisited);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Sidebar Question Palette */
+        .sidebar {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-color: var(--unvisited);
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .palette-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .palette-btn.current {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+        }
+
+        .palette-btn.correct {
+            background-color: var(--correct);
+            color: white;
+        }
+
+        .palette-btn.wrong {
+            background-color: var(--wrong);
+            color: white;
+        }
+
+        .legend {
+            margin-top: 1.75rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        /* Mobile / Small Screen Fallbacks */
+        @media (max-width: 960px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+            .palette-grid {
+                grid-template-columns: repeat(10, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Header & Creator Timer Controls -->
+    <header>
+        <div class="title-area">
+            <h1>Khilji Dynasty खिलजी राजवंश (1290-1320)</h1>
+            <div class="subtitle"><span class="live-dot"></span> History Important PYQs (LIVE)</div>
+        </div>
+
+        <div class="timer-section">
+            <div class="timer-display" id="timerDisplay">25</div>
+            <button class="timer-btn" id="startTimerBtn">START</button>
+            <button class="timer-btn stop-btn" id="stopTimerBtn">STOP</button>
+        </div>
+    </header>
+
+    <!-- Main Content Workspace -->
+    <div class="app-container">
+        
+        <!-- Main Quiz Workspace -->
+        <main class="quiz-card">
+            <div>
+                <div class="question-header" id="questionTracker">Question 1 of 40</div>
+                
+                <div class="question-text-hi" id="qHindi">Loading Question...</div>
+                <div class="question-text-en" id="qEnglish">Loading Question...</div>
+
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Options Dynamically Rendered -->
+                </div>
+
+                <div class="explanation-box" id="explanationBox">
+                    <div class="explanation-title">Explanation / व्याख्या:</div>
+                    <div class="exp-hi" id="expHindi"></div>
+                    <div class="exp-en" id="expEnglish"></div>
+                </div>
+            </div>
+
+            <div class="nav-footer">
+                <button class="action-btn" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
+                <button class="action-btn" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
+            </div>
+        </main>
+
+        <!-- Question Palette Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Question Palette</div>
+            <div class="palette-grid" id="paletteGrid">
+                <!-- Palette Grid Dynamically Rendered -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color" style="background: var(--unvisited);"></div> Unvisited</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--correct);"></div> Correct</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--wrong);"></div> Wrong</div>
+                <div class="legend-item"><div class="legend-color" style="border: 2px solid var(--primary);"></div> Current</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // Data Structure Array
+        const quizData = [
+            {
+                questionHindi: "1. खिलजी राजवंश का संस्थापक कौन था?",
+                questionEnglish: "Who was the founder of the Khilji Dynasty?",
+                options: ["Alauddin Khilji (अलाउद्दीन खिलजी)", "Jalal-ud-din Khilji (जलालुद्दीन खिलजी)", "Malik Kafur (मलिक काफूर)", "Qutb-ud-din Mubarak Shah (कुतुबुद्दीन मुबारक शाह)"],
+                correctIndex: 1,
+                explanationHindi: "जलालुद्दीन खिलजी ने गुलाम वंश के अंत के बाद 1290 ईस्वी में इस राजवंश की स्थापना की थी।",
+                explanationEnglish: "Jalal-ud-din Khilji founded the dynasty in 1290 A.D. after the end of the Slave dynasty."
+            },
+            {
+                questionHindi: "2. खिलजी राजवंश ने किस अवधि के दौरान शासन किया?",
+                questionEnglish: "The Khilji Dynasty ruled during which period?",
+                options: ["1206–1290", "1290–1320", "1320–1414", "1414–1450"],
+                correctIndex: 1,
+                explanationHindi: "खिलजी राजवंश ने 1290 से 1320 तक दिल्ली सल्तनत पर शासन किया।",
+                explanationEnglish: "The Khilji Dynasty ruled the Delhi Sultanate from 1290 to 1320."
+            },
+            {
+                questionHindi: "3. दिल्ली सल्तनत के किस राजवंश ने सबसे कम अवधि तक शासन किया?",
+                questionEnglish: "Which dynasty of the Delhi Sultanate ruled for the shortest period?",
+                options: ["Slave Dynasty (गुलाम वंश)", "Khilji Dynasty (खिलजी वंश)", "Tughlaq Dynasty (तुगलक वंश)", "Lodi Dynasty (लोदी वंश)"],
+                correctIndex: 1,
+                explanationHindi: "खिलजी वंश ने केवल 30 वर्षों (1290-1320) तक शासन किया, जो सल्तनत के प्रमुख राजवंशों में सबसे कम है।",
+                explanationEnglish: "The Khiljis ruled for only 30 years (1290-1320), making it the shortest reign among the major Sultanate dynasties."
+            },
+            {
+                questionHindi: "4. खिलजी राजवंश का सबसे महान शासक किसे माना जाता है?",
+                questionEnglish: "Who is considered the greatest ruler of the Khilji Dynasty?",
+                options: ["Jalal-ud-din Khilji", "Alauddin Khilji", "Khusrau Khan", "Shihab-ud-din Omar"],
+                correctIndex: 1,
+                explanationHindi: "अलाउद्दीन खिलजी को इस राजवंश का सबसे शक्तिशाली और महान शासक माना जाता है।",
+                explanationEnglish: "Alauddin Khilji is recognized as the most powerful and greatest ruler of this dynasty."
+            },
+            {
+                questionHindi: "5. अलाउद्दीन खिलजी ने निम्नलिखित में से कौन सी उपाधि धारण की थी?",
+                questionEnglish: "Alauddin Khilji assumed which of the following titles?",
+                options: ["Zil-i-Ilahi", "Sikander-e-Sani (Second Alexander)", "Lakh Baksh", "Mehboob-e-Ilahi"],
+                correctIndex: 1,
+                explanationHindi: "अलाउद्दीन खिलजी ने 'सिकंदर-ए-सानी' की उपाधि ली थी, जिसका अर्थ है 'दूसरा सिकंदर'।",
+                explanationEnglish: "Alauddin Khilji took the title 'Sikander-e-Sani', which means 'Second Alexander'."
+            },
+            {
+                questionHindi: "6. अलाउद्दीन खिलजी के किस सेनापति ने दक्षिण भारत में अभियानों का नेतृत्व किया?",
+                questionEnglish: "Which general of Alauddin Khilji led expeditions to South India?",
+                options: ["Zafar Khan", "Nusrat Khan", "Malik Kafur", "Ulugh Khan"],
+                correctIndex: 2,
+                explanationHindi: "मलिक काफूर देवगिरी और वारंगल जैसे दक्षिण भारतीय क्षेत्रों में सैन्य अभियानों का नेतृत्व करने के लिए जिम्मेदार था।",
+                explanationEnglish: "Malik Kafur was responsible for leading military expeditions into South Indian regions like Devagiri and Warangal."
+            },
+            {
+                questionHindi: "7. दिल्ली में बाजार नियंत्रण और राशनिंग प्रणाली किसने शुरू की?",
+                questionEnglish: "Who introduced the market control and rationing system in Delhi?",
+                options: ["Balban", "Iltutmish", "Alauddin Khilji", "Jalal-ud-din Khilji"],
+                correctIndex: 2,
+                explanationHindi: "अलाउद्दीन खिलजी एक बड़ी सेना बनाए रखने के लिए अपने सख्त मूल्य नियंत्रण और बाजार राशनिंग प्रणाली के लिए प्रसिद्ध है।",
+                explanationEnglish: "Alauddin Khilji is famous for his strict price control and market rationing system to maintain a large army."
+            },
+            {
+                questionHindi: "8. दिल्ली में अलाई दरवाजा किसने बनवाया था?",
+                questionEnglish: "Who built the Alai Darwaza in Delhi?",
+                options: ["Firoz Shah Tughlaq", "Iltutmish", "Alauddin Khilji", "Qutb-ud-din Aibak"],
+                correctIndex: 2,
+                explanationHindi: "दिल्ली में अलाई दरवाजा का निर्माण अलाउद्दीन खिलजी द्वारा करवाया गया था।",
+                explanationEnglish: "The Alai Darwaza was constructed by Alauddin Khilji in Delhi."
+            },
+            {
+                questionHindi: "9. खिलजी राजवंश का अंतिम शासक कौन था?",
+                questionEnglish: "Who was the last ruler of the Khilji Dynasty?",
+                options: ["Mubarak Shah", "Khusrau Khan", "Shihab-ud-din Omar", "Malik Kafur"],
+                correctIndex: 1,
+                explanationHindi: "खिलजी वंश के अंतिम शासक खुसरो खान थे, जिसके बाद तुगलक वंश आया।",
+                explanationEnglish: "Khusrau Khan was the final ruler of the Khilji dynasty before it was succeeded by the Tughlaqs."
+            },
+            {
+                questionHindi: "10. किस खिलजी शासक की हत्या उसके भतीजे अलाउद्दीन खिलजी ने की थी?",
+                questionEnglish: "Which Khilji ruler was assassinated by his nephew Alauddin Khilji?",
+                options: ["Nasir-ud-din", "Jalal-ud-din Khilji", "Zafar Khan", "Balban"],
+                correctIndex: 1,
+                explanationHindi: "अलाउद्दीन खिलजी ने सिंहासन प्राप्त करने के लिए अपने चाचा और ससुर जलालुद्दीन की हत्या कर दी थी।",
+                explanationEnglish: "Alauddin Khilji assassinated his uncle and father-in-law, Jalal-ud-din, to take the throne."
+            },
+            {
+                questionHindi: "11. अलाउद्दीन खिलजी ने मवेशियों पर कौन सा कर लगाया था?",
+                questionEnglish: "Alauddin Khilji introduced which tax on cattle?",
+                options: ["Ghari", "Charai", "Zakat", "Jizya"],
+                correctIndex: 1,
+                explanationHindi: "उन्होंने विशेष रूप से मवेशियों के लिए 'चराई' कर की शुरुआत की थी।",
+                explanationEnglish: "He introduced the 'Charai' tax specifically for cattle."
+            },
+            {
+                questionHindi: "12. अलाउद्दीन खिलजी के शासनकाल में मंगोलों को किसने हराया था?",
+                questionEnglish: "Who defeated the Mongols during Alauddin Khilji's reign?",
+                options: ["Malik Kafur", "Zafar Khan", "Khizr Khan", "Qutb-ud-din Mubarak Shah"],
+                correctIndex: 1,
+                explanationHindi: "जफर खान एक प्रमुख सेनापति थे जिन्होंने मंगोल आक्रमणकारियों को सफलतापूर्वक हराया था।",
+                explanationEnglish: "Zafar Khan was a prominent general who successfully defeated Mongol invaders."
+            },
+            {
+                questionHindi: "13. किस सूफी संत ने सुल्तान जलालुद्दीन खिलजी से मिलने से इनकार कर दिया था?",
+                questionEnglish: "Which Sufi saint refused to meet Sultan Jalaluddin Khilji?",
+                options: ["Moinuddin Chishti", "Nizamuddin Auliya", "Salim Chishti", "Baba Farid"],
+                correctIndex: 1,
+                explanationHindi: "निजामुद्दीन औलिया ने सुल्तान जलालुद्दीन खिलजी और बाद में अलाउद्दीन खिलजी से मिलने से इनकार कर दिया था।",
+                explanationEnglish: "Nizamuddin Auliya refused an audience with Sultan Jalaluddin Khilji and later Alauddin Khilji."
+            },
+            {
+                questionHindi: "14. अलाउद्दीन के दक्षिण भारत अभियान का मुख्य कारण क्या था?",
+                questionEnglish: "What was the main reason for Alauddin's South India campaign?",
+                options: ["To spread Islam (इस्लाम फैलाने के लिए)", "To collect wealth (धन इकट्ठा करने के लिए)", "To defeat Mongols (मंगोलों को हराने के लिए)", "To stop rebellions (विद्रोहों को रोकने के लिए)"],
+                correctIndex: 1,
+                explanationHindi: "दक्षिणी अभियानों का प्राथमिक उद्देश्य अपार धन प्राप्त करना था।",
+                explanationEnglish: "The primary objective of the southern campaigns was to acquire immense riches."
+            },
+            {
+                questionHindi: "15. अलाउद्दीन की उपलब्धियों की प्रशंसा करते हुए 'खजैन-उल-फुतुह' किसने लिखी थी?",
+                questionEnglish: "Who wrote 'Khazain-ul-Futuh' praising Alauddin's achievements?",
+                options: ["Ibn Battuta", "Ziauddin Barani", "Amir Khusrau", "Minhaj Siraj"],
+                correctIndex: 2,
+                explanationHindi: "अमीर खुसरो ने अलाउद्दीन खिलजी की विजयों का दस्तावेजीकरण और प्रशंसा करने के लिए यह कृति लिखी थी।",
+                explanationEnglish: "Amir Khusrau wrote this work to document and praise the victories of Alauddin Khilji."
+            },
+            {
+                questionHindi: "16. अलाउद्दीन खिलजी ने किस शहर को नई राजधानी के रूप में स्थापित किया?",
+                questionEnglish: "Which city did Alauddin Khilji establish as a new capital?",
+                options: ["Daulatabad", "Siri", "Tughlaqabad", "Agra"],
+                correctIndex: 1,
+                explanationHindi: "अलाउद्दीन खिलजी ने सीरी शहर की स्थापना की और वहां एक किला बनवाया।",
+                explanationEnglish: "Alauddin Khilji established the city of Siri and built a fort there."
+            },
+            {
+                questionHindi: "17. घोड़ों के लिए 'दाग' (ब्रांडिंग) प्रणाली किसने शुरू की?",
+                questionEnglish: "Who introduced the 'Dagh' (branding) system for horses?",
+                options: ["Balban", "Alauddin Khilji", "Iltutmish", "Ghiyasuddin Tughlaq"],
+                correctIndex: 1,
+                explanationHindi: "सेना में भ्रष्टाचार को रोकने के लिए, अलाउद्दीन ने घोड़ों को दागने (दाग) की प्रथा शुरू की।",
+                explanationEnglish: "To prevent corruption in the army, Alauddin introduced the branding of horses (Dagh)."
+            },
+            {
+                questionHindi: "18. स्थायी सेना रखने वाला पहला सुल्तान कौन था?",
+                questionEnglish: "Who was the first Sultan to introduce a permanent standing army?",
+                options: ["Iltutmish", "Balban", "Alauddin Khilji", "Mubarak Shah"],
+                correctIndex: 2,
+                explanationHindi: "अलाउद्दीन खिलजी दिल्ली में स्थायी सेना रखने वाला पहला सुल्तान था।",
+                explanationEnglish: "Alauddin Khilji was the first Sultan to maintain a permanent standing army in Delhi."
+            },
+            {
+                questionHindi: "19. खिलजी काल के दौरान गैर-मुसलमानों से कौन सा कर वसूला जाता था?",
+                questionEnglish: "Which tax was collected from non-Muslims during the Khilji period?",
+                options: ["Zakat", "Jizya", "Kharaj", "Ushr"],
+                correctIndex: 1,
+                explanationHindi: "जजिया विशेष रूप से गैर-मुस्लिम प्रजा पर लगाया जाने वाला कर था।",
+                explanationEnglish: "Jizya was the tax levied specifically on non-Muslim subjects."
+            },
+            {
+                questionHindi: "20. रामचंद्र किस राज्य के शासक थे, जिन्हें मलिक काफूर ने हराया था?",
+                questionEnglish: "Which kingdom was ruled by Ramachandra, who was defeated by Malik Kafur?",
+                options: ["Warangal (वारंगल)", "Devagiri (Yadava dynasty) (देवगिरी - यादव वंश)", "Madurai (मदुरै)", "Gujarat (गुजरात)"],
+                correctIndex: 1,
+                explanationHindi: "मलिक काफूर ने देवगिरी में यादव वंश के राजा रामचंद्र को हराया था।",
+                explanationEnglish: "Malik Kafur defeated King Ramachandra of the Yadava dynasty in Devagiri."
+            },
+            {
+                questionHindi: "21. 1320 में खिलजी राजवंश के समाप्त होने पर सुल्तान कौन था?",
+                questionEnglish: "Who was the Sultan when the Khilji Dynasty ended in 1320?",
+                options: ["Mubarak Shah", "Alauddin Khilji", "Khusrau Khan", "Ghiyasuddin Tughlaq"],
+                correctIndex: 2,
+                explanationHindi: "खुसरो खान अंतिम खिलजी शासक था, जिसे 1320 में गयासुद्दीन तुगलक ने मार दिया था।",
+                explanationEnglish: "Khusrau Khan was the last Khilji ruler, killed by Ghiyasuddin Tughlaq in 1320."
+            },
+            {
+                questionHindi: "22. खिलजी वंश के दौरान किस बाजार ने कपड़ों की कीमतों को नियंत्रित किया?",
+                questionEnglish: "Which market during the Khilji dynasty controlled textile prices?",
+                options: ["Grain market (अनाज बाजार)", "Sarai-i-adl (सराय-ए-अदल)", "Slave market (गुलाम बाजार)", "Horse market (घोड़ा बाजार)"],
+                correctIndex: 1,
+                explanationHindi: "'सराय-ए-अदल' कपड़े और अन्य आवश्यक वस्तुओं के लिए विशिष्ट बाजार था।",
+                explanationEnglish: "'Sarai-i-adl' was the specific market for cloth and other essential items."
+            },
+            {
+                questionHindi: "23. अलाउद्दीन खिलजी की चित्तौड़ विजय किस रानी से जुड़ी है?",
+                questionEnglish: "Alauddin Khilji's conquest of Chittor is associated with which queen?",
+                options: ["Rani Lakshmibai", "Padmavati", "Razia Sultan", "Rani Durgavati"],
+                correctIndex: 1,
+                explanationHindi: "चित्तौड़ का घेरा प्रसिद्ध रूप से रानी पद्मावती की कहानी से जुड़ा है।",
+                explanationEnglish: "The siege of Chittor is famously linked to the story of Queen Padmavati."
+            },
+            {
+                questionHindi: "24. 'तारीख-ए-फिरोजशाही' किसने लिखी थी?",
+                questionEnglish: "Who wrote 'Tarikh-i-Firuz Shahi'?",
+                options: ["Amir Khusrau", "Ziauddin Barani", "Ibn Battuta", "Al-Biruni"],
+                correctIndex: 1,
+                explanationHindi: "जियाउद्दीन बरनी ऐतिहासिक ग्रंथ 'तारीख-ए-फिरोजशाही' के लेखक हैं।",
+                explanationEnglish: "Ziauddin Barani is the author of the historical text 'Tarikh-i-Firuz Shahi'."
+            },
+            {
+                questionHindi: "25. किस सुल्तान ने 'बरीद' नामक जासूसी प्रणाली शुरू की थी?",
+                questionEnglish: "Which Sultan introduced the spy system known as 'Barid'?",
+                options: ["Mubarak Shah", "Jalal-ud-din Khilji", "Alauddin Khilji", "Balban"],
+                correctIndex: 2,
+                explanationHindi: "अलाउद्दीन खिलजी ने रईसों की निगरानी के लिए एक कुशल जासूसी नेटवर्क (बरीद) स्थापित किया था।",
+                explanationEnglish: "Alauddin Khilji established an efficient spy network (Barids) to monitor nobles."
+            },
+            {
+                questionHindi: "26. अलाउद्दीन खिलजी ने निम्नलिखित में से किस सामाजिक प्रथा पर प्रतिबंध लगा दिया था?",
+                questionEnglish: "Alauddin Khilji banned which of the following social practices?",
+                options: ["Child marriage (बाल विवाह)", "Drinking of wine (शराब पीना)", "Sati (सती प्रथा)", "Widow remarriage (विधवा पुनर्विवाह)"],
+                correctIndex: 1,
+                explanationHindi: "उन्होंने दिल्ली में शराब के सेवन और बिक्री पर रोक लगा दी थी।",
+                explanationEnglish: "He prohibited the consumption and sale of wine in Delhi."
+            },
+            {
+                questionHindi: "27. अलाउद्दीन खिलजी की मृत्यु के बाद कार्यवाहक (रीजेंट) कौन था?",
+                questionEnglish: "Who was the regent after Alauddin Khilji's death?",
+                options: ["Mubarak Shah", "Malik Kafur", "Khusrau Khan", "Shihab-ud-din Omar"],
+                correctIndex: 1,
+                explanationHindi: "अलाउद्दीन की मृत्यु के बाद मलिक काफूर ने उसके नाबालिग बेटे शहाबुद्दीन उमर के लिए कार्यवाहक के रूप में कार्य किया।",
+                explanationEnglish: "Malik Kafur acted as regent for the minor son Shihab-ud-din Omar after Alauddin's death."
+            },
+            {
+                questionHindi: "28. खिलजी राजवंश के बाद कौन सा राजवंश आया?",
+                questionEnglish: "Which dynasty succeeded the Khilji Dynasty?",
+                options: ["Lodi Dynasty", "Sayyid Dynasty", "Tughlaq Dynasty", "Slave Dynasty"],
+                correctIndex: 2,
+                explanationHindi: "1320 में खिलजी के बाद तुगलक वंश ने सत्ता संभाली।",
+                explanationEnglish: "The Tughlaq dynasty took over after the Khiljis in 1320."
+            },
+            {
+                questionHindi: "29. अलाउद्दीन खिलजी ने 1301 में किसे हराकर रणथंभौर पर कब्जा किया?",
+                questionEnglish: "Alauddin Khilji captured Ranthambore in 1301 after defeating whom?",
+                options: ["Hammir Dev", "Ramachandra", "Prataparudra", "Ratan Singh"],
+                correctIndex: 0,
+                explanationHindi: "अलाउद्दीन ने रणथंभौर के किले पर कब्जा करने के लिए राजा हम्मीर देव को हराया था।",
+                explanationEnglish: "Alauddin defeated King Hammir Dev to capture the fort of Ranthambore."
+            },
+            {
+                questionHindi: "30. 1305 में मंगोलों को हराने के लिए कौन सा सेनापति जिम्मेदार था?",
+                questionEnglish: "Which commander was responsible for defeating the Mongols in 1305?",
+                options: ["Zafar Khan", "Malik Nayak", "Nusrat Khan", "Malik Kafur"],
+                correctIndex: 1,
+                explanationHindi: "मलिक नायक ने उन सेनाओं का नेतृत्व किया जिन्होंने 1305 में मंगोलों को हराया था।",
+                explanationEnglish: "Malik Nayak led the forces that defeated the Mongols in 1305."
+            },
+            {
+                questionHindi: "31. अलाउद्दीन खिलजी द्वारा जारी 'जवाबित' क्या थे?",
+                questionEnglish: "What were the 'Zawabit' issued by Alauddin Khilji?",
+                options: ["Religious laws (धार्मिक कानून)", "Secular regulations (धर्मनिरपेक्ष नियम)", "Military ranks (सैन्य पद)", "Tax exemptions (कर छूट)"],
+                correctIndex: 1,
+                explanationHindi: "'जवाबित' सुल्तान द्वारा जारी किए गए राज्य कानून या धर्मनिरपेक्ष नियम थे।",
+                explanationEnglish: "'Zawabit' were state laws or secular regulations issued by the Sultan."
+            },
+            {
+                questionHindi: "32. खिलजी वंश का दूसरा सुल्तान कौन था?",
+                questionEnglish: "Who was the second Sultan of the Khilji dynasty?",
+                options: ["Alauddin Khilji", "Qutb-ud-din Mubarak Shah", "Khusrau Khan", "Shihab-ud-din Omar"],
+                correctIndex: 0,
+                explanationHindi: "अलाउद्दीन खिलजी जलालुद्दीन के बाद दूसरे शासक थे।",
+                explanationEnglish: "Alauddin Khilji was the second ruler, succeeding Jalal-ud-din."
+            },
+            {
+                questionHindi: "33. मलिक काफूर ने किस क्षेत्र पर विजय प्राप्त नहीं की थी?",
+                questionEnglish: "Which region was NOT conquered by Malik Kafur?",
+                options: ["Madurai", "Warangal", "Malabar", "Devagiri"],
+                correctIndex: 2,
+                explanationHindi: "हालांकि उन्होंने व्यापक अभियान चलाए, लेकिन मालाबार को उनके द्वारा विजित नहीं किया गया क्षेत्र बताया गया है।",
+                explanationEnglish: "While he campaigned extensively, Malabar is cited as a region not conquered by him."
+            },
+            {
+                questionHindi: "34. अलाउद्दीन खिलजी की राजस्व नीति का उद्देश्य क्या था?",
+                questionEnglish: "Alauddin Khilji's revenue policy aimed at?",
+                options: ["Reducing prices (कीमतें कम करना)", "Controlling nobles (रईसों को नियंत्रित करना)", "Increasing state income (राज्य की आय बढ़ाना)", "Helping farmers (किसानों की मदद करना)"],
+                correctIndex: 2,
+                explanationHindi: "उनके राजस्व सुधार मुख्य रूप से राज्य के राजस्व को अधिकतम करने के लिए तैयार किए गए थे।",
+                explanationEnglish: "His revenue reforms were primarily designed to maximize state revenue."
+            },
+            {
+                questionHindi: "35. 1299 में किस मंगोल नेता ने भारत पर हमला किया?",
+                questionEnglish: "Which Mongol leader attacked India in 1299?",
+                options: ["Chengiz Khan", "Qutlugh Khwaja", "Timur", "Hulagu"],
+                correctIndex: 1,
+                explanationHindi: "कुतलुग ख्वाजा ने अलाउद्दीन के शासनकाल के दौरान 1299 में मंगोल आक्रमण का नेतृत्व किया था।",
+                explanationEnglish: "Qutlugh Khwaja led the Mongol invasion in 1299 during Alauddin's reign."
+            },
+            {
+                questionHindi: "36. खिलजी वंश में कौन अपनी उदार और दयालु नीतियों के लिए जाना जाता था?",
+                questionEnglish: "Who was known for his mild and merciful policies in the Khilji dynasty?",
+                options: ["Alauddin Khilji", "Khusrau Khan", "Jalal-ud-din Khilji", "Mubarak Shah"],
+                correctIndex: 2,
+                explanationHindi: "जलालुद्दीन को एक उदार और उदार शासक होने के लिए जाना जाता था।",
+                explanationEnglish: "Jalal-ud-din was known for being a mild and generous ruler."
+            },
+            {
+                questionHindi: "37. 'हौज-ए-अलाई' का निर्माण किस सुल्तान ने करवाया था?",
+                questionEnglish: "Which Sultan built the 'Hauz-i-Alai'?",
+                options: ["Jalal-ud-din", "Mubarak Shah", "Alauddin Khilji", "Khusrau Khan"],
+                correctIndex: 2,
+                explanationHindi: "हौज-ए-अलाई (अब हौज खास) का निर्माण अलाउद्दीन खिलजी ने करवाया था।",
+                explanationEnglish: "The Hauz-i-Alai (now Hauz Khas) was built by Alauddin Khilji."
+            },
+            {
+                questionHindi: "38. रणथंभौर के घेरे के दौरान किस खिलजी सेनापति की मृत्यु हुई थी?",
+                questionEnglish: "Which Khilji commander died during the siege of Ranthambore?",
+                options: ["Ulugh Khan", "Nusrat Khan", "Zafar Khan", "Malik Kafur"],
+                correctIndex: 1,
+                explanationHindi: "रणथंभौर में घेराबंदी के संचालन का नेतृत्व करते समय नुसरत खान की मृत्यु हो गई थी।",
+                explanationEnglish: "Nusrat Khan died while leading the siege operations at Ranthambore."
+            },
+            {
+                questionHindi: "39. खुसरो खान किस समूह से संबंधित था?",
+                questionEnglish: "Khusrau Khan belonged to which group?",
+                options: ["Turkish (तुर्क)", "Afghan (अफगान)", "Baradu (बराडू)", "Rajput (राजपूत)"],
+                correctIndex: 2,
+                explanationHindi: "खुसरो खान बराडू समूह से संबंधित था।",
+                explanationEnglish: "Khusrau Khan belonged to the Baradu group."
+            },
+            {
+                questionHindi: "40. खिलजी राजवंश किस वर्ष समाप्त हुआ?",
+                questionEnglish: "In which year did the Khilji Dynasty end?",
+                options: ["1290", "1316", "1320", "1325"],
+                correctIndex: 2,
+                explanationHindi: "तुगलक वंश के उदय के साथ 1320 में इस राजवंश का अंत हो गया।",
+                explanationEnglish: "The dynasty ended in 1320 with the rise of the Tughlaqs."
+            }
+        ];
+
+        // Global State Variables
+        let currentIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let timerSeconds = 25;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // DOM Element Cache
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startTimerBtn = document.getElementById('startTimerBtn');
+        const stopTimerBtn = document.getElementById('stopTimerBtn');
+        const progressBar = document.getElementById('progressBar');
+        const questionTracker = document.getElementById('questionTracker');
+        const qHindi = document.getElementById('qHindi');
+        const qEnglish = document.getElementById('qEnglish');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const explanationBox = document.getElementById('explanationBox');
+        const expHindi = document.getElementById('expHindi');
+        const expEnglish = document.getElementById('expEnglish');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const paletteGrid = document.getElementById('paletteGrid');
+
+        // Initializer
+        function initApp() {
+            renderPalette();
+            loadQuestion(currentIndex);
+            setupTimerControls();
+        }
+
+        // Render Question Palette Buttons
+        function renderPalette() {
+            paletteGrid.innerHTML = '';
+            quizData.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-btn';
+                btn.innerText = index + 1;
+                btn.onclick = () => jumpToQuestion(index);
+                
+                if (index === currentIndex) btn.classList.add('current');
+                if (userAnswers[index] !== null) {
+                    if (userAnswers[index] === quizData[index].correctIndex) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                }
+                
+                paletteGrid.appendChild(btn);
+            });
+        }
+
+        // Load Question Function
+        function loadQuestion(index) {
+            resetTimer();
+            const data = quizData[index];
+            
+            questionTracker.innerText = `Question ${index + 1} of ${quizData.length}`;
+            progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+            qHindi.innerText = data.questionHindi;
+            qEnglish.innerText = data.questionEnglish;
+
+            optionsContainer.innerHTML = '';
+            const prefixes = ['A', 'B', 'C', 'D'];
+            
+            data.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-prefix">${prefixes[optIdx]}</span> <span>${optText}</span>`;
+                
+                if (userAnswers[index] !== null) {
+                    btn.disabled = true;
+                    if (optIdx === data.correctIndex) {
+                        btn.classList.add('correct');
+                    }
+                    if (userAnswers[index] === optIdx && optIdx !== data.correctIndex) {
+                        btn.classList.add('wrong');
+                    }
+                } else {
+                    btn.onclick = () => handleOptionClick(optIdx);
+                }
+
+                optionsContainer.appendChild(btn);
+            });
+
+            if (userAnswers[index] !== null) {
+                expHindi.innerText = data.explanationHindi;
+                expEnglish.innerText = data.explanationEnglish;
+                explanationBox.classList.add('active');
+            } else {
+                explanationBox.classList.remove('active');
+            }
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === quizData.length - 1;
+
+            renderPalette();
+            startTimer();
+        }
+
+        // Option Click Interaction
+        function handleOptionClick(selectedIndex) {
+            stopTimer();
+            userAnswers[currentIndex] = selectedIndex;
+
+            const data = quizData[currentIndex];
+            const optionButtons = optionsContainer.children;
+
+            Array.from(optionButtons).forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === data.correctIndex) {
+                    btn.classList.add('correct');
+                }
+                if (idx === selectedIndex && selectedIndex !== data.correctIndex) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            expHindi.innerText = data.explanationHindi;
+            expEnglish.innerText = data.explanationEnglish;
+            explanationBox.classList.add('active');
+
+            renderPalette();
+        }
+
+        // Next/Prev Navigation
+        function navigateQuestion(step) {
+            const targetIndex = currentIndex + step;
+            if (targetIndex >= 0 && targetIndex < quizData.length) {
+                currentIndex = targetIndex;
+                loadQuestion(currentIndex);
+            }
+        }
+
+        // Direct Palette Navigation
+        function jumpToQuestion(index) {
+            currentIndex = index;
+            loadQuestion(currentIndex);
+        }
+
+        // Timer Logic
+        function startTimer() {
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                timerDisplay.innerText = timerSeconds < 10 ? `0${timerSeconds}` : timerSeconds;
+                
+                if (timerSeconds <= 0) {
+                    stopTimer();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerSeconds = 25;
+            timerDisplay.innerText = '25';
+        }
+
+        function setupTimerControls() {
+            startTimerBtn.onclick = () => startTimer();
+            stopTimerBtn.onclick = () => stopTimer();
+        }
+
+        // Initialize App on DOM Load
+        window.onload = initApp;
+    </script>
+</body>
+</html>
