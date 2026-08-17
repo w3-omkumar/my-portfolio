@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सैय्यद वंश (1414-1451) Sayyid dynasty - Live Quiz</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --correct: #16a34a;
+            --correct-bg: #dcfce7;
+            --wrong: #dc2626;
+            --wrong-bg: #fee2e2;
+            --unvisited: #cbd5e1;
+            --border: #e2e8f0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif, 'Noto Sans Devanagari';
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Responsive Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Header Area */
+        header {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            margin-top: 8px;
+        }
+
+        .title-area h1 {
+            font-size: 1.75rem;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .title-area .subtitle {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #dc2626;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.25); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Live Timer & Creator Controls */
+        .timer-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .timer-display {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-family: monospace;
+            color: var(--text-main);
+            min-width: 48px;
+            text-align: center;
+        }
+
+        .timer-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .timer-btn:active {
+            transform: scale(0.97);
+        }
+
+        .timer-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .timer-btn.stop-btn {
+            background-color: #dc2626;
+        }
+
+        .timer-btn.stop-btn:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Workspace Grid */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 2rem;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Main Quiz Card */
+        .quiz-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 2.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Large Hindi Font for Recording Visibility */
+        .question-text-hi {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        .question-text-en {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        /* Option Buttons Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text-main);
+            width: 100%;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-btn[disabled] {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct) !important;
+            color: #14532d !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong) !important;
+            color: #7f1d1d !important;
+        }
+
+        .option-prefix {
+            font-weight: 800;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .option-btn.correct .option-prefix {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.wrong .option-prefix {
+            background: var(--wrong);
+            color: white;
+        }
+
+        /* Immediate Explanation Box */
+        .explanation-box {
+            background: #f8fafc;
+            border-left: 5px solid var(--primary);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .explanation-box.active {
+            display: block;
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .exp-hi {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .exp-en {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Bottom Controls */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            background-color: var(--text-main);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover:not([disabled]) {
+            opacity: 0.9;
+        }
+
+        .action-btn:disabled {
+            background-color: var(--unvisited);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Sidebar Question Palette */
+        .sidebar {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background-color: var(--unvisited);
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .palette-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .palette-btn.current {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+        }
+
+        .palette-btn.correct {
+            background-color: var(--correct);
+            color: white;
+        }
+
+        .palette-btn.wrong {
+            background-color: var(--wrong);
+            color: white;
+        }
+
+        .legend {
+            margin-top: 1.75rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        /* Mobile / Small Screen Fallbacks */
+        @media (max-width: 960px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+            .palette-grid {
+                grid-template-columns: repeat(10, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Header & Creator Timer Controls -->
+    <header>
+        <div class="title-area">
+            <h1>सैय्यद वंश (1414-1451) Sayyid dynasty</h1>
+            <div class="subtitle"><span class="live-dot"></span> History Important PYQs (LIVE) | Exam Buddy Om</div>
+        </div>
+
+        <div class="timer-section">
+            <div class="timer-display" id="timerDisplay">25</div>
+            <button class="timer-btn" id="startTimerBtn">START</button>
+            <button class="timer-btn stop-btn" id="stopTimerBtn">STOP</button>
+        </div>
+    </header>
+
+    <!-- Main Content Workspace -->
+    <div class="app-container">
+        
+        <!-- Main Quiz Workspace -->
+        <main class="quiz-card">
+            <div>
+                <div class="question-header" id="questionTracker">Question 1 of 30</div>
+                
+                <div class="question-text-hi" id="qHindi">Loading Question...</div>
+                <div class="question-text-en" id="qEnglish">Loading Question...</div>
+
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Options Dynamically Rendered -->
+                </div>
+
+                <div class="explanation-box" id="explanationBox">
+                    <div class="explanation-title">Explanation / व्याख्या:</div>
+                    <div class="exp-hi" id="expHindi"></div>
+                    <div class="exp-en" id="expEnglish"></div>
+                </div>
+            </div>
+
+            <div class="nav-footer">
+                <button class="action-btn" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
+                <button class="action-btn" id="nextBtn" onclick="navigateQuestion(1)">Next</button>
+            </div>
+        </main>
+
+        <!-- Question Palette Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Question Palette</div>
+            <div class="palette-grid" id="paletteGrid">
+                <!-- Palette Grid Dynamically Rendered -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color" style="background: var(--unvisited);"></div> Unvisited</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--correct);"></div> Correct</div>
+                <div class="legend-item"><div class="legend-color" style="background: var(--wrong);"></div> Wrong</div>
+                <div class="legend-item"><div class="legend-color" style="border: 2px solid var(--primary);"></div> Current</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // Data Structure Array for Sayyid Dynasty Quiz
+        const quizData = [
+            {
+                questionHindi: "1. 'तारीख-ए-मुबारक शाही' पुस्तक के लेखक कौन थे, जो इस वंश का प्राथमिक स्रोत है?",
+                questionEnglish: "Who was the author of the book 'Tarikh-i-Mubarak Shahi', the primary source for this dynasty?",
+                options: ["Yahya-bin-Ahmad Sirhindi (याह्या-बिन-अहमद सरहिंदी)", "Amir Khusrau (अमीर खुसरो)", "Ziauddin Barani (जियाउद्दीन बरनी)", "Ibn Battuta (इब्न बतूता)"],
+                correctIndex: 0,
+                explanationHindi: "यह पुस्तक सैय्यद वंश के इतिहास का एकमात्र समकालीन स्रोत है, जिसे याह्या-बिन-अहमद सरहिंदी द्वारा लिखा गया था।",
+                explanationEnglish: "This book is the only source of history for the Sayyid dynasty. It was written by Yahya-bin-Ahmad Sirhindi."
+            },
+            {
+                questionHindi: "2. सैय्यद वंश ने दिल्ली सल्तनत पर कुल कितने वर्षों तक शासन किया?",
+                questionEnglish: "The Sayyid Dynasty ruled the Delhi Sultanate for a total of how many years?",
+                options: ["30 years", "45 years", "37 years", "28 years"],
+                correctIndex: 2,
+                explanationHindi: "सैय्यद वंश ने 1414 ई. से 1451 ई. तक शासन किया, जिससे उनका कुल शासनकाल लगभग 37 वर्ष का रहा।",
+                explanationEnglish: "The Sayyid dynasty ruled from 1414 AD to 1451 AD, making their total reign approximately 37 years."
+            },
+            {
+                questionHindi: "3. दिल्ली का शासक बनने से पहले खिज्र खाँ किस क्षेत्र का गवर्नर था?",
+                questionEnglish: "Khizr Khan was the governor of which region before becoming the ruler of Delhi?",
+                options: ["Multan (मुल्तान)", "Lahore (लाहौर)", "Delhi (दिल्ली)", "Agra (आगरा)"],
+                correctIndex: 0,
+                explanationHindi: "खिज्र खाँ को तैमूर द्वारा मुल्तान का गवर्नर नियुक्त किया गया था।",
+                explanationEnglish: "Khizr Khan was appointed as the governor of Multan by Timur."
+            },
+            {
+                questionHindi: "4. खिज्र खाँ ने 'सुल्तान' के बजाय कौन सी उपाधि धारण की थी?",
+                questionEnglish: "Which title was assumed by Khizr Khan instead of 'Sultan'?",
+                options: ["Shah (शाह)", "Raiyat-i-Aala (रैयत-ए-आला)", "Khan-i-Khana (खान-ए-खाना)", "Amir (अमीर)"],
+                correctIndex: 1,
+                explanationHindi: "खिज्र खाँ ने सुल्तान की उपाधि नहीं ली; वह 'रैयत-ए-आला' की उपाधि से ही संतुष्ट रहा।",
+                explanationEnglish: "Khizr Khan did not take the title of Sultan; he was satisfied with the title 'Raiyat-i-Aala'."
+            },
+            {
+                questionHindi: "5. खिज्र खाँ ने सुल्तान की उपाधि लेने से इनकार क्यों किया?",
+                questionEnglish: "Why did Khizr Khan refuse to take the title of Sultan?",
+                options: ["He was a foreigner (वह एक विदेशी था)", "Pressure from nobles (रईसों का दबाव)", "He felt unworthy (उसने खुद को अयोग्य महसूस किया)", "He ruled on behalf of Timur and Shahrukh (उसने तैमूर और शाहरुख की ओर से शासन किया)"],
+                correctIndex: 3,
+                explanationHindi: "उसने तैमूर के पुत्र शाहरुख के प्रतिनिधि के रूप में शासन किया और अपने सिक्कों पर भी उनके नाम उत्कीर्ण करवाए।",
+                explanationEnglish: "He ruled as a deputy of Timur's son, Shahrukh, and even had their names inscribed on his coins."
+            },
+            {
+                questionHindi: "6. सैय्यद शासकों ने किसका वंशज होने का दावा किया?",
+                questionEnglish: "The Sayyid rulers claimed to be the descendants of whom?",
+                options: ["Prophet Muhammad (पैगंबर मुहम्मद)", "Changez Khan (चंगेज खाँ)", "Timur (तैमूर)", "Alexander (सिकंदर)"],
+                correctIndex: 0,
+                explanationHindi: "सैय्यद वंश के शासकों ने पैगंबर मुहम्मद का प्रत्यक्ष वंशज होने का दावा किया था।",
+                explanationEnglish: "The rulers of the Sayyid dynasty claimed descent from the Prophet Muhammad."
+            },
+            {
+                questionHindi: "7. इस वंश का पहला शासक कौन था जिसने 'शाह' की उपाधि धारण की थी?",
+                questionEnglish: "Who was the first ruler of this dynasty to assume the title of 'Shah'?",
+                options: ["Khizr Khan (खिज्र खाँ)", "Muhammad Shah (मुहम्मद शाह)", "Mubarak Shah (मुबारक शाह)", "Alam Shah (आलम शाह)"],
+                correctIndex: 2,
+                explanationHindi: "मुबारक शाह इस वंश का पहला शासक था जिसने 'शाह' और 'नाइबे अमीरुल मोमीन' की उपाधियाँ धारण की थीं।",
+                explanationEnglish: "Mubarak Shah was the first ruler of the dynasty to assume the titles of 'Shah' and 'Naibe Amirul Momin'."
+            },
+            {
+                questionHindi: "8. 1434 ई. में मुबारक शाह द्वारा किस शहर की स्थापना की गई थी?",
+                questionEnglish: "Which city was established by Mubarak Shah in 1434 AD?",
+                options: ["Khizrabad (खिज्राबाद)", "Mubarakabad (मुबारकाबाद)", "Jaunpur (जौनपुर)", "Agra (आगरा)"],
+                correctIndex: 1,
+                explanationHindi: "मुबारक शाह ने 1434 ईस्वी में मुबारकाबाद नामक नए नगर की स्थापना की थी।",
+                explanationEnglish: "Mubarak Shah founded the city of Mubarakabad in 1434 AD."
+            },
+            {
+                questionHindi: "9. मुबारकाबाद शहर किस नदी के तट पर स्थित था?",
+                questionEnglish: "Mubarakabad city was situated on the bank of which river?",
+                options: ["Ganges (गंगा)", "Ravi (रावी)", "Indus (सिंधु)", "Yamuna (यमुना)"],
+                correctIndex: 3,
+                explanationHindi: "मुबारकाबाद शहर का निर्माण यमुना नदी के तट पर किया गया था।",
+                explanationEnglish: "The city of Mubarakabad was built on the banks of the river Yamuna."
+            },
+            {
+                questionHindi: "10. सैय्यद शासन के दौरान दिल्ली सल्तनत की आधिकारिक भाषा क्या थी?",
+                questionEnglish: "What was the official language of the Delhi Sultanate during the Sayyid rule?",
+                options: ["Persian (फारसी)", "Hindi (हिंदी)", "Arabic (अरबी)", "Turkish (तुर्की)"],
+                correctIndex: 0,
+                explanationHindi: "सैय्यद काल के दौरान दिल्ली सल्तनत की प्रशासनिक एवं आधिकारिक भाषा फारसी थी।",
+                explanationEnglish: "Persian was the official language during the Sayyid period."
+            },
+            {
+                questionHindi: "11. सैय्यद वंश का सबसे सक्षम और योग्य शासक किसे माना जाता है?",
+                questionEnglish: "Who is considered the most capable and qualified ruler of the Sayyid Dynasty?",
+                options: ["Khizr Khan (खिज्र खाँ)", "Mubarak Shah (मुबारक शाह)", "Muhammad Shah (मुहम्मद शाह)", "Alam Shah (आलम शाह)"],
+                correctIndex: 1,
+                explanationHindi: "सैय्यद शासकों में मुबारक शाह को सबसे योग्य और सक्षम शासक माना जाता है।",
+                explanationEnglish: "Mubarak Shah is regarded as the most qualified and capable ruler among the Sayyid rulers."
+            },
+            {
+                questionHindi: "12. फरवरी 1434 में किस वज़ीर ने मुबारक शाह की हत्या की थी?",
+                questionEnglish: "Which Wazir assassinated Mubarak Shah in February 1434?",
+                options: ["Hamid Khan (हमीद खाँ)", "Kamal-ul-Mulk (कमाल-उल-मुल्क)", "Sarwar-ul-Mulk (सरवर-उल-मुल्क)", "Bahlul Lodi (बहलोल लोदी)"],
+                correctIndex: 2,
+                explanationHindi: "वज़ीर सरवर-उल-मुल्क ने मुबारक शाह की हत्या तब कर दी जब वह मुबारकाबाद शहर का निरीक्षण कर रहा था।",
+                explanationEnglish: "Wazir Sarwar-ul-Mulk killed Mubarak Shah while he was inspecting the city of Mubarakabad."
+            },
+            {
+                questionHindi: "13. मुबारक शाह के बाद सिंहासन का उत्तराधिकारी कौन बना?",
+                questionEnglish: "Who succeeded Mubarak Shah to the throne?",
+                options: ["Alam Shah (आलम शाह)", "Khizr Khan (खिज्र खाँ)", "Bahlul Lodi (बहलोल लोदी)", "Muhammad Shah (मुहम्मद शाह)"],
+                correctIndex: 3,
+                explanationHindi: "मुबारक शाह का भतीजा, मुहम्मद शाह, उसके बाद दिल्ली के सिंहासन पर बैठा।",
+                explanationEnglish: "Muhammad Shah, the nephew of Mubarak Shah, succeeded him to the throne."
+            },
+            {
+                questionHindi: "14. मुहम्मद शाह ने किस रईस को 'खान-ए-खाना' की उपाधि दी थी?",
+                questionEnglish: "Muhammad Shah bestowed the title of 'Khan-i-Khana' on which noble?",
+                options: ["Bahlul Lodi (बहलोल लोदी)", "Sarwar-ul-Mulk (सरवर-उल-मुल्क)", "Kamal-ul-Mulk (कमाल-उल-मुल्क)", "Khizr Khan (खिज्र खाँ)"],
+                correctIndex: 0,
+                explanationHindi: "मुहम्मद शाह ने बहलोल लोदी को 'खान-ए-खाना' की उपाधि दी और उसे अपना पुत्र कहकर संबोधित किया।",
+                explanationEnglish: "Muhammad Shah gave the title of 'Khan-i-Khana' to Bahlul Lodi and even addressed him as his son."
+            },
+            {
+                questionHindi: "15. सैय्यद वंश का चौथा और अंतिम शासक कौन था?",
+                questionEnglish: "Who was the fourth and final ruler of the Sayyid Dynasty?",
+                options: ["Muhammad Shah (मुहम्मद शाह)", "Alauddin Alam Shah (अलाउद्दीन आलम शाह)", "Mubarak Shah (मुबारक शाह)", "Khizr Khan (खिज्र खाँ)"],
+                correctIndex: 1,
+                explanationHindi: "अलाउद्दीन आलम शाह (जिसे अलाउद्दीन हसन शाह भी कहा जाता है) सैय्यद वंश का अंतिम शासक था।",
+                explanationEnglish: "Alauddin Alam Shah (also known as Alauddin Hasan Shah) was the last ruler of the dynasty."
+            },
+            {
+                questionHindi: "16. स्वेच्छा से सिंहासन छोड़ने के बाद अलाउद्दीन आलम शाह किस स्थान पर चला गया था?",
+                questionEnglish: "To which place did Alauddin Alam Shah retire after voluntarily giving up the throne?",
+                options: ["Agra (आगरा)", "Jaunpur (जौनपुर)", "Badaun (बदायूँ)", "Patna (पटना)"],
+                correctIndex: 2,
+                explanationHindi: "सिंहासन त्यागने के बाद, आलम शाह दिल्ली छोड़कर बदायूँ चला गया और वहीं अपना जीवन व्यतीत किया।",
+                explanationEnglish: "After leaving the throne, Alam Shah retired to Badaun."
+            },
+            {
+                questionHindi: "17. सैय्यद वंश के पतन के बाद कौन सा वंश सत्ता में आया?",
+                questionEnglish: "Which dynasty rose to power after the decline of the Sayyid Dynasty?",
+                options: ["Slave Dynasty (गुलाम वंश)", "Khilji Dynasty (खिलजी वंश)", "Tughlaq Dynasty (तुगलक वंश)", "Lodi Dynasty (लोदी वंश)"],
+                correctIndex: 3,
+                explanationHindi: "1451 ईस्वी में सैय्यद वंश का स्थान लोदी वंश (प्रथम अफगान साम्राज्य) ने लिया।",
+                explanationEnglish: "The Sayyid dynasty was succeeded by the Lodi dynasty in 1451 AD."
+            },
+            {
+                questionHindi: "18. खिज्र खाँ ने किस वर्ष दिल्ली पर कब्जा किया और वंश की स्थापना की?",
+                questionEnglish: "In which year did Khizr Khan capture Delhi and establish the dynasty?",
+                options: ["1414", "1398", "1421", "1451"],
+                correctIndex: 0,
+                explanationHindi: "खिज्र खाँ ने 1414 ई. में दिल्ली पर अधिकार कर सैय्यद वंश की नींव रखी थी।",
+                explanationEnglish: "Khizr Khan captured Delhi in 1414 AD, marking the start of Sayyid rule."
+            },
+            {
+                questionHindi: "19. सैय्यद वंश में कुल कितने शासक थे?",
+                questionEnglish: "How many total rulers belonged to the Sayyid Dynasty?",
+                options: ["3", "4", "5", "6"],
+                correctIndex: 1,
+                explanationHindi: "इस वंश में कुल 4 शासक हुए: खिज्र खाँ, मुबारक शाह, मुहम्मद शाह, और अलाउद्दीन आलम शाह।",
+                explanationEnglish: "There were a total of 4 rulers: Khizr Khan, Mubarak Shah, Muhammad Shah, and Alauddin Alam Shah."
+            },
+            {
+                questionHindi: "20. दिल्ली में मुबारक शाह का मकबरा किस वास्तुकला का उदाहरण है?",
+                questionEnglish: "The tomb of Mubarak Shah in Delhi is an example of which architecture?",
+                options: ["Nagara architecture (नागर वास्तुकला)", "Mughal architecture (मुगल वास्तुकला)", "Indo-Islamic architecture (इंडो-इस्लामिक वास्तुकला)", "Dravidian architecture (द्रविड़ वास्तुकला)"],
+                correctIndex: 2,
+                explanationHindi: "दिल्ली स्थित मुबारक शाह का मकबरा अष्टकोणीय इंडो-इस्लामिक वास्तुकला का एक प्रमुख उदाहरण है।",
+                explanationEnglish: "The tomb of Mubarak Shah is a notable example of Indo-Islamic architecture."
+            },
+            {
+                questionHindi: "21. खिज्र खाँ की 'वसीयत' का उल्लेख किस पुस्तक में मिलता है?",
+                questionEnglish: "Which book mentions the 'Will' of Khizr Khan?",
+                options: ["Tarikh-e-Firozshahi (तारीख-ए-फिरोजशाही)", "Kitab-ul-Rehla (किताब-उल-रेहला)", "Futuhat-e-Firozshahi (फुतुहात-ए-फिरोजशाही)", "Darar-e-Jazbat (दरार-ए-जज्बात)"],
+                correctIndex: 3,
+                explanationHindi: "'दरार-ए-जज्बात' नामक पुस्तक खिज्र खाँ से संबंधित है और इसमें उसकी वसीयत का उल्लेख है।",
+                explanationEnglish: "The book \"Darar-e-Jazbat\" is related to Khizr Khan and mentions his will."
+            },
+            {
+                questionHindi: "22. गुलाम वंश के किस शासक को अक्सर गलत तरीके से सैय्यदों के साथ जोड़ा जाता है?",
+                questionEnglish: "Which ruler of the Slave (Ghulam) dynasty is often wrongly associated with the Sayyids?",
+                options: ["Ruknuddin Firoz (रुकनुद्दीन फिरोज)", "Iltutmish (इल्तुतमिश)", "Balban (बलवन)", "Qutubuddin Aibak (कुतुबुद्दीन ऐबक)"],
+                correctIndex: 0,
+                explanationHindi: "रुकनुद्दीन फिरोज गुलाम (ममलूक) वंश का शासक था, न कि सैय्यद वंश का।",
+                explanationEnglish: "Ruknuddin Firoz belonged to the Slave (Ghulam) dynasty, not the Sayyid dynasty."
+            },
+            {
+                questionHindi: "23. किस सैय्यद शासक को अपने पूरे शासनकाल में रईसों के निरंतर विद्रोह का सामना करना पड़ा?",
+                questionEnglish: "Which Sayyid ruler faced constant rebellions from the nobles throughout his reign?",
+                options: ["Khizr Khan (खिज्र खाँ)", "Mubarak Shah (मुबारक शाह)", "Muhammad Shah (मुहम्मद शाह)", "Alam Shah (आलम शाह)"],
+                correctIndex: 1,
+                explanationHindi: "मुबारक शाह को व्यवस्था बनाए रखने का प्रयास करते समय अपने ही रईसों के निरंतर विद्रोहों से जूझना पड़ा।",
+                explanationEnglish: "Mubarak Shah faced continuous rebellions from his own nobles while trying to maintain order."
+            },
+            {
+                questionHindi: "24. सैय्यद राज्य के लिए आय का प्राथमिक स्रोत क्या था?",
+                questionEnglish: "What was the primary source of income for the Sayyid state?",
+                options: ["Trade Tax (व्यापार कर)", "Jizya (जजिया)", "Land Revenue (भू-राजस्व)", "Mining (खनन)"],
+                correctIndex: 2,
+                explanationHindi: "सैय्यद वंश के दौरान राज्य की अर्थव्यवस्था और राजस्व का मुख्य आधार भू-राजस्व था।",
+                explanationEnglish: "Land Revenue was the main source of income during the Sayyid dynasty."
+            },
+            {
+                questionHindi: "25. शुरुआत में खिज्र खाँ को मुल्तान से निकालने के लिए कौन सी जनजाति जिम्मेदार थी?",
+                questionEnglish: "Which tribe was responsible for expelling Khizr Khan from Multan initially?",
+                options: ["Kolis (कोली)", "Khokhar (खोखर)", "Beradas (बेरादास)", "Muin Tribes (मुइन जनजाति)"],
+                correctIndex: 3,
+                explanationHindi: "शुरुआती दौर में मुइन जनजाति के विरोध के कारण खिज्र खाँ को मुल्तान छोड़ना पड़ा था।",
+                explanationEnglish: "Khizr Khan was expelled from Multan by the Muin tribes."
+            },
+            {
+                questionHindi: "26. तैमूर ने किस वर्ष भारत पर आक्रमण किया, जिससे तुगलकों का पतन हुआ?",
+                questionEnglish: "In which year did Timur invade India, leading to the decline of the Tughlaqs?",
+                options: ["1398", "1414", "1320", "1451"],
+                correctIndex: 0,
+                explanationHindi: "1398 ई. में तैमूर के आक्रमण ने तुगलक वंश की रीढ़ तोड़ दी, जिससे आगे चलकर सैय्यद वंश का उदय हुआ।",
+                explanationEnglish: "Timur's invasion in 1398 shattered Tughlaq power and eventually led to the rise of the Sayyids."
+            },
+            {
+                questionHindi: "27. किस सैय्यद शासक को कमजोर, अक्षम और एक खराब प्रशासक के रूप में वर्णित किया गया है?",
+                questionEnglish: "Which Sayyid ruler is described as weak, incapable, and a poor administrator?",
+                options: ["Khizr Khan (खिज्र खाँ)", "Alauddin Alam Shah (अलाउद्दीन आलम शाह)", "Mubarak Shah (मुबारक शाह)", "Muhammad Shah (मुहम्मद शाह)"],
+                correctIndex: 1,
+                explanationHindi: "आलम शाह अत्यधिक कमजोर और अयोग्य शासक था, जिसने अंततः स्वेच्छा से सत्ता छोड़ दी।",
+                explanationEnglish: "Alam Shah was considered a weak and incapable ruler who eventually gave up his power."
+            },
+            {
+                questionHindi: "28. किसने \"मुबारक शाही\" नाम के सिक्के जारी किए और व्यक्तिगत मुद्रा के उपयोग को पुनर्जीवित किया?",
+                questionEnglish: "Who introduced coins named \"Mubarak Shahi\" and revived the use of personal currency?",
+                options: ["Khizr Khan (खिज्र खाँ)", "Muhammad Shah (मुहम्मद शाह)", "Mubarak Shah (मुबारक शाह)", "Alam Shah (आलम शाह)"],
+                correctIndex: 2,
+                explanationHindi: "मुबारक शाह ने अपने नाम से सिक्के चलाए और \"मुबारक शाही\" नामक मुद्रा की शुरुआत की।",
+                explanationEnglish: "Mubarak Shah revived the use of coins and introduced currency named \"Mubarak Shahi\"."
+            },
+            {
+                questionHindi: "29. सैय्यद वंश का अंत किस वर्ष हुआ था?",
+                questionEnglish: "The Sayyid Dynasty ended in which year?",
+                options: ["1421", "1434", "1445", "1451"],
+                correctIndex: 3,
+                explanationHindi: "1451 ईस्वी में बहलोल लोदी के दिल्ली के सिंहासन पर अधिकार करने के साथ सैय्यद वंश का अंत हो गया।",
+                explanationEnglish: "The Sayyid dynasty ended in 1451 AD when Bahlul Lodi took the throne."
+            },
+            {
+                questionHindi: "30. खिज्र खाँ की मृत्यु किस वर्ष हुई, जिसके बाद मुबारक शाह गद्दी पर बैठा?",
+                questionEnglish: "Khizr Khan died in which year, leading to the accession of Mubarak Shah?",
+                options: ["1421", "1414", "1434", "1451"],
+                correctIndex: 0,
+                explanationHindi: "लगभग 7 वर्षों तक शासन करने के बाद 1421 ईस्वी में खिज्र खाँ की मृत्यु हो गई थी।",
+                explanationEnglish: "Khizr Khan died in 1421 AD after ruling for about 7 years."
+            }
+        ];
+
+        // Global State Variables
+        let currentIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let timerSeconds = 25;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // DOM Element Cache
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startTimerBtn = document.getElementById('startTimerBtn');
+        const stopTimerBtn = document.getElementById('stopTimerBtn');
+        const progressBar = document.getElementById('progressBar');
+        const questionTracker = document.getElementById('questionTracker');
+        const qHindi = document.getElementById('qHindi');
+        const qEnglish = document.getElementById('qEnglish');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const explanationBox = document.getElementById('explanationBox');
+        const expHindi = document.getElementById('expHindi');
+        const expEnglish = document.getElementById('expEnglish');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const paletteGrid = document.getElementById('paletteGrid');
+
+        // Initializer
+        function initApp() {
+            renderPalette();
+            loadQuestion(currentIndex);
+            setupTimerControls();
+        }
+
+        // Render Question Palette Buttons
+        function renderPalette() {
+            paletteGrid.innerHTML = '';
+            quizData.forEach((_, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-btn';
+                btn.innerText = index + 1;
+                btn.onclick = () => jumpToQuestion(index);
+                
+                if (index === currentIndex) btn.classList.add('current');
+                if (userAnswers[index] !== null) {
+                    if (userAnswers[index] === quizData[index].correctIndex) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                }
+                
+                paletteGrid.appendChild(btn);
+            });
+        }
+
+        // Load Question Function
+        function loadQuestion(index) {
+            resetTimer();
+            const data = quizData[index];
+            
+            questionTracker.innerText = `Question ${index + 1} of ${quizData.length}`;
+            progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+            qHindi.innerText = data.questionHindi;
+            qEnglish.innerText = data.questionEnglish;
+
+            optionsContainer.innerHTML = '';
+            const prefixes = ['A', 'B', 'C', 'D'];
+            
+            data.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-prefix">${prefixes[optIdx]}</span> <span>${optText}</span>`;
+                
+                if (userAnswers[index] !== null) {
+                    btn.disabled = true;
+                    if (optIdx === data.correctIndex) {
+                        btn.classList.add('correct');
+                    }
+                    if (userAnswers[index] === optIdx && optIdx !== data.correctIndex) {
+                        btn.classList.add('wrong');
+                    }
+                } else {
+                    btn.onclick = () => handleOptionClick(optIdx);
+                }
+
+                optionsContainer.appendChild(btn);
+            });
+
+            if (userAnswers[index] !== null) {
+                expHindi.innerText = data.explanationHindi;
+                expEnglish.innerText = data.explanationEnglish;
+                explanationBox.classList.add('active');
+            } else {
+                explanationBox.classList.remove('active');
+            }
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === quizData.length - 1;
+
+            renderPalette();
+            startTimer();
+        }
+
+        // Option Click Interaction
+        function handleOptionClick(selectedIndex) {
+            stopTimer();
+            userAnswers[currentIndex] = selectedIndex;
+
+            const data = quizData[currentIndex];
+            const optionButtons = optionsContainer.children;
+
+            Array.from(optionButtons).forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === data.correctIndex) {
+                    btn.classList.add('correct');
+                }
+                if (idx === selectedIndex && selectedIndex !== data.correctIndex) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            expHindi.innerText = data.explanationHindi;
+            expEnglish.innerText = data.explanationEnglish;
+            explanationBox.classList.add('active');
+
+            renderPalette();
+        }
+
+        // Next/Prev Navigation
+        function navigateQuestion(step) {
+            const targetIndex = currentIndex + step;
+            if (targetIndex >= 0 && targetIndex < quizData.length) {
+                currentIndex = targetIndex;
+                loadQuestion(currentIndex);
+            }
+        }
+
+        // Direct Palette Navigation
+        function jumpToQuestion(index) {
+            currentIndex = index;
+            loadQuestion(currentIndex);
+        }
+
+        // Timer Logic
+        function startTimer() {
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                timerDisplay.innerText = timerSeconds < 10 ? `0${timerSeconds}` : timerSeconds;
+                
+                if (timerSeconds <= 0) {
+                    stopTimer();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerSeconds = 25;
+            timerDisplay.innerText = '25';
+        }
+
+        function setupTimerControls() {
+            startTimerBtn.onclick = () => startTimer();
+            stopTimerBtn.onclick = () => stopTimer();
+        }
+
+        // Initialize App on DOM Load
+        window.onload = initApp;
+    </script>
+</body>
+</html>
